@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MovieCollection</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="movie_collection">Movie Collection!</string>
     <string name="action_settings">Settings</string>
 
 </resources>
