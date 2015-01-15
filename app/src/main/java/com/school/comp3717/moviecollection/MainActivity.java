@@ -1,55 +1,136 @@
 package com.school.comp3717.moviecollection;
 
-import android.graphics.Color;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
-import it.neokree.materialnavigationdrawer.MaterialSection;
-import it.neokree.materialnavigationdrawer.MaterialSectionListener;
 
+public class MainActivity extends ActionBarActivity {
+    private DrawerLayout drawerLayoutt;
+    private ListView listView;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
-public class MainActivity extends MaterialNavigationDrawer{
-    MaterialSection section1, section2, recorder, night, last;
+    private Toolbar toolbar;
+
+    private String[] navigationDrawerItems;
 
     @Override
-    @SuppressWarnings("unchecked") //this.newSection causes warnings with MaterialNavigationDrawer types, but needed for example.
-    public void init(Bundle savedInstanceState) {
-        // create sections
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        section1 = this.newSection("Section 1",new FragmentIndex());
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        section2 = this.newSection("Section 2",new MaterialSectionListener() {
-            @Override
-            public void onClick(MaterialSection section) {
-                Toast.makeText(MainActivity.this, "Section 2 Clicked", Toast.LENGTH_SHORT).show();
+        navigationDrawerItems = getResources().getStringArray(R.array.navigation_drawer_items);
+        drawerLayoutt = (DrawerLayout) findViewById(R.id.drawer_layout);
+        listView = (ListView) findViewById(R.id.left_drawer);
 
-                // deselect section when is clicked
-                section.unSelect();
-            }
-        });
-        // recorder section with icon and 10 notifications
-        recorder = this.newSection("Recorder",this.getResources().getDrawable(R.drawable.ic_launcher),new FragmentIndex()).setNotifications(10);
-        // night section with icon, section color and notifications
-        night = this.newSection("Night Section", this.getResources().getDrawable(R.drawable.ic_launcher), new FragmentIndex())
-                .setSectionColor(Color.parseColor("#2196f3"),Color.parseColor("#1565c0")).setNotifications(150);
-        // night section with section color
-        last = this.newSection("Last Section", new FragmentButton()).setSectionColor(Color.parseColor("#ff9800"),Color.parseColor("#ef6c00"));
+        setSupportActionBar(toolbar);
 
-        // add your sections to the drawer
-        this.addSection(section1);
-        this.addSection(section2);
-        this.addSubheader("Subheader");
-        this.addSection(recorder);
-        this.addSection(night);
-        this.addDivisor();
-        this.addSection(last);
+        // set a custom shadow that overlays the main content when the drawer opens
+        //drawerLayoutt.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // set up the drawer's list view with items and click listener
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.nav_item, navigationDrawerItems));
+        listView.setOnItemClickListener(new DrawerItemClickListener());
 
-        /*
-        This keeps the drawer from being open when launched
-        material usually will launch the app with the drawer open the first couple
-        of times to let users know it uses the material-style drawer.
-         */
-        this.disableLearningPattern();
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayoutt, toolbar, R.string.app_name, R.string.app_name);
+        drawerLayoutt.setDrawerListener(actionBarDrawerToggle);
+
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
+    }
+
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        // update the main content by replacing fragments
+        Fragment fragment = new DummyFragment();
+        Bundle args = new Bundle();
+        args.putInt(DummyFragment.ARG_MENU_INDEX, position);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+        // update selected item and title, then close the drawer
+        listView.setItemChecked(position, true);
+        setTitle(navigationDrawerItems[position]);
+        drawerLayoutt.closeDrawer(listView);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        getSupportActionBar().setTitle(title);
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public static class DummyFragment extends Fragment {
+        public static final String ARG_MENU_INDEX = "index";
+
+        public DummyFragment() {
+            // Empty constructor required for fragment subclasses
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.home, container, false);
+            int index = getArguments().getInt(ARG_MENU_INDEX);
+            String text = String.format("Menu at index %s", index);
+            ((TextView) rootView.findViewById(R.id.textView)).setText(text);
+            getActivity().setTitle(text);
+            return rootView;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 }

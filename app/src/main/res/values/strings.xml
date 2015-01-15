@@ -4,5 +4,12 @@
     <string name="app_name">MovieCollection</string>
     <string name="movie_collection">Movie Collection!</string>
     <string name="action_settings">Settings</string>
-
+    <string-array name="navigation_drawer_items">
+        <item>Menu 1</item>
+        <item>Menu 2</item>
+        <item>Menu 3</item>
+        <item>Menu 4</item>
+        <item>Menu 5</item>
+    </string-array>
+    <string name="search">Search</string>
 </resources>
