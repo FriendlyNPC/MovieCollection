@@ -17,5 +17,7 @@
 
     <string name="search">Search</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_blank_fragment">Hello blank fragment. From Home Screen</string>
+    <string name="about_blank_fragment">Hello blank fragment. From About Screen</string>
 
 </resources>

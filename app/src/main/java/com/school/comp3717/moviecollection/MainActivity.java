@@ -68,8 +68,33 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
+        Fragment fragment = null;
+        switch(position){
+            case(0):
+                fragment = new Home();
+                break;
+            case(1):
+                fragment = new MyCollection();
+                break;
+            case(2):
+                fragment = new MyLists();
+                break;
+            case(3):
+                fragment = new MyRatings();
+                break;
+            case(4):
+                fragment = new RandomPicks();
+                break;
+            case(5):
+                fragment = new MovieMetrics();
+                break;
+            case(6):
+                fragment = new About();
+                break;
+            default:
+                fragment = new Home();
+        }
 
-        Fragment fragment = new Home();
         Bundle args = new Bundle();
         fragment.setArguments(args);
 
