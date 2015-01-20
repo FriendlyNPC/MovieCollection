@@ -8,14 +8,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -71,9 +68,9 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new DummyFragment();
+
+        Fragment fragment = new Home();
         Bundle args = new Bundle();
-        args.putInt(DummyFragment.ARG_MENU_INDEX, position);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -107,24 +104,6 @@ public class MainActivity extends ActionBarActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public static class DummyFragment extends Fragment {
-        public static final String ARG_MENU_INDEX = "index";
-
-        public DummyFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.home, container, false);
-            int index = getArguments().getInt(ARG_MENU_INDEX);
-            String text = String.format("Menu at index %s", index);
-            ((TextView) rootView.findViewById(R.id.textView)).setText(text);
-            getActivity().setTitle(text);
-            return rootView;
-        }
     }
 
     @Override
