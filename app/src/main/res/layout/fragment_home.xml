@@ -1,9 +1,173 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.school.comp3717.moviecollection.Home">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.school.comp3717.moviecollection.Home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/home_blank_fragment" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_300" >
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Recently Added"
+            android:id="@+id/recentlyAddedHeader"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/grey_800"
+            android:textStyle="italic"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:id="@+id/recentlyAddedWrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recentlyAddedHeader"
+            android:layout_alignParentLeft="true"
+            android:weightSum="1.0" >
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/recentlyAddedPoster1"
+                android:elevation="8dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/recentlyAddedPoster2"
+                android:elevation="8dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/recentlyAddedPoster3"
+                android:elevation="8dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Just Watched"
+            android:id="@+id/justWatchedHeader"
+            android:layout_below="@id/recentlyAddedWrapper"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/grey_800"
+            android:textStyle="italic"
+            android:paddingTop="10dp"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:id="@+id/justWatchedWrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/justWatchedHeader"
+            android:layout_alignParentLeft="true"
+            android:weightSum="1.0" >
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/justWatchedPoster1"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/justWatchedPoster2"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/justWatchedPoster3"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="New Releases"
+            android:id="@+id/newReleasesHeader"
+            android:layout_below="@id/justWatchedWrapper"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/grey_800"
+            android:textStyle="italic"
+            android:paddingTop="10dp"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:id="@+id/newReleasesWrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newReleasesHeader"
+            android:layout_alignParentLeft="true"
+            android:weightSum="1.0" >
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/newReleasesPoster1"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/newReleasesPoster2"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/newReleasesPoster3"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
