@@ -11,4 +11,9 @@
         <item name="android:textColorSecondary">@color/amber_800</item>
     </style>
 
+    <!-- Creating a custom green star rating bar -->
+    <style name="movieRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/movie_rating_bar</item>
+    </style>
+
 </resources>

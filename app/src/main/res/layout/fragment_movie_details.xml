@@ -1,0 +1,123 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.school.comp3717.moviecollection.MovieDetails"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_300"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin" >
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="180dp"
+            android:id="@+id/moviePoster"
+            android:elevation="8dp"
+            android:src="@drawable/default_poster" />
+
+        <LinearLayout
+            android:id="@+id/movieHeaderWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/moviePoster"
+            android:layout_alignTop="@id/moviePoster"
+            android:layout_alignBottom="@id/moviePoster"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:weightSum="1.0" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Movie Title"
+                android:id="@+id/movieTitle"
+                android:textColor="@color/grey_800"
+                android:textStyle="italic"
+                android:layout_marginTop="5dp"
+                android:layout_weight=".20" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="(Year)"
+                android:id="@+id/movieYear"
+                android:textColor="@color/grey_800"
+                android:textStyle="italic"
+                android:layout_marginTop="5dp"
+                android:layout_weight=".20" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Directed by John Doe"
+                android:id="@+id/movieDirector"
+                android:textColor="@color/grey_600"
+                android:layout_marginTop="20dp"
+                android:layout_weight=".10" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addMovieButton"
+                android:text="Add to Collection"
+                android:layout_marginTop="20dp"
+                android:layout_weight=".50" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Synopsis"
+            android:id="@+id/synopsisHeader"
+            android:textColor="@color/grey_800"
+            android:textStyle="bold"
+            android:layout_below="@id/moviePoster"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris..."
+            android:id="@+id/synopsisBody"
+            android:textColor="@color/grey_600"
+            android:layout_below="@id/synopsisHeader"
+            android:layout_marginTop="10dp" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize=".5"
+            style="@style/movieRatingBar"
+            android:id="@+id/criticRatingBar"
+            android:layout_below="@id/synopsisBody"
+            android:layout_marginTop="10dp" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize=".5"
+            style="@style/movieRatingBar"
+            android:id="@+id/userRatingBar"
+            android:layout_below="@id/criticRatingBar"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
+</ScrollView>
