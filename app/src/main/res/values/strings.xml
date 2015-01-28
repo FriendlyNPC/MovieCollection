@@ -16,15 +16,31 @@
     </string-array>
 
     <string name="search">Search</string>
+
+    // Home fragment
     <string name="new_releases">New Releases</string>
     <string name="recently_added">Recently Added</string>
     <string name="just_watched">Just Watched</string>
+
     <string name="searchActivity">MovieSearch</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home_blank_fragment">Hello blank fragment. From Home Screen</string>
     <string name="about_blank_fragment">Hello blank fragment. From About Screen</string>
     <string name="search_hint">Search Movies</string>
     <string name="title_activity_search_result">SearchResultActivity</string>
+
+    // About fragment
+    <string name="version_text">Version 0.1\n© 2015 Team KGY</string>
+    <string name="feedback_link_text">Send feedback</string>
+    <string name="feedback_description_text">Tell us what you think</string>
+    <string name="report_link_text">Report a problem</string>
+    <string name="report_description_text">Let us know about a bug or problem</string>
+    <string name="promote_link_text">Spread the word</string>
+    <string name="promote_description_text">Tell your friends where they can get this app</string>
+    <string name="line_break_text">....................................................................</string>
+    <string name="app_description_text">My Movie Collection allows you to keep track of movies that you own or have watched, as well as creating and sharing movie lists with others. This app is optimized for Lollipop.</string>
+    <string name="terms_of_service_text">Terms of Service</string>
+    <string name="privacy_policy_text">Privacy Policy</string>
 
     <string name="hello_world">Hello world!</string>
 </resources>
