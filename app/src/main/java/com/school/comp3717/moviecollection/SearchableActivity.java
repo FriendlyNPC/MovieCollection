@@ -2,8 +2,8 @@ package com.school.comp3717.moviecollection;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.os.*;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +37,43 @@ public class SearchableActivity extends ActionBarActivity {
             Log.d("Searchable","Attempting search with value: \"" + query + "\"");
             Toast toast = Toast.makeText(getApplicationContext(),query,Toast.LENGTH_LONG);
             toast.show();
-        }
 
+            String[] taskParams = {apiKey,query};
+            new InitDbApi().execute(taskParams);
+
+        }
+    }
+
+    public void logResults(TmdbResultsList<MovieDb> results){
+        for(MovieDb movie: results.getResults()){
+            Log.d("Searchable", "Found title: " + movie.getTitle());
+        }
         this.finish();
     }
+
+    private class InitDbApi extends AsyncTask<String, Void, TmdbResultsList<MovieDb>> {
+        protected TmdbResultsList<MovieDb> doInBackground(String... params) {
+            try {
+                TheMovieDbApi movieDB = new TheMovieDbApi(params[0]);
+                return movieDB.searchMovie(params[1],0,null,false,0);
+
+            } catch (MovieDbException e) {
+                Log.e("Searchable", "MovieDB  (MovieDbExcepiton) error");
+                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
+                Log.e("Searchable", msg);
+                return null;
+            } catch (Exception e) {
+                Log.e("Searchable", "MovieDB (Exception) error");
+                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
+                Log.e("Searchable", "exception", e);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(TmdbResultsList<MovieDb> result) {
+            logResults(result);
+        }
+    }
 }
+
+

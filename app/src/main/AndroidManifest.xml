@@ -20,8 +20,9 @@
         </activity>
         <activity
             android:name=".SearchableActivity"
+            android:label="@string/searchActivity"
             android:launchMode="singleTop">
-            <intent-filter>
+            <intent-filter android:label="@string/searchActivity">
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <meta-data
@@ -29,5 +30,5 @@
                 android:resource="@xml/searchable" />
         </activity>
     </application>
-
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

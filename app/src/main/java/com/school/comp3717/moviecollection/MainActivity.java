@@ -150,7 +150,6 @@ public class MainActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
             public boolean onQueryTextSubmit(String query){
-                toolbar.clearFocus();
                 SearchView search = (SearchView)toolbar.getMenu().findItem(R.id.action_search).getActionView();
                 search.onActionViewCollapsed();
                 return false;
