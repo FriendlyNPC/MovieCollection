@@ -3,7 +3,12 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
+    packagingOptions{
+        exclude'META-INF/LICENSE.txt'
+        exclude'META-INF/LICENSE'
+        exclude'META-INF/NOTICE.txt'
+        exclude'META-INF/NOTICE'
+    }
     defaultConfig {
         applicationId "com.school.comp3717.moviecollection"
         minSdkVersion 19
@@ -20,7 +25,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.omertron:themoviedbapi:3.11'
 }
 
