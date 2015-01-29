@@ -29,6 +29,12 @@
     <string name="search_hint">Search Movies</string>
     <string name="title_activity_search_result">SearchResultActivity</string>
 
+    // Movie Details fragment
+    <string name="add_movie_text">Add to Collection</string>
+    <string name="synopsis_header_text">Synopsis</string>
+    <string name="my_rating_text">My Rating</string>
+    <string name="review_header_text">My Review</string>
+
     // About fragment
     <string name="version_text">Version 0.1\n© 2015 Team KGY</string>
     <string name="feedback_link_text">Send feedback</string>
