@@ -1,9 +1,114 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.school.comp3717.moviecollection.About">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.school.comp3717.moviecollection.About"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_300"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/about_blank_fragment" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/versionText"
+        android:text="@string/version_text"
+        android:textColor="@color/grey_800"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal" />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedbackLink"
+        android:text="@string/feedback_link_text"
+        android:textColor="@color/green_300"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedbackDescription"
+        android:text="@string/feedback_description_text"
+        android:textColor="@color/grey_600"
+        android:textStyle="italic"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reportLink"
+        android:text="@string/report_link_text"
+        android:textColor="@color/green_300"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reportText"
+        android:text="@string/report_description_text"
+        android:textColor="@color/grey_600"
+        android:textStyle="italic"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/promoteLink"
+        android:text="@string/promote_link_text"
+        android:textColor="@color/green_300"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/promoteText"
+        android:text="@string/promote_description_text"
+        android:textColor="@color/grey_600"
+        android:textStyle="italic"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lineBreak"
+        android:text="@string/line_break_text"
+        android:textColor="@color/grey_600"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/appDescription"
+        android:text="@string/app_description_text"
+        android:textColor="@color/grey_800"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/termsOfServiceLink"
+        android:text="@string/terms_of_service_text"
+        android:textColor="@color/green_300"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/privacyPolicyLink"
+        android:text="@string/privacy_policy_text"
+        android:textColor="@color/green_300"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp" />
+
+</LinearLayout>
