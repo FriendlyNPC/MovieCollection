@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_300">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Test Movie"
+        android:id="@+id/resultCollectionItemTitle"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/grey_800"
+        android:paddingTop="10dp"
+        android:layout_margin="5dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/resultCollectionItemTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="(1972)"
+        android:id="@+id/resultCollectionItemYear"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/grey_500"
+        android:textStyle="italic"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"/>
+    <View
+        android:layout_below="@id/resultCollectionItemYear"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:src="@android:drawable/divider_horizontal_bright"/>
+
+</RelativeLayout>

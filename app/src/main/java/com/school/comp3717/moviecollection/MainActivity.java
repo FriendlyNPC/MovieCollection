@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +22,7 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout drawerLayoutt;
     private ListView listView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
+    private final String apiKey = "48a5ee87fadc129033207cea80b86b81";
     private Toolbar toolbar;
 
     private String[] navigationDrawerItems;
@@ -54,12 +54,17 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
         if (savedInstanceState == null) {
             selectItem(0);
         }
+        handleIntent(getIntent());
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
 
     /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -163,5 +168,39 @@ public class MainActivity extends ActionBarActivity {
         });
 
         return true;
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            SearchResults searchResults = new SearchResults();
+
+            Bundle args = new Bundle();
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            args.putString("query",query);
+            searchResults.setArguments(args);
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, searchResults, "searchResults")
+                    .addToBackStack("searchResults")
+                    .commit();
+
+            // update selected item and title, then close the drawer
+            //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
+            setTitle(R.string.searchResults);
+            drawerLayoutt.closeDrawer(listView);
+        }
+    }
+
+    //handle the back button being pressed
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            //TODO:IF AT HOME SCREEN, CALL super.onBackPressed();
+            fm.popBackStack();
+        }else {
+            super.onBackPressed();
+        }
     }
 }
