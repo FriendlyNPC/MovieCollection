@@ -50,7 +50,6 @@ public class SearchResults extends Fragment {
     }
 
     public void setOnlineResults(TmdbResultsList<MovieDb> results){
-
         LinearLayout layout = (LinearLayout)getView().findViewById(R.id.onlineItems);
         if(results.getTotalResults() > 0){
             for(MovieDb movie : results.getResults()){
@@ -81,7 +80,7 @@ public class SearchResults extends Fragment {
         protected TmdbResultsList<MovieDb> doInBackground(String... params) {
             try {
                 TheMovieDbApi movieDB = new TheMovieDbApi(params[0]);
-                return movieDB.searchMovie(params[1],0,null,true,0);
+                return movieDB.searchMovie(params[1],0,null,false,0);
             } catch (MovieDbException e) {
                 Log.e("Search", "MovieDB  (MovieDbExcepiton) error");
                 String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
