@@ -2,6 +2,7 @@ package com.school.comp3717.moviecollection;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,14 +20,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends ActionBarActivity {
-    private DrawerLayout drawerLayoutt;
-    private ListView listView;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
-    private final String apiKey = "48a5ee87fadc129033207cea80b86b81";
-    private Toolbar toolbar;
+    private DrawerLayout            drawerLayoutt;
+    private ListView                listView;
+    private ActionBarDrawerToggle   actionBarDrawerToggle;
+    private Toolbar                 toolbar;
 
-    private String[] navigationDrawerItems;
-
+    private String[]                navigationDrawerItems;
+    private Fragment[]              appFragments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +55,21 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         if (savedInstanceState == null) {
+            appFragments = new Fragment[9];
+            appFragments[0] = new Home();
+            appFragments[1] = new MyCollection();
+            appFragments[2] = new MyLists();
+            appFragments[3] = new MyRatings();
+            appFragments[4] = new RandomPicks();
+            appFragments[5] = new MovieMetrics();
+            appFragments[6] = new About();
+            //secondary screens
+            appFragments[7] = new SearchResults();
+            appFragments[8] = new MovieDetails();
+
+            //set homescreen
             selectItem(0);
-        }
-        handleIntent(getIntent());
+         }
     }
 
     @Override
@@ -75,39 +87,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void selectItem(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = null;
-        switch(position){
-            case(0):
-                fragment = new Home();
-                break;
-            case(1):
-                fragment = new MyCollection();
-                break;
-            case(2):
-                fragment = new MyLists();
-                break;
-            case(3):
-                fragment = new MyRatings();
-                break;
-            case(4):
-                fragment = new RandomPicks();
-                break;
-            case(5):
-                fragment = new MovieMetrics();
-                break;
-            case(6):
-                fragment = new About();
-                break;
-            default:
-                fragment = new Home();
-        }
-
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-
+        //set main view to selected fragment
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, appFragments[position]).commit();
 
         // update selected item and title, then close the drawer
         listView.setItemChecked(position, true);
@@ -172,23 +154,28 @@ public class MainActivity extends ActionBarActivity {
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            SearchResults searchResults = new SearchResults();
-
-            Bundle args = new Bundle();
             String query = intent.getStringExtra(SearchManager.QUERY);
-            args.putString("query",query);
-            searchResults.setArguments(args);
 
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, searchResults, "searchResults")
-                    .addToBackStack("searchResults")
-                    .commit();
+            SearchResults resultsFragment = (SearchResults) appFragments[7];
+
+            if (fragmentManager.findFragmentByTag(getResources().getString(R.string.search_results_tag)) == null){
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
+                        .addToBackStack(getResources().getString(R.string.search_results_tag))
+                        .commit();
+            }
 
             // update selected item and title, then close the drawer
             //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
-            setTitle(R.string.searchResults);
+            setTitle(R.string.search_results);
             drawerLayoutt.closeDrawer(listView);
+
+            //get the fragment showing before launching the query.
+            fragmentManager.executePendingTransactions();
+            getSupportFragmentManager().executePendingTransactions();
+
+            resultsFragment.query(query);
         }
     }
 
@@ -197,7 +184,6 @@ public class MainActivity extends ActionBarActivity {
     public void onBackPressed(){
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            //TODO:IF AT HOME SCREEN, CALL super.onBackPressed();
             fm.popBackStack();
         }else {
             super.onBackPressed();

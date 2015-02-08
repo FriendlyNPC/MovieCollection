@@ -4,9 +4,6 @@
     tools:context="com.school.comp3717.moviecollection.SearchResults"
     android:background="@color/grey_300">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -45,6 +42,12 @@
                 android:layout_marginRight="5dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/collectionProgressBar"
+                android:layout_gravity="center"
+                />
 
             </RelativeLayout>
 
@@ -82,9 +85,8 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/searchProgressBar"
+                android:id="@+id/onlineProgressBar"
                 android:layout_gravity="center"
-
                  />
 
         </LinearLayout>

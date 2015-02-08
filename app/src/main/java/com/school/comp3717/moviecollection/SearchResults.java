@@ -23,9 +23,11 @@ import com.omertron.themoviedbapi.results.TmdbResultsList;
  */
 public class SearchResults extends Fragment {
     private final String apiKey = "48a5ee87fadc129033207cea80b86b81";
-    private ProgressBar progressBar;
+    private ProgressBar onlineProgressBar;
+    private ProgressBar collectionProgressBar;
     private TextView onlineResults;
-    private String query;
+    private TextView collectionResults;
+
     public SearchResults() {
         // Required empty public constructor
     }
@@ -34,23 +36,25 @@ public class SearchResults extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.searchProgressBar);
+        onlineProgressBar = (ProgressBar) rootView.findViewById(R.id.onlineProgressBar);
         onlineResults = (TextView) rootView.findViewById(R.id.onlineResultsStatusText);
-        progressBar.setVisibility(View.GONE);
+        collectionResults = (TextView) rootView.findViewById(R.id.collectionResultsStatus);
+        collectionProgressBar = (ProgressBar) rootView.findViewById(R.id.collectionProgressBar);
+        onlineProgressBar.setVisibility(View.GONE);
         onlineResults.setVisibility(View.GONE);
-        Bundle args = getArguments();
-        query = args.getString("query");
+        collectionResults.setVisibility(View.GONE);
+        collectionProgressBar.setVisibility(View.GONE);
         return rootView;
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        Query();
     }
 
     public void setOnlineResults(TmdbResultsList<MovieDb> results){
         LinearLayout layout = (LinearLayout)getView().findViewById(R.id.onlineItems);
+        layout.removeAllViewsInLayout();
         if(results.getTotalResults() > 0){
             for(MovieDb movie : results.getResults()){
                 TextView movieEntry = new TextView(getActivity());
@@ -62,7 +66,11 @@ public class SearchResults extends Fragment {
             onlineResults.setText(R.string.no_results);
             onlineResults.setVisibility(View.VISIBLE);
         }
+    }
 
+    public void setDBResults(){
+        collectionResults.setText("DB not set up yet ;_;");
+        collectionResults.setVisibility(View.VISIBLE);
     }
 
     public void setOnlineError(){
@@ -70,9 +78,18 @@ public class SearchResults extends Fragment {
         onlineResults.setVisibility(View.VISIBLE);
     }
 
-    public void Query(){
+    public void query(String query){
         String[] taskParams = {apiKey,query};
-        progressBar.setVisibility(View.VISIBLE);
+        onlineProgressBar.setVisibility(View.VISIBLE);
+        onlineResults.setVisibility(View.GONE);
+
+        collectionResults.setVisibility(View.GONE);
+        collectionProgressBar.setVisibility(View.GONE);
+        //query DB
+        //TODO: add db query
+        setDBResults();
+
+        //query online
         new InitDbApi().execute(taskParams);
     }
 
@@ -95,7 +112,7 @@ public class SearchResults extends Fragment {
         }
 
         protected void onPostExecute(TmdbResultsList<MovieDb> result) {
-            progressBar.setVisibility(View.GONE);
+            onlineProgressBar.setVisibility(View.GONE);
             if (result == null){
                 setOnlineError();
             }else {
