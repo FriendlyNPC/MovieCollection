@@ -17,7 +17,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_alignEnd="@+id/view" />
+        android:layout_alignParentEnd="true" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,13 +30,4 @@
         android:textStyle="italic"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"/>
-    <View
-        android:layout_below="@id/resultCollectionItemYear"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:src="@android:drawable/divider_horizontal_bright"
-        android:id="@+id/view" />
-
 </RelativeLayout>
