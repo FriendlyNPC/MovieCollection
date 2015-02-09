@@ -2,22 +2,18 @@ package com.school.comp3717.moviecollection;
 
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -181,7 +177,7 @@ public class SearchResults extends Fragment {
             movieTitle.setText(movies.get(position).getTitle());
             movieYear.setText(movies.get(position).getReleaseDate());
 
-            Button quickAdd = (Button) rowView.findViewById(R.id.quickAddButton);
+            ImageButton quickAdd = (ImageButton) rowView.findViewById(R.id.quickAddButton);
 
             quickAdd.setOnClickListener(new View.OnClickListener(){
                 @Override

@@ -40,6 +40,7 @@
     <string name="results">Results</string>
     <string name="no_connection">Unable to connect for search</string>
     <string name="title_activity_search_result">SearchResultActivity</string>
+    <string name="quick_add_descriptor">Quick Add Button</string>
 
     // Movie Details fragment
     <string name="movie_details_tag">movie_details_tag</string>

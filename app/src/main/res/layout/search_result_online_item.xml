@@ -31,13 +31,18 @@
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:id="@+id/quickAddButton"
         android:clickable="false"
         android:layout_alignTop="@+id/resultOnlineItemTitle"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/resultOnlineItemYear" />
+        android:layout_alignBottom="@+id/resultOnlineItemYear"
+        android:longClickable="false"
+        android:src="@mipmap/ic_quick_add"
+        android:scaleType="fitCenter"
+        android:background="@color/grey_300"
+        android:contentDescription="@string/quick_add_descriptor" />
 
 </RelativeLayout>
