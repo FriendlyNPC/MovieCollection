@@ -4,44 +4,40 @@
     android:layout_height="wrap_content"
     android:background="@color/grey_300">
 
-    <TextView
+    <com.school.comp3717.moviecollection.tools.AutoFitTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Test Movie"
         android:id="@+id/resultOnlineItemTitle"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textColor="@color/grey_800"
-        android:paddingTop="10dp"
-        android:layout_margin="5dp" />
+        android:paddingTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@+id/quickAddButton" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/resultOnlineItemTitle"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="(1972)"
         android:id="@+id/resultOnlineItemYear"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textColor="@color/grey_500"
         android:textStyle="italic"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="15dp"/>
-    <View
-        android:layout_below="@id/resultOnlineItemYear"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:src="@android:drawable/divider_horizontal_bright"
-        android:id="@+id/view" />
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addButton"
-        android:layout_alignBottom="@+id/resultOnlineItemYear"
-        android:layout_alignEnd="@+id/view"
+        android:id="@+id/quickAddButton"
+        android:clickable="false"
         android:layout_alignTop="@+id/resultOnlineItemTitle"
-        android:clickable="false" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/resultOnlineItemYear" />
 
 </RelativeLayout>

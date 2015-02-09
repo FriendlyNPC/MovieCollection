@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="apiKey">48a5ee87fadc129033207cea80b86b81</string>
 
     <string name="app_name">3R_MovieCollection</string>
     <string name="movie_collection">Movie Collection!</string>
@@ -15,7 +16,8 @@
         <item>About</item>
     </string-array>
 
-    <string name="search">Search</string>
+    <string name="search_toolbar">Search</string>
+    <string name="movie_details_toolbar">Movie Details</string>
 
     // Home fragment
     <string name="new_releases">New Releases</string>

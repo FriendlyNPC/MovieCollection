@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.omertron.themoviedbapi.model.MovieDb;
+
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout            drawerLayoutt;
     private ListView                listView;
@@ -188,5 +190,27 @@ public class MainActivity extends ActionBarActivity {
         }else {
             super.onBackPressed();
         }
+    }
+
+    public void setMovie(MovieDb movie)
+    {
+        FragmentManager fragmentManager = getFragmentManager();
+        MovieDetails movieDetailFragment = (MovieDetails) appFragments[8];
+
+        movieDetailFragment.setMovie(movie);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, movieDetailFragment, getResources().getString(R.string.movie_details_tag))
+                .addToBackStack(getResources().getString(R.string.movie_details_tag))
+                .commit();
+
+        // update selected item and title, then close the drawer
+        //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
+        setTitle(R.string.movie_details_toolbar);
+        drawerLayoutt.closeDrawer(listView);
+
+        //get the fragment showing before launching the query.
+        fragmentManager.executePendingTransactions();
+        getSupportFragmentManager().executePendingTransactions();
     }
 }

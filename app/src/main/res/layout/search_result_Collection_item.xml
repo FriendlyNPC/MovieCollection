@@ -4,34 +4,39 @@
     android:layout_height="wrap_content"
     android:background="@color/grey_300">
 
-    <TextView
+    <com.school.comp3717.moviecollection.tools.AutoFitTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Test Movie"
         android:id="@+id/resultCollectionItemTitle"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textColor="@color/grey_800"
-        android:paddingTop="10dp"
-        android:layout_margin="5dp" />
+        android:paddingTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignEnd="@+id/view" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/resultCollectionItemTitle"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="(1972)"
         android:id="@+id/resultCollectionItemYear"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textColor="@color/grey_500"
         android:textStyle="italic"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="5dp"/>
     <View
         android:layout_below="@id/resultCollectionItemYear"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:src="@android:drawable/divider_horizontal_bright"/>
+        android:src="@android:drawable/divider_horizontal_bright"
+        android:id="@+id/view" />
 
 </RelativeLayout>
