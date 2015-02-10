@@ -2,7 +2,6 @@ package com.school.comp3717.moviecollection;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +28,9 @@ public class MainActivity extends ActionBarActivity {
 
     private String[]                navigationDrawerItems;
     private Fragment[]              appFragments;
+
+    private MovieDbHelper           mDbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         // set a custom shadow that overlays the main content when the drawer opens
-        //drawerLayoutt.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.nav_item, navigationDrawerItems));
         listView.setOnItemClickListener(new DrawerItemClickListener());
@@ -71,7 +73,10 @@ public class MainActivity extends ActionBarActivity {
 
             //set homescreen
             selectItem(0);
-         }
+        }
+
+        // Create and initialize database and movie table
+        mDbHelper = new MovieDbHelper(this);
     }
 
     @Override
@@ -80,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
         handleIntent(intent);
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
