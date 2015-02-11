@@ -1,0 +1,208 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.school.comp3717.moviecollection.Home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/grey_300"
+        android:weightSum="3.0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/my_list_1"
+            android:id="@+id/myList1Header"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/grey_800"
+            android:textStyle="italic"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:id="@+id/myListMovie1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myList1Header"
+            android:layout_alignParentLeft="true"
+            android:weightSum="1.0" >
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/myListMovieImage1"
+                android:elevation="8dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <LinearLayout
+                android:id="@+id/movieDetail1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myList1Header"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Movie Title"
+                    android:id="@+id/movieTitle1"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight=".20" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="(Year)"
+                    android:id="@+id/movieYear1"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight=".20"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Directed by John Doe"
+                    android:id="@+id/movieDirector1"
+                    android:textColor="@color/grey_600"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight=".10" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/myListMovie2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myListMovie1"
+            android:layout_alignParentLeft="true"
+            android:weightSum="1.0" >
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recentlyAddedPoster2"
+                android:elevation="8dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+                <LinearLayout
+                    android:id="@+id/movieDetail2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/myList1Header"
+                    android:layout_alignParentLeft="true"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Movie Title"
+                        android:id="@+id/movieTitle2"
+                        android:textColor="@color/grey_800"
+                        android:textStyle="italic"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight=".20" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="(Year)"
+                        android:id="@+id/movieYear2"
+                        android:textColor="@color/grey_800"
+                        android:textStyle="italic"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight=".20"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Directed by John Doe"
+                        android:id="@+id/movieDirector2"
+                        android:textColor="@color/grey_600"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight=".10" />
+                </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/myListMovie3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myListMovie2"
+            android:layout_alignParentLeft="true"
+            android:weightSum="1.0" >
+
+            <ImageButton
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recentlyAddedPoster3"
+                android:elevation="8dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:src="@drawable/default_poster"
+                android:layout_weight=".33" />
+
+            <LinearLayout
+                android:id="@+id/movieDetail3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myList1Header"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Movie Title"
+                    android:id="@+id/movieTitle3"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight=".20" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="(Year)"
+                    android:id="@+id/movieYear3"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight=".20"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Directed by John Doe"
+                    android:id="@+id/movieDirector3"
+                    android:textColor="@color/grey_600"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight=".10" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

@@ -29,6 +29,12 @@
     <string name="home_blank_fragment">Hello blank fragment. From Home Screen</string>
     <string name="about_blank_fragment">Hello blank fragment. From About Screen</string>
 
+    //My Lists Fragment
+    <string name="my_lists_header">My Lists</string>
+    <string name="my_list_1">My List 1</string>
+    <string name="my_list_2">My List 2</string>
+    <string name="my_list_3">My List 3</string>
+
     //Search Results Fragment
     <string name="search_results_tag">search_results_tag</string>
     <string name="search_results">Search Results</string>

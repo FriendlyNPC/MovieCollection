@@ -1,10 +1,69 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.school.comp3717.moviecollection.MyLists">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.school.comp3717.mylists.Home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_300" >
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="@string/my_lists_header"
+            android:id="@+id/myListsHeader"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/grey_800"
+            android:textStyle="italic"
+            android:layout_margin="30dp" />
+
+        <LinearLayout
+            android:id="@+id/recentlyAddedWrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/myListsHeader"
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical"
+            android:weightSum="1.0"
+            android:clickable="false">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/my_list_1"
+                android:id="@+id/myLists1"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/grey_800"
+                android:layout_margin="15dp"
+                android:clickable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/my_list_2"
+                android:id="@+id/myLists2"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/grey_800"
+                android:layout_margin="15dp"
+                android:clickable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/my_list_3"
+                android:id="@+id/myLists3"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/grey_800"
+                android:layout_margin="15dp"
+                android:clickable="true" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
