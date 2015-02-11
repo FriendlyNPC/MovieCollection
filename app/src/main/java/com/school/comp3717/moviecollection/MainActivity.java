@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -60,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         if (savedInstanceState == null) {
-            appFragments = new Fragment[9];
+            appFragments = new Fragment[7];
             appFragments[0] = new Home();
             appFragments[1] = new MyCollection();
             appFragments[2] = new MyLists();
@@ -69,8 +70,6 @@ public class MainActivity extends ActionBarActivity {
             appFragments[5] = new MovieMetrics();
             appFragments[6] = new About();
             //secondary screens
-            appFragments[7] = new SearchResults();
-            appFragments[8] = new MovieDetails();
 
             //set homescreen
             selectItem(0);
@@ -97,6 +96,9 @@ public class MainActivity extends ActionBarActivity {
     private void selectItem(int position) {
         //set main view to selected fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
+
+        //if we switch to any nav drawer item, we crush the backstack
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         fragmentManager.beginTransaction().replace(R.id.content_frame, appFragments[position]).commit();
 
@@ -164,34 +166,42 @@ public class MainActivity extends ActionBarActivity {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-
+            Log.d("SearchAction", "Query: " + query);
             FragmentManager fragmentManager = getSupportFragmentManager();
-            //SearchResults resultsFragment = (SearchResults) appFragments[7];
+
+            fragmentManager.popBackStackImmediate(getResources().getString(R.string.search_results_tag),FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             SearchResults resultsFragment = (SearchResults) fragmentManager.findFragmentByTag(getResources().getString(R.string.search_results_tag));
 
-            //if the fragment is visible, just tell it to do the query
-            if (resultsFragment != null && resultsFragment.isVisible()){
+            if (resultsFragment == null) { //fragment is not active
+                Log.d("SearchAction", "fragment not active");
 
-                resultsFragment.doQuery(query);
-
-            } else { //otherwise we should switch and send the query
+                resultsFragment = new SearchResults();
 
                 Bundle args = new Bundle();
                 args.putString("QUERY", query);
 
-                resultsFragment = (SearchResults) appFragments[7];
                 resultsFragment.setArguments(args);
-                if (fragmentManager.findFragmentByTag(getResources().getString(R.string.search_results_tag)) == null){
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
-                            .addToBackStack(getResources().getString(R.string.search_results_tag))
-                            .commit();
-                } else {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
-                            .commit();
-                }
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, resultsFragment, getResources().getString(R.string.search_results_tag))
+                        .addToBackStack(getResources().getString(R.string.search_results_tag))
+                        .commit();
+
+            } else if(!resultsFragment.isVisible()){ //performed a search, but left screen
+                Log.d("SearchAction", "fragment not visible");
+
+                resultsFragment.getArguments().putString("QUERY", query);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
+                        .addToBackStack(getResources().getString(R.string.search_results_tag))
+                        .commit();
+
+            } else { //we're still on the search results screen
+                //fragmentManager.popBackStackImmediate(getResources().getString(R.string.search_results_tag),0);
+                Log.d("SearchAction", "fragment active & visible");
+                resultsFragment.doQuery(query);
             }
 
             // update selected item and title, then close the drawer
@@ -214,10 +224,12 @@ public class MainActivity extends ActionBarActivity {
 
     public void setMovie(MovieDb movie)
     {
+        Log.d("SetMovie" , "Movie to set: " + movie.getTitle());
         FragmentManager fragmentManager = getSupportFragmentManager();
-        MovieDetails movieDetailFragment = (MovieDetails) appFragments[8];
 
-        movieDetailFragment.setMovie(movie);
+        MovieDetails movieDetailFragment = new MovieDetails();
+
+        Bundle args = new Bundle();
 
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, movieDetailFragment, getResources().getString(R.string.movie_details_tag))
@@ -228,8 +240,5 @@ public class MainActivity extends ActionBarActivity {
         //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
         setTitle(R.string.movie_details_toolbar);
         drawerLayoutt.closeDrawer(listView);
-
-        //get the fragment showing before launching the query.
-        getSupportFragmentManager().executePendingTransactions();
     }
 }

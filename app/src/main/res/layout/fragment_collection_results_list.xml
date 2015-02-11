@@ -21,7 +21,8 @@
             android:layout_marginRight="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textIsSelectable="false"/>
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -29,7 +30,8 @@
             android:id="@+id/collectionProgressBar"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:focusable="false"/>
 
         <ListView
             android:layout_width="wrap_content"

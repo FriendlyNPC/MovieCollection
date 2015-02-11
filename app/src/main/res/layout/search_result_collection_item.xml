@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_300">
+    android:background="@color/grey_300"
+    android:descendantFocusability="blocksDescendants">
 
     <com.school.comp3717.moviecollection.tools.AutoFitTextView
         android:layout_width="wrap_content"
@@ -17,7 +18,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textIsSelectable="false"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,5 +31,6 @@
         android:textColor="@color/grey_500"
         android:textStyle="italic"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp"
+        android:textIsSelectable="false"/>
 </RelativeLayout>

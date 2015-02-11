@@ -23,7 +23,7 @@ public class CollectionResultsList extends Fragment {
     private ProgressBar collectionProgressBar;
     private TextView collectionResults;
     private ListView collectionItems;
-
+    private String query;
     public CollectionResultsList() {
         // Required empty public constructor
     }
@@ -41,15 +41,17 @@ public class CollectionResultsList extends Fragment {
         collectionProgressBar.setVisibility(View.GONE);
         collectionItems.setVisibility(View.GONE);
 
-        doQuery(this.getArguments().getString("QUERY"));
+        String query = this.getArguments().getString("QUERY");
+        Log.d("OnlineSearch", "Query: " + query);
+        doQuery(query);
+
         return rootView;
     }
 
     public void doQuery(String movie){
-        //do query stuff here
-        collectionResults.setVisibility(View.GONE);
-        collectionProgressBar.setVisibility(View.VISIBLE);
-        collectionItems.setVisibility(View.GONE);
+        //TODO: do query stuff here
+        collectionResults.setVisibility(View.VISIBLE);
+        //collectionProgressBar.setVisibility(View.VISIBLE);
     }
 
     public void setCollectionResults(){

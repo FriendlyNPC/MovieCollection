@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,20 +28,17 @@ public class SearchResults extends Fragment {
         // Required empty public constructor
     }
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle bundle = new Bundle();
         String query = this.getArguments().getString("QUERY");
-        bundle.putString("QUERY", sanitize(query) );
-        mSearchViewPagerAdapter = new SearchViewPagerAdapter(getFragmentManager(), bundle);
+        query = sanitize(query);
+        Log.d("SearchResult", "Query: " + query);
+        bundle.putString("QUERY", query);
+
+        mSearchViewPagerAdapter = new SearchViewPagerAdapter(getChildFragmentManager(), bundle);
         View rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
 
         mViewPager = (ViewPager) rootView.findViewById(R.id.searchPager);
@@ -65,8 +63,8 @@ public class SearchResults extends Fragment {
      */
     public void doQuery(String query){
         query = sanitize(query);
-        CollectionResultsList crl = (CollectionResultsList) getFragmentManager().findFragmentByTag(getFragmentTag(mViewPager.getId(), 0));
-        OnlineResultsList orl = (OnlineResultsList) getFragmentManager().findFragmentByTag(getFragmentTag(mViewPager.getId(), 1));
+        CollectionResultsList crl = (CollectionResultsList) getChildFragmentManager().findFragmentByTag(getFragmentTag(mViewPager.getId(), 0));
+        OnlineResultsList orl = (OnlineResultsList) getChildFragmentManager().findFragmentByTag(getFragmentTag(mViewPager.getId(), 1));
 
         crl.doQuery(query);
         orl.doQuery(query);

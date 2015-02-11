@@ -21,6 +21,7 @@ import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.results.TmdbResultsList;
+import com.school.comp3717.moviecollection.MainActivity;
 import com.school.comp3717.moviecollection.R;
 
 import java.util.List;
@@ -49,17 +50,15 @@ public class OnlineResultsList extends Fragment {
         onlineProgressBar.setVisibility(View.VISIBLE);
         onlineResults.setVisibility(View.GONE);
         onlineItems.setVisibility(View.GONE);
-
-        doQuery(this.getArguments().getString("QUERY"));
+        String query = this.getArguments().getString("QUERY");
+        Log.d("OnlineSearch", "Query: " + query);
+        doQuery(query);
         return rootView;
     }
-
-
 
     public void doQuery(String query){
         onlineProgressBar.setVisibility(View.VISIBLE);
         onlineResults.setVisibility(View.GONE);
-
         onlineItems.setVisibility(View.GONE);
         //send background query
         new QueryOnlineMoviesTask().execute(query);
@@ -69,23 +68,25 @@ public class OnlineResultsList extends Fragment {
         if(results.getTotalResults() > 0){
             OnlineSearchItemArrayAdapter adapter = new OnlineSearchItemArrayAdapter(getActivity(),
                     results.getResults());
-
             onlineItems.setAdapter(adapter);
             onlineItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d("OnlineItem", "Online item clicked at position : " + position);
-                    //TODO: get onItemClick working
-                    /*
-                    SearchItemArrayAdapter adapter = (SearchItemArrayAdapter)parent.getAdapter();
+                    Log.d("OnlineItemClick", "Online item clicked at position : " + position);
+                    OnlineSearchItemArrayAdapter adapter = (OnlineSearchItemArrayAdapter)parent.getAdapter();
                     MovieDb selected = adapter.getMovie(position);
+                    Log.d("OnlineItemClick", "Movie selected : " + selected.getTitle());
+                    onlineItems.setVisibility(View.GONE);
                     MainActivity act = (MainActivity)getActivity();
-                    act.setMovie(selected);*/
+                    act.setMovie(selected);
                 }
             });
+            getFragmentManager().executePendingTransactions();
+            onlineProgressBar.setVisibility(View.GONE);
             onlineItems.setVisibility(View.VISIBLE);
         } else {
             onlineResults.setText(R.string.no_results);
+            onlineProgressBar.setVisibility(View.GONE);
             onlineResults.setVisibility(View.VISIBLE);
         }
     }
@@ -163,7 +164,6 @@ public class OnlineResultsList extends Fragment {
         }
 
         protected void onPostExecute(TmdbResultsList<MovieDb> result) {
-            onlineProgressBar.setVisibility(View.GONE);
             if (result == null){
                 setOnlineError();
             }else {
