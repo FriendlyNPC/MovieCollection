@@ -1,10 +1,10 @@
-package com.school.comp3717.moviecollection;
+package com.school.comp3717.moviecollection.search;
 
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,53 +21,53 @@ import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.results.TmdbResultsList;
+import com.school.comp3717.moviecollection.R;
 
-import java.util.HashMap;
 import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchResults extends Fragment {
+public class OnlineResultsList extends Fragment {
     private ProgressBar onlineProgressBar;
-    private ProgressBar collectionProgressBar;
     private TextView onlineResults;
-    private TextView collectionResults;
-    private ListView collectionItems;
     private ListView onlineItems;
 
-    public SearchResults() {
+    public OnlineResultsList() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_online_results_list, container, false);
+
         onlineProgressBar = (ProgressBar) rootView.findViewById(R.id.onlineProgressBar);
         onlineResults = (TextView) rootView.findViewById(R.id.onlineResultsStatusText);
-        collectionResults = (TextView) rootView.findViewById(R.id.collectionResultsStatus);
-        collectionProgressBar = (ProgressBar) rootView.findViewById(R.id.collectionProgressBar);
-        collectionItems = (ListView) rootView.findViewById(R.id.collectionItemList);
         onlineItems = (ListView) rootView.findViewById(R.id.onlineItemList);
-        onlineProgressBar.setVisibility(View.GONE);
+        onlineProgressBar.setVisibility(View.VISIBLE);
         onlineResults.setVisibility(View.GONE);
-        collectionResults.setVisibility(View.GONE);
-        collectionProgressBar.setVisibility(View.GONE);
-        collectionItems.setVisibility(View.GONE);
         onlineItems.setVisibility(View.GONE);
+
+        doQuery(this.getArguments().getString("QUERY"));
         return rootView;
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
+
+
+    public void doQuery(String query){
+        onlineProgressBar.setVisibility(View.VISIBLE);
+        onlineResults.setVisibility(View.GONE);
+
+        onlineItems.setVisibility(View.GONE);
+        //send background query
+        new QueryOnlineMoviesTask().execute(query);
     }
 
     public void setOnlineResults(TmdbResultsList<MovieDb> results){
         if(results.getTotalResults() > 0){
-            SearchItemArrayAdapter adapter = new SearchItemArrayAdapter(getActivity(),
+            OnlineSearchItemArrayAdapter adapter = new OnlineSearchItemArrayAdapter(getActivity(),
                     results.getResults());
 
             onlineItems.setAdapter(adapter);
@@ -90,76 +90,23 @@ public class SearchResults extends Fragment {
         }
     }
 
-    public void setDBResults(){
-        collectionResults.setText("DB not set up yet ;_;");
-        collectionResults.setVisibility(View.VISIBLE);
-    }
 
     public void setOnlineError(){
         onlineResults.setText(R.string.no_connection);
         onlineResults.setVisibility(View.VISIBLE);
     }
 
-    public void query(String query){
-        String[] taskParams = {query};
-        onlineProgressBar.setVisibility(View.VISIBLE);
-        onlineResults.setVisibility(View.GONE);
-
-        collectionResults.setVisibility(View.GONE);
-        collectionProgressBar.setVisibility(View.GONE);
-
-        onlineItems.setVisibility(View.GONE);
-        collectionItems.setVisibility(View.GONE);
-
-        //query DB
-        //TODO: add db query
-        setDBResults();
-
-        //query online
-        new InitDbApi().execute(taskParams);
-    }
-
-    private class InitDbApi extends AsyncTask<String, Void, TmdbResultsList<MovieDb>> {
-        protected TmdbResultsList<MovieDb> doInBackground(String... params) {
-            try {
-                TheMovieDbApi movieDB = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
-                return movieDB.searchMovie(params[0],0,null,false,0);
-            } catch (MovieDbException e) {
-                Log.e("Search", "MovieDB  (MovieDbExcepiton) error");
-                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
-                Log.e("Search", msg);
-                return null;
-            } catch (Exception e) {
-                Log.e("Search", "MovieDB (Exception) error");
-                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
-                Log.e("Search", msg);
-                return null;
-            }
-        }
-
-        protected void onPostExecute(TmdbResultsList<MovieDb> result) {
-            onlineProgressBar.setVisibility(View.GONE);
-            if (result == null){
-                setOnlineError();
-            }else {
-                logResults(result);
-                setOnlineResults(result);
-            }
-        }
-
-    }
-
     public void logResults(TmdbResultsList<MovieDb> results){
         for(MovieDb movie: results.getResults()){
-            Log.d("Search", "Found title: " + movie.getTitle());
+            Log.d("OnlineSearch", "Found title: " + movie.getTitle());
         }
     }
 
-    private class SearchItemArrayAdapter extends ArrayAdapter<MovieDb> {
+    private class OnlineSearchItemArrayAdapter extends ArrayAdapter<MovieDb> {
         private final Context context;
         private final List<MovieDb> movies;
 
-        public SearchItemArrayAdapter(Context context, List<MovieDb> objects) {
+        public OnlineSearchItemArrayAdapter(Context context, List<MovieDb> objects) {
             super(context, R.layout.search_result_online_item, objects);
             this.context = context;
             this.movies = objects;
@@ -184,9 +131,9 @@ public class SearchResults extends Fragment {
                 public void onClick(View v){
                     //TODO: Do actual DB add here
                     Toast.makeText(
-                        getActivity(),
-                        movies.get(position).getTitle() + " added to your collection!",
-                        Toast.LENGTH_LONG).show();
+                            getActivity(),
+                            movies.get(position).getTitle() + " added to your collection!",
+                            Toast.LENGTH_LONG).show();
                 }
             });
             return rowView;
@@ -195,5 +142,35 @@ public class SearchResults extends Fragment {
         public MovieDb getMovie(int position){
             return movies.get(position);
         }
+    }
+
+    private class QueryOnlineMoviesTask extends AsyncTask<String, Void, TmdbResultsList<MovieDb>> {
+        protected TmdbResultsList<MovieDb> doInBackground(String... query) {
+            try {
+                TheMovieDbApi movieDB = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
+                return movieDB.searchMovie(query[0],0,null,false,0);
+            } catch (MovieDbException e) {
+                Log.e("Search", "MovieDB  (MovieDbExcepiton) error");
+                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            } catch (Exception e) {
+                Log.e("Search", "MovieDB (Exception) error");
+                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(TmdbResultsList<MovieDb> result) {
+            onlineProgressBar.setVisibility(View.GONE);
+            if (result == null){
+                setOnlineError();
+            }else {
+                logResults(result);
+                setOnlineResults(result);
+            }
+        }
+
     }
 }

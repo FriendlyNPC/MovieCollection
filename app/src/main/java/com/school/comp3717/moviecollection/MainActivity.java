@@ -1,7 +1,7 @@
 package com.school.comp3717.moviecollection;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.omertron.themoviedbapi.model.MovieDb;
+import com.school.comp3717.moviecollection.search.SearchResults;
 
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout            drawerLayoutt;
@@ -95,7 +96,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectItem(int position) {
         //set main view to selected fragment
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
         fragmentManager.beginTransaction().replace(R.id.content_frame, appFragments[position]).commit();
 
         // update selected item and title, then close the drawer
@@ -163,35 +165,48 @@ public class MainActivity extends ActionBarActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            FragmentManager fragmentManager = getFragmentManager();
-            SearchResults resultsFragment = (SearchResults) appFragments[7];
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            //SearchResults resultsFragment = (SearchResults) appFragments[7];
 
-            if (fragmentManager.findFragmentByTag(getResources().getString(R.string.search_results_tag)) == null){
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
-                        .addToBackStack(getResources().getString(R.string.search_results_tag))
-                        .commit();
+            SearchResults resultsFragment = (SearchResults) fragmentManager.findFragmentByTag(getResources().getString(R.string.search_results_tag));
+
+            //if the fragment is visible, just tell it to do the query
+            if (resultsFragment != null && resultsFragment.isVisible()){
+
+                resultsFragment.doQuery(query);
+
+            } else { //otherwise we should switch and send the query
+
+                Bundle args = new Bundle();
+                args.putString("QUERY", query);
+
+                resultsFragment = (SearchResults) appFragments[7];
+                resultsFragment.setArguments(args);
+                if (fragmentManager.findFragmentByTag(getResources().getString(R.string.search_results_tag)) == null){
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
+                            .addToBackStack(getResources().getString(R.string.search_results_tag))
+                            .commit();
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_frame, resultsFragment,getResources().getString(R.string.search_results_tag))
+                            .commit();
+                }
             }
 
             // update selected item and title, then close the drawer
             //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
             setTitle(R.string.search_results);
             drawerLayoutt.closeDrawer(listView);
-
-            //get the fragment showing before launching the query.
-            fragmentManager.executePendingTransactions();
-            getSupportFragmentManager().executePendingTransactions();
-
-            resultsFragment.query(query);
         }
     }
 
     //handle the back button being pressed
     @Override
     public void onBackPressed(){
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+        FragmentManager sfm = getSupportFragmentManager();
+        if (sfm.getBackStackEntryCount() > 0) {
+            sfm.popBackStack();
         }else {
             super.onBackPressed();
         }
@@ -199,7 +214,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void setMovie(MovieDb movie)
     {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         MovieDetails movieDetailFragment = (MovieDetails) appFragments[8];
 
         movieDetailFragment.setMovie(movie);
@@ -215,7 +230,6 @@ public class MainActivity extends ActionBarActivity {
         drawerLayoutt.closeDrawer(listView);
 
         //get the fragment showing before launching the query.
-        fragmentManager.executePendingTransactions();
         getSupportFragmentManager().executePendingTransactions();
     }
 }

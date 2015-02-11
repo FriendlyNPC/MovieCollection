@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@color/grey_300">
 
+
+
     <com.school.comp3717.moviecollection.tools.AutoFitTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

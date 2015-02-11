@@ -30,5 +30,6 @@ dependencies {
     compile ('com.omertron:themoviedbapi:3.11'){
         exclude module: 'httpclient'
     }
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
 

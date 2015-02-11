@@ -1,107 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.school.comp3717.moviecollection.SearchResults"
-    android:background="@color/grey_300">
+    android:orientation="vertical"
+    android:background="@color/grey_300"
+    >
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/grey_300"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/my_collection"
-            android:id="@+id/inCollectionHeader"
-            android:textColor="@color/grey_800"
-            android:textStyle="italic"
-            android:paddingTop="10dp"
-            android:layout_margin="5dp" />
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/collectionItems">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/no_results"
-                android:id="@+id/collectionResultsStatus"
-                android:textColor="@color/grey_800"
-                android:textStyle="italic"
-                android:paddingTop="10dp"
-                android:textAlignment="center"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"/>
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/collectionProgressBar"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"/>
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/collectionItemList" />
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/searchTabs"
+        app:pstsShouldExpand="true"
+        app:pstsTextAllCaps="true"
+        app:pstsIndicatorColor="@color/green_800"
+        app:pstsUnderlineColor="@color/green_300"
+        app:pstsDividerColor="@color/grey_0"
+        android:background="@color/green_300"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+    </com.astuetz.PagerSlidingTabStrip>
 
-        </RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/searchPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/online_search"
-            android:id="@+id/onlineResultsHeader"
-            android:textColor="@color/grey_800"
-            android:textStyle="italic"
-            android:paddingTop="10dp"
-            android:layout_margin="5dp" />
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/onlineItems">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/no_results"
-                android:id="@+id/onlineResultsStatusText"
-                android:textColor="@color/grey_800"
-                android:textStyle="italic"
-                android:paddingTop="10dp"
-                android:textAlignment="center"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"
-                />
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/onlineProgressBar"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"
-                 />
-
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/onlineItemList" />
-
-        </RelativeLayout>
-
-        </LinearLayout>
-</RelativeLayout>
