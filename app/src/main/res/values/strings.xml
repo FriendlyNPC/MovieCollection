@@ -50,7 +50,7 @@
 
     // Movie Details fragment
     <string name="movie_details_tag">movie_details_tag</string>
-    <string name="add_movie_text">Add to Collection</string>
+    <string name="add_movie_text">Add Movie</string>
     <string name="synopsis_header_text">Synopsis</string>
     <string name="my_rating_text">My Rating</string>
     <string name="review_header_text">My Review</string>

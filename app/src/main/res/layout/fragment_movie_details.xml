@@ -24,10 +24,9 @@
         <LinearLayout
             android:id="@+id/movieHeaderWrapper"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/moviePoster"
             android:layout_alignTop="@id/moviePoster"
-            android:layout_alignBottom="@id/moviePoster"
             android:orientation="vertical"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:weightSum="1.0" >
@@ -82,7 +81,7 @@
             android:id="@+id/synopsisHeader"
             android:textColor="@color/grey_800"
             android:textStyle="bold"
-            android:layout_below="@id/moviePoster"
+            android:layout_below="@id/movieHeaderWrapper"
             android:layout_marginTop="20dp" />
 
         <TextView
@@ -97,7 +96,7 @@
 
         <RatingBar
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:isIndicator="true"
             android:numStars="5"
             android:rating="5"
@@ -114,14 +113,14 @@
             android:text="Critic Rating (100%)"
             android:id="@+id/criticRatingText"
             android:textColor="@color/grey_600"
-            android:layout_below="@id/synopsisBody"
             android:layout_toRightOf="@id/criticRatingBar"
-            android:layout_marginTop="20dp"
+            android:layout_alignTop="@id/criticRatingBar"
+            android:layout_alignBottom="@id/criticRatingBar"
             android:layout_marginLeft="10dp" />
 
         <RatingBar
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:isIndicator="false"
             android:numStars="5"
             android:rating="0"
@@ -138,9 +137,9 @@
             android:text="@string/my_rating_text"
             android:id="@+id/myRatingText"
             android:textColor="@color/grey_600"
-            android:layout_below="@id/criticRatingText"
             android:layout_toRightOf="@id/myRatingBar"
-            android:layout_marginTop="20dp"
+            android:layout_alignTop="@id/myRatingBar"
+            android:layout_alignBottom="@id/myRatingBar"
             android:layout_marginLeft="10dp" />
 
         <TextView
@@ -152,7 +151,7 @@
             android:textColor="@color/grey_800"
             android:textStyle="bold"
             android:layout_below="@id/myRatingBar"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -162,6 +161,7 @@
             android:id="@+id/reviewTextBox"
             android:background="@drawable/rectangle"
             android:layout_below="@id/reviewHeader"
+            android:textColor="@color/grey_800"
             android:cursorVisible="false"
             android:scrollbars="vertical"
             android:gravity="top|start"
