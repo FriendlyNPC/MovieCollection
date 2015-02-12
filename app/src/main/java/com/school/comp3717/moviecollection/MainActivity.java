@@ -241,4 +241,13 @@ public class MainActivity extends ActionBarActivity {
         setTitle(R.string.movie_details_toolbar);
         drawerLayoutt.closeDrawer(listView);
     }
+
+    public void listDetailsClick(View v) {
+        ListDetails listDetailsFragment = new ListDetails();
+        FragmentManager fragManager = getSupportFragmentManager();
+        fragManager.beginTransaction()
+                .replace(R.id.myLists, listDetailsFragment)
+                .addToBackStack(null)
+                .commit();
+    }
 }
