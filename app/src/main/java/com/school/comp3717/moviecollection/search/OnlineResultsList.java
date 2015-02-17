@@ -34,7 +34,7 @@ public class OnlineResultsList extends Fragment {
     private ProgressBar onlineProgressBar;
     private TextView onlineResults;
     private ListView onlineItems;
-
+    private QueryOnlineMoviesTask onlineQueryTask;
     public OnlineResultsList() {
         // Required empty public constructor
     }
@@ -58,14 +58,22 @@ public class OnlineResultsList extends Fragment {
     }
 
     public void doQuery(String query){
+        Log.d("OnlineSearch", "Online Search Query: " + query);
         onlineProgressBar.setVisibility(View.VISIBLE);
         onlineResults.setVisibility(View.GONE);
         onlineItems.setVisibility(View.GONE);
         //send background query
-        new QueryOnlineMoviesTask().execute(query);
+
+        if(onlineQueryTask != null){
+            onlineQueryTask.cancel(true);
+        }else {
+            onlineQueryTask = new QueryOnlineMoviesTask();
+            onlineQueryTask.execute(query);
+        }
     }
 
     public void setOnlineResults(TmdbResultsList<MovieDb> results){
+        if(getActivity() == null){return;} //stop the crash on rapid back-button presses
         if(results.getTotalResults() > 0){
             OnlineSearchItemArrayAdapter adapter = new OnlineSearchItemArrayAdapter(getActivity(),
                     results.getResults());
@@ -84,11 +92,9 @@ public class OnlineResultsList extends Fragment {
                 }
             });
             getFragmentManager().executePendingTransactions();
-            onlineProgressBar.setVisibility(View.GONE);
             onlineItems.setVisibility(View.VISIBLE);
         } else {
             onlineResults.setText(R.string.no_results);
-            onlineProgressBar.setVisibility(View.GONE);
             onlineResults.setVisibility(View.VISIBLE);
         }
     }
@@ -166,13 +172,27 @@ public class OnlineResultsList extends Fragment {
         }
 
         protected void onPostExecute(TmdbResultsList<MovieDb> result) {
+            super.onPostExecute(result);
+            onlineQueryTask = null;
+            onlineProgressBar.setVisibility(View.GONE);
             if (result == null){
                 setOnlineError();
             }else {
-                logResults(result);
+                //logResults(result);
                 setOnlineResults(result);
             }
         }
 
+        @Override
+        protected void onCancelled(){
+            super.onCancelled();
+            onlineQueryTask.cancel(true);
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        onlineQueryTask = null;
     }
 }
