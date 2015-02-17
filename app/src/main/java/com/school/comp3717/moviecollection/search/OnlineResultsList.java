@@ -22,6 +22,7 @@ import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.results.TmdbResultsList;
 import com.school.comp3717.moviecollection.MainActivity;
+import com.school.comp3717.moviecollection.Movie;
 import com.school.comp3717.moviecollection.R;
 
 import java.util.List;
@@ -78,7 +79,8 @@ public class OnlineResultsList extends Fragment {
                     Log.d("OnlineItemClick", "Movie selected : " + selected.getTitle());
                     onlineItems.setVisibility(View.GONE);
                     MainActivity act = (MainActivity)getActivity();
-                    act.setMovie(selected);
+                    Movie movie = new Movie(selected);
+                    act.setMovie(movie);
                 }
             });
             getFragmentManager().executePendingTransactions();

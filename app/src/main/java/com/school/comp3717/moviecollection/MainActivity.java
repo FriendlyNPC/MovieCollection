@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.omertron.themoviedbapi.model.MovieDb;
 import com.school.comp3717.moviecollection.search.SearchResults;
 
 public class MainActivity extends ActionBarActivity {
@@ -222,14 +221,16 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void setMovie(MovieDb movie)
-    {
+    public void setMovie(Movie movie) {
         Log.d("SetMovie" , "Movie to set: " + movie.getTitle());
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         MovieDetails movieDetailFragment = new MovieDetails();
 
         Bundle args = new Bundle();
+        args.putParcelable("movie", movie);
+
+        movieDetailFragment.setArguments(args);
 
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, movieDetailFragment, getResources().getString(R.string.movie_details_tag))

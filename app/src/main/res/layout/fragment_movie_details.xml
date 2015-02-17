@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Movie Title"
+                android:text="@string/movie_title"
                 android:id="@+id/movieTitle"
                 android:textColor="@color/grey_800"
                 android:textStyle="italic"
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="(Year)"
+                android:text="@string/year"
                 android:id="@+id/movieYear"
                 android:textColor="@color/grey_800"
                 android:textStyle="italic"
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Directed by John Doe"
+                android:text="@string/director"
                 android:id="@+id/movieDirector"
                 android:textColor="@color/grey_600"
                 android:layout_marginTop="20dp"
@@ -102,7 +102,7 @@
             android:rating="5"
             android:stepSize=".5"
             style="@style/movieRatingBar"
-            android:id="@+id/criticRatingBar"
+            android:id="@+id/userRatingBar"
             android:layout_below="@id/synopsisBody"
             android:layout_marginTop="10dp" />
 
@@ -110,12 +110,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Critic Rating (100%)"
-            android:id="@+id/criticRatingText"
+            android:text="@string/user_rating_text"
+            android:id="@+id/userRatingText"
             android:textColor="@color/grey_600"
-            android:layout_toRightOf="@id/criticRatingBar"
-            android:layout_alignTop="@id/criticRatingBar"
-            android:layout_alignBottom="@id/criticRatingBar"
+            android:layout_toRightOf="@id/userRatingBar"
+            android:layout_alignTop="@id/userRatingBar"
+            android:layout_alignBottom="@id/userRatingBar"
             android:layout_marginLeft="10dp" />
 
         <RatingBar
@@ -127,7 +127,7 @@
             android:stepSize=".5"
             style="@style/movieRatingBar"
             android:id="@+id/myRatingBar"
-            android:layout_below="@id/criticRatingBar"
+            android:layout_below="@id/userRatingBar"
             android:layout_marginTop="10dp" />
 
         <TextView
@@ -158,7 +158,7 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:lines="6"
-            android:id="@+id/reviewTextBox"
+            android:id="@+id/myReview"
             android:background="@drawable/rectangle"
             android:layout_below="@id/reviewHeader"
             android:textColor="@color/grey_800"

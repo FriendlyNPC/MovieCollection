@@ -1,6 +1,8 @@
 package com.school.comp3717.moviecollection;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,28 +10,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.omertron.themoviedbapi.MovieDbException;
-import com.omertron.themoviedbapi.TheMovieDbApi;
-import com.omertron.themoviedbapi.model.Artwork;
-import com.omertron.themoviedbapi.model.MovieDb;
-import com.omertron.themoviedbapi.model.PersonCrew;
-import com.omertron.themoviedbapi.results.TmdbResultsList;
-
+import java.io.InputStream;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MovieDetails extends Fragment {
 
-    MovieDb movie;
+    private static final int YEAR_LENGTH = 4;
+
+    Movie movie;
     TextView title;
     TextView year;
     TextView synopsis;
     TextView director;
+    TextView userRating;
+    RatingBar userRatingBar;
+    RatingBar myRatingBar;
     ImageView poster;
+    EditText myReview;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -46,60 +50,64 @@ public class MovieDetails extends Fragment {
         year = (TextView) rootView.findViewById(R.id.movieYear);
         synopsis = (TextView) rootView.findViewById(R.id.synopsisBody);
         director = (TextView) rootView.findViewById(R.id.movieDirector);
+        userRating = (TextView) rootView.findViewById(R.id.userRatingText);
+        userRatingBar = (RatingBar) rootView.findViewById(R.id.userRatingBar);
+        myRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
+        myReview = (EditText) rootView.findViewById(R.id.myReview);
+
+        movie = this.getArguments().getParcelable("movie");
+        setDetails();
+
+        new DownloadPosterTask((ImageView) rootView.findViewById(R.id.moviePoster))
+                .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
 
         return rootView;
     }
 
-
-    public void setMovie(MovieDb movie){
-        this.movie = movie;
-        setDetails();
-    }
-
-    private void setDetails(){
+    private void setDetails() {
         title.setText(movie.getTitle());
-        year.setText(movie.getReleaseDate());
+
+        year.setText("(" + movie.getReleaseDate().substring(0, YEAR_LENGTH) + ")");
+
         String directedBy = "Directed by";
+        String[] directorArray = movie.getDirector().split("\t");
         int numDirectors = 0;
-        for(PersonCrew crew : movie.getCrew()){
-            if (crew.getJob().equalsIgnoreCase("director")){
-                directedBy += numDirectors == 0 ? " " : ", ";
-                directedBy += crew.getName();
-                numDirectors++;
-            }
+        for(String directorName : directorArray){
+            directedBy += (numDirectors == 0) ? " " : ", ";
+            directedBy += directorName;
+            numDirectors++;
         }
-        synopsis.setText(movie.getOverview());
 
+        synopsis.setText(movie.getSynopsis());
+
+        userRating.setText(movie.getVoteAverage() + "/10 (" + movie.getVoteCount() + " votes)");
+        userRatingBar.setRating((float)movie.getVoteAverage() / 2);
+        myRatingBar.setRating((float)movie.getMyRating());
+        myReview.setText(movie.getMyReview());
     }
 
-    public void setPoster(Artwork poster){
+    private class DownloadPosterTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
 
-    }
+        public DownloadPosterTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
 
-    public class getPosterTask extends AsyncTask<Integer,Void,TmdbResultsList<Artwork>> {
-
-        @Override
-        protected TmdbResultsList<Artwork> doInBackground(Integer... params) {
+        protected Bitmap doInBackground(String... urls) {
+            String urlDisplay = urls[0];
+            Bitmap mIcon = null;
             try {
-                TheMovieDbApi movieDB = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
-                return movieDB.getMovieImages(params[0], null);
-            } catch (MovieDbException e) {
-                Log.e("Search", "MovieDB  (MovieDbExcepiton) error");
-                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
-                Log.e("Search", msg);
-                return null;
+                InputStream in = new java.net.URL(urlDisplay).openStream();
+                mIcon = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Search", "MovieDB (Exception) error");
-                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
-                Log.e("Search", msg);
-                return null;
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
             }
+            return mIcon;
         }
 
-        @Override
-        protected void onPostExecute(TmdbResultsList<Artwork> result) {
-
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
         }
     }
-
 }
