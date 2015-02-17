@@ -1,6 +1,17 @@
 package com.school.comp3717.moviecollection;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.omertron.themoviedbapi.model.Genre;
+import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.model.ProductionCompany;
+
+import java.util.List;
+
+public class Movie implements Parcelable {
+
+    private static final int YEAR_LENGTH = 4;
 
     private int movieId;
     private String title;
@@ -18,7 +29,7 @@ public class Movie {
     private int watchCount;
     private int isLoaned;
 
-    // Creating a movie object from app database
+    // Create a movie object from app database
     public Movie(int movieId,
                  String title,
                  int year,
@@ -51,7 +62,7 @@ public class Movie {
         this.isLoaned = isLoaned;
     }
 
-    // Creating a movie object from online database
+    // Create a movie object from online database
     public Movie(int movieId,
                  String title,
                  int year,
@@ -78,6 +89,102 @@ public class Movie {
         this.lastWatched = null;
         this.watchCount = 0;
         this.isLoaned = 0;
+    }
+
+    // Create a movie object from online database using MovieDb wrapper
+    public Movie(MovieDb source) {
+        this.movieId = source.getId();
+        this.title = source.getTitle();
+        this.year = Integer.valueOf(source.getReleaseDate().substring(0, YEAR_LENGTH)); // TODO: Change to full release date (string)
+        this.mpaaRating = ""; // TODO: Find a way to get rating
+        this.runtime = source.getRuntime();
+        this.criticScore = source.getVoteAverage(); // TODO: Change to "User Rating"
+        this.userScore = 0; // TODO: Change to "My Rating"
+        this.synopsis = source.getOverview();
+        this.posterUrl = source.getPosterPath();
+        this.genre = genreToString(source.getGenres());
+        this.director = ""; // TODO: Find a way to get director
+        this.studio = studioToString(source.getProductionCompanies());
+        this.lastWatched = null;
+        this.watchCount = 0;
+        this.isLoaned = 0;
+        // TODO: Add tag line, budget, popularity, revenue, vote count, original language?
+    }
+
+    // TODO: Decide whether we should store this in its own genre table
+    private String genreToString(List<Genre> genres) {
+        StringBuilder genreBuilder = new StringBuilder();
+        for (Genre genre : genres)
+        {
+            genreBuilder.append(genre.getName());
+            genreBuilder.append("\t");
+        }
+        return genreBuilder.toString();
+    }
+
+    private String studioToString(List<ProductionCompany> studios) {
+        StringBuilder studioBuilder = new StringBuilder();
+        for (ProductionCompany studio : studios)
+        {
+            studioBuilder.append(studio.getName());
+            studioBuilder.append("\t");
+        }
+        return studioBuilder.toString();
+    }
+
+
+    // Required for Parcelable
+    public int describeContents() {
+        return 0;
+    }
+
+    // Write object's data to the passed-in Parcel
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(movieId);
+        out.writeString(title);
+        out.writeInt(year);
+        out.writeString(mpaaRating);
+        out.writeInt(runtime);
+        out.writeDouble(criticScore);
+        out.writeDouble(userScore);
+        out.writeString(synopsis);
+        out.writeString(posterUrl);
+        out.writeString(genre);
+        out.writeString(director);
+        out.writeString(studio);
+        out.writeString(lastWatched);
+        out.writeInt(watchCount);
+        out.writeInt(isLoaned);
+    }
+
+    // This is used to regenerate the object; all Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    // Create movie object from Parcel
+    private Movie(Parcel in) {
+        this.movieId = in.readInt();
+        this.title = in.readString();
+        this.year = in.readInt();
+        this.mpaaRating = in.readString();
+        this.runtime = in.readInt();
+        this.criticScore = in.readDouble();
+        this.userScore = in.readDouble();
+        this.synopsis = in.readString();
+        this.posterUrl = in.readString();
+        this.genre = in.readString();
+        this.director = in.readString();
+        this.studio = in.readString();
+        this.lastWatched = in.readString();
+        this.watchCount = in.readInt();
+        this.isLoaned = in.readInt();
     }
 
     public int getMovieId() {
