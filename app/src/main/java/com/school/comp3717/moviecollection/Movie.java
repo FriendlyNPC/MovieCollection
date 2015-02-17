@@ -5,26 +5,32 @@ import android.os.Parcelable;
 
 import com.omertron.themoviedbapi.model.Genre;
 import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.model.PersonCrew;
 import com.omertron.themoviedbapi.model.ProductionCompany;
+import com.omertron.themoviedbapi.model.ReleaseInfo;
 
 import java.util.List;
 
 public class Movie implements Parcelable {
 
-    private static final int YEAR_LENGTH = 4;
-
     private int movieId;
     private String title;
-    private int year;
-    private String mpaaRating;
+    private String releaseDate;
+    private String filmRating;
     private int runtime;
-    private double criticScore;
-    private double userScore;
+    private double voteAverage;
+    private int voteCount;
+    private String tagLine;
     private String synopsis;
     private String posterUrl;
     private String genre;
     private String director;
     private String studio;
+    private double popularity;
+    private long budget;
+    private long revenue;
+    private int myRating;
+    private String myReview;
     private String lastWatched;
     private int watchCount;
     private int isLoaned;
@@ -32,106 +38,120 @@ public class Movie implements Parcelable {
     // Create a movie object from app database
     public Movie(int movieId,
                  String title,
-                 int year,
-                 String mpaaRating,
+                 String releaseDate,
+                 String filmRating,
                  int runtime,
-                 double criticScore,
-                 double userScore,
+                 double voteAverage,
+                 int voteCount,
+                 String tagLine,
                  String synopsis,
                  String posterUrl,
                  String genre,
                  String director,
                  String studio,
+                 double popularity,
+                 long budget,
+                 long revenue,
+                 int myRating,
+                 String myReview,
                  String lastWatched,
                  int watchCount,
                  int isLoaned) {
         this.movieId = movieId;
         this.title = title;
-        this.year = year;
-        this.mpaaRating = mpaaRating;
+        this.releaseDate = releaseDate;
+        this.filmRating = filmRating;
         this.runtime = runtime;
-        this.criticScore = criticScore;
-        this.userScore = userScore;
+        this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
+        this.tagLine = tagLine;
         this.synopsis = synopsis;
         this.posterUrl = posterUrl;
         this.genre = genre;
         this.director = director;
         this.studio = studio;
+        this.popularity = popularity;
+        this.budget = budget;
+        this.revenue = revenue;
+        this.myRating = myRating;
+        this.myReview = myReview;
         this.lastWatched = lastWatched;
         this.watchCount = watchCount;
         this.isLoaned = isLoaned;
     }
 
-    // Create a movie object from online database
-    public Movie(int movieId,
-                 String title,
-                 int year,
-                 String mpaaRating,
-                 int runtime,
-                 double criticScore,
-                 String synopsis,
-                 String posterUrl,
-                 String genre,
-                 String director,
-                 String studio) {
-        this.movieId = movieId;
-        this.title = title;
-        this.year = year;
-        this.mpaaRating = mpaaRating;
-        this.runtime = runtime;
-        this.criticScore = criticScore;
-        this.userScore = 0;
-        this.synopsis = synopsis;
-        this.posterUrl = posterUrl;
-        this.genre = genre;
-        this.director = director;
-        this.studio = studio;
-        this.lastWatched = null;
-        this.watchCount = 0;
-        this.isLoaned = 0;
-    }
-
     // Create a movie object from online database using MovieDb wrapper
     public Movie(MovieDb source) {
+        String country = "US";
+        String job = "director";
+
         this.movieId = source.getId();
         this.title = source.getTitle();
-        this.year = Integer.valueOf(source.getReleaseDate().substring(0, YEAR_LENGTH)); // TODO: Change to full release date (string)
-        this.mpaaRating = ""; // TODO: Find a way to get rating
+        this.releaseDate = source.getReleaseDate();
+        this.filmRating = getReleaseRating(source.getReleases(), country);
         this.runtime = source.getRuntime();
-        this.criticScore = source.getVoteAverage(); // TODO: Change to "User Rating"
-        this.userScore = 0; // TODO: Change to "My Rating"
+        this.voteAverage = source.getVoteAverage();
+        this.voteCount = source.getVoteCount();
+        this.tagLine = source.getTagline();
         this.synopsis = source.getOverview();
         this.posterUrl = source.getPosterPath();
         this.genre = genreToString(source.getGenres());
-        this.director = ""; // TODO: Find a way to get director
+        this.director = getPersonFromCrew(source.getCrew(), job);
         this.studio = studioToString(source.getProductionCompanies());
+        this.popularity = source.getPopularity();
+        this.budget = source.getBudget();
+        this.revenue = source.getRevenue();
+
+        this.myRating = 0;
+        this.myReview = null;
         this.lastWatched = null;
         this.watchCount = 0;
         this.isLoaned = 0;
-        // TODO: Add tag line, budget, popularity, revenue, vote count, original language?
     }
 
     // TODO: Decide whether we should store this in its own genre table
+    // Returns genres in a tab-delimited string
     private String genreToString(List<Genre> genres) {
         StringBuilder genreBuilder = new StringBuilder();
-        for (Genre genre : genres)
-        {
+        for (Genre genre : genres) {
             genreBuilder.append(genre.getName());
             genreBuilder.append("\t");
         }
         return genreBuilder.toString();
     }
 
+    // Returns studios in a tab-delimited string
     private String studioToString(List<ProductionCompany> studios) {
         StringBuilder studioBuilder = new StringBuilder();
-        for (ProductionCompany studio : studios)
-        {
+        for (ProductionCompany studio : studios) {
             studioBuilder.append(studio.getName());
             studioBuilder.append("\t");
         }
         return studioBuilder.toString();
     }
 
+    // Returns country's parental rating
+    private String getReleaseRating(List<ReleaseInfo> releases, String country) {
+        String rating = null;
+        for (ReleaseInfo release : releases) {
+            if (release.getCountry().equalsIgnoreCase(country)) {
+                rating = release.getCertification();
+            }
+        }
+        return rating;
+    }
+
+    // Returns person(s) in a given job in a tab-delimited string
+    private String getPersonFromCrew(List<PersonCrew> crew, String job) {
+        StringBuilder jobBuilder = new StringBuilder();
+        for (PersonCrew person : crew) {
+            if (person.getJob().equalsIgnoreCase(job)) {
+                jobBuilder.append(person.getName());
+                jobBuilder.append("\t");
+            }
+        }
+        return jobBuilder.toString();
+    }
 
     // Required for Parcelable
     public int describeContents() {
@@ -142,16 +162,22 @@ public class Movie implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(movieId);
         out.writeString(title);
-        out.writeInt(year);
-        out.writeString(mpaaRating);
+        out.writeString(releaseDate);
+        out.writeString(filmRating);
         out.writeInt(runtime);
-        out.writeDouble(criticScore);
-        out.writeDouble(userScore);
+        out.writeDouble(voteAverage);
+        out.writeInt(voteCount);
+        out.writeString(tagLine);
         out.writeString(synopsis);
         out.writeString(posterUrl);
         out.writeString(genre);
         out.writeString(director);
         out.writeString(studio);
+        out.writeDouble(popularity);
+        out.writeLong(budget);
+        out.writeLong(revenue);
+        out.writeInt(myRating);
+        out.writeString(myReview);
         out.writeString(lastWatched);
         out.writeInt(watchCount);
         out.writeInt(isLoaned);
@@ -172,16 +198,22 @@ public class Movie implements Parcelable {
     private Movie(Parcel in) {
         this.movieId = in.readInt();
         this.title = in.readString();
-        this.year = in.readInt();
-        this.mpaaRating = in.readString();
+        this.releaseDate = in.readString();
+        this.filmRating = in.readString();
         this.runtime = in.readInt();
-        this.criticScore = in.readDouble();
-        this.userScore = in.readDouble();
+        this.voteAverage = in.readDouble();
+        this.voteCount = in.readInt();
+        this.tagLine = in.readString();
         this.synopsis = in.readString();
         this.posterUrl = in.readString();
         this.genre = in.readString();
         this.director = in.readString();
         this.studio = in.readString();
+        this.popularity = in.readDouble();
+        this.budget = in.readLong();
+        this.revenue = in.readLong();
+        this.myRating = in.readInt();
+        this.myReview = in.readString();
         this.lastWatched = in.readString();
         this.watchCount = in.readInt();
         this.isLoaned = in.readInt();
@@ -203,20 +235,20 @@ public class Movie implements Parcelable {
         this.title = title;
     }
 
-    public int getYear() {
-        return year;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public String getMpaaRating() {
-        return mpaaRating;
+    public String getFilmRating() {
+        return filmRating;
     }
 
-    public void setMpaaRating(String mpaaRating) {
-        this.mpaaRating = mpaaRating;
+    public void setFilmRating(String filmRating) {
+        this.filmRating = filmRating;
     }
 
     public int getRuntime() {
@@ -227,20 +259,28 @@ public class Movie implements Parcelable {
         this.runtime = runtime;
     }
 
-    public double getCriticScore() {
-        return criticScore;
+    public double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setCriticScore(double criticScore) {
-        this.criticScore = criticScore;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
-    public double getUserScore() {
-        return userScore;
+    public int getVoteCount() {
+        return voteCount;
     }
 
-    public void setUserScore(double userScore) {
-        this.userScore = userScore;
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public String getTagLine() {
+        return tagLine;
+    }
+
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
     }
 
     public String getSynopsis() {
@@ -281,6 +321,46 @@ public class Movie implements Parcelable {
 
     public void setStudio(String studio) {
         this.studio = studio;
+    }
+
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
+    }
+
+    public long getBudget() {
+        return budget;
+    }
+
+    public void setBudget(long budget) {
+        this.budget = budget;
+    }
+
+    public long getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(long revenue) {
+        this.revenue = revenue;
+    }
+
+    public int getMyRating() {
+        return myRating;
+    }
+
+    public void setMyRating(int myRating) {
+        this.myRating = myRating;
+    }
+
+    public String getMyReview() {
+        return myReview;
+    }
+
+    public void setMyReview(String myReview) {
+        this.myReview = myReview;
     }
 
     public String getLastWatched() {

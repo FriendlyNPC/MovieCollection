@@ -15,7 +15,7 @@ import java.util.List;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     // If DB schema changed, must increment DB version; otherwise, DB errors
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "Movie.db";
 
     private static final String TAG =          "MovieDbHelper";
@@ -29,16 +29,22 @@ public class MovieDbHelper extends SQLiteOpenHelper {
             + MovieTable._ID +          PRIM_KEY +  COMMA
             + MovieTable.MOVIE_ID +     INT_TYPE +  COMMA
             + MovieTable.TITLE +        TEXT_TYPE + COMMA
-            + MovieTable.YEAR +         INT_TYPE +  COMMA
-            + MovieTable.MPAA_RATING +  TEXT_TYPE + COMMA
+            + MovieTable.RELEASE_DATE + TEXT_TYPE + COMMA
+            + MovieTable.FILM_RATING +  TEXT_TYPE + COMMA
             + MovieTable.RUNTIME +      INT_TYPE +  COMMA
-            + MovieTable.CRITIC_SCORE + REAL_TYPE + COMMA
-            + MovieTable.USER_SCORE +   INT_TYPE +  COMMA
+            + MovieTable.VOTE_AVERAGE + REAL_TYPE + COMMA
+            + MovieTable.VOTE_COUNT +   INT_TYPE  + COMMA
+            + MovieTable.TAG_LINE +     TEXT_TYPE + COMMA
             + MovieTable.SYNOPSIS +     TEXT_TYPE + COMMA
             + MovieTable.POSTER_URL +   TEXT_TYPE + COMMA
             + MovieTable.GENRE +        TEXT_TYPE + COMMA
             + MovieTable.DIRECTOR +     TEXT_TYPE + COMMA
             + MovieTable.STUDIO +       TEXT_TYPE + COMMA
+            + MovieTable.POPULARITY +   REAL_TYPE + COMMA
+            + MovieTable.BUDGET +       INT_TYPE  + COMMA
+            + MovieTable.REVENUE +      INT_TYPE  + COMMA
+            + MovieTable.MY_RATING +    INT_TYPE +  COMMA
+            + MovieTable.MY_REVIEW +    TEXT_TYPE + COMMA
             + MovieTable.LAST_WATCHED + TEXT_TYPE + COMMA
             + MovieTable.WATCH_COUNT +  INT_TYPE +  COMMA
             + MovieTable.IS_LOANED +    INT_TYPE
@@ -79,21 +85,27 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(MovieTable.MOVIE_ID, movie.getMovieId());
         values.put(MovieTable.TITLE, movie.getTitle());
-        values.put(MovieTable.YEAR, movie.getYear());
-        values.put(MovieTable.MPAA_RATING, movie.getMpaaRating());
+        values.put(MovieTable.RELEASE_DATE, movie.getReleaseDate());
+        values.put(MovieTable.FILM_RATING, movie.getFilmRating());
         values.put(MovieTable.RUNTIME, movie.getRuntime());
-        values.put(MovieTable.CRITIC_SCORE, movie.getCriticScore());
-        values.put(MovieTable.USER_SCORE, movie.getUserScore());
+        values.put(MovieTable.VOTE_AVERAGE, movie.getVoteAverage());
+        values.put(MovieTable.VOTE_COUNT, movie.getVoteCount());
+        values.put(MovieTable.TAG_LINE, movie.getTagLine());
         values.put(MovieTable.SYNOPSIS, movie.getSynopsis());
         values.put(MovieTable.POSTER_URL, movie.getPosterUrl());
         values.put(MovieTable.GENRE, movie.getGenre());
         values.put(MovieTable.DIRECTOR, movie.getDirector());
         values.put(MovieTable.STUDIO, movie.getStudio());
+        values.put(MovieTable.POPULARITY, movie.getPopularity());
+        values.put(MovieTable.BUDGET, movie.getBudget());
+        values.put(MovieTable.REVENUE, movie.getRevenue());
+        values.put(MovieTable.MY_RATING, movie.getMyRating());
+        values.put(MovieTable.MY_REVIEW, movie.getMyReview());
         values.put(MovieTable.LAST_WATCHED, movie.getLastWatched());
         values.put(MovieTable.WATCH_COUNT, movie.getWatchCount());
         values.put(MovieTable.IS_LOANED, movie.isLoaned());
         sq.insert(MovieTable.TABLE_NAME, null, values);
-        Log.d(TAG, "One row inserted");
+        Log.d(TAG, "One movie inserted");
     }
 
     // Gets a movie from local DB using online DB ID; stores in Movie object
@@ -106,16 +118,22 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         if (cr.moveToFirst()) {
             movie = new Movie(cr.getInt(cr.getColumnIndex("movieId")),
                               cr.getString(cr.getColumnIndex("title")),
-                              cr.getInt(cr.getColumnIndex("year")),
-                              cr.getString(cr.getColumnIndex("mpaaRating")),
+                              cr.getString(cr.getColumnIndex("releaseDate")),
+                              cr.getString(cr.getColumnIndex("filmRating")),
                               cr.getInt(cr.getColumnIndex("runtime")),
-                              cr.getDouble(cr.getColumnIndex("criticScore")),
-                              cr.getDouble(cr.getColumnIndex("userScore")),
+                              cr.getDouble(cr.getColumnIndex("voteAverage")),
+                              cr.getInt(cr.getColumnIndex("voteCount")),
+                              cr.getString(cr.getColumnIndex("tagLine")),
                               cr.getString(cr.getColumnIndex("synopsis")),
                               cr.getString(cr.getColumnIndex("posterUrl")),
                               cr.getString(cr.getColumnIndex("genre")),
                               cr.getString(cr.getColumnIndex("director")),
                               cr.getString(cr.getColumnIndex("studio")),
+                              cr.getDouble(cr.getColumnIndex("popularity")),
+                              cr.getLong(cr.getColumnIndex("budget")),
+                              cr.getLong(cr.getColumnIndex("revenue")),
+                              cr.getInt(cr.getColumnIndex("myRating")),
+                              cr.getString(cr.getColumnIndex("myReview")),
                               cr.getString(cr.getColumnIndex("lastWatched")),
                               cr.getInt(cr.getColumnIndex("watchCount")),
                               cr.getInt(cr.getColumnIndex("isLoaned")));
@@ -134,16 +152,22 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 movies.add(
                     new Movie(cr.getInt(cr.getColumnIndex("movieId")),
                               cr.getString(cr.getColumnIndex("title")),
-                              cr.getInt(cr.getColumnIndex("year")),
-                              cr.getString(cr.getColumnIndex("mpaaRating")),
+                              cr.getString(cr.getColumnIndex("releaseDate")),
+                              cr.getString(cr.getColumnIndex("filmRating")),
                               cr.getInt(cr.getColumnIndex("runtime")),
-                              cr.getDouble(cr.getColumnIndex("criticScore")),
-                              cr.getDouble(cr.getColumnIndex("userScore")),
+                              cr.getDouble(cr.getColumnIndex("voteAverage")),
+                              cr.getInt(cr.getColumnIndex("voteCount")),
+                              cr.getString(cr.getColumnIndex("tagLine")),
                               cr.getString(cr.getColumnIndex("synopsis")),
                               cr.getString(cr.getColumnIndex("posterUrl")),
                               cr.getString(cr.getColumnIndex("genre")),
                               cr.getString(cr.getColumnIndex("director")),
                               cr.getString(cr.getColumnIndex("studio")),
+                              cr.getDouble(cr.getColumnIndex("popularity")),
+                              cr.getLong(cr.getColumnIndex("budget")),
+                              cr.getLong(cr.getColumnIndex("revenue")),
+                              cr.getInt(cr.getColumnIndex("myRating")),
+                              cr.getString(cr.getColumnIndex("myReview")),
                               cr.getString(cr.getColumnIndex("lastWatched")),
                               cr.getInt(cr.getColumnIndex("watchCount")),
                               cr.getInt(cr.getColumnIndex("isLoaned")))
