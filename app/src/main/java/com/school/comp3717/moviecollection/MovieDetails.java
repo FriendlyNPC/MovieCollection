@@ -39,7 +39,6 @@ public class MovieDetails extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +76,7 @@ public class MovieDetails extends Fragment {
             directedBy += directorName;
             numDirectors++;
         }
+        director.setText(directedBy);
 
         synopsis.setText(movie.getSynopsis());
 

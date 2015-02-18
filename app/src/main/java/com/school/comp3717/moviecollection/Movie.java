@@ -80,7 +80,6 @@ public class Movie implements Parcelable {
         this.isLoaned = isLoaned;
     }
 
-    // TODO: Troubleshoot getReleaseRating, genreToString, getPersonFromCrew, studioToString
     // Create a movie object from online database using MovieDb wrapper
     public Movie(MovieDb source) {
         String country = "US";
@@ -89,16 +88,16 @@ public class Movie implements Parcelable {
         this.movieId = source.getId();
         this.title = source.getTitle();
         this.releaseDate = source.getReleaseDate();
-        this.filmRating = ""; //getReleaseRating(source.getReleases(), country);
+        this.filmRating = getReleaseRating(source.getReleases(), country);
         this.runtime = source.getRuntime();
         this.voteAverage = source.getVoteAverage();
         this.voteCount = source.getVoteCount();
         this.tagLine = source.getTagline();
         this.synopsis = source.getOverview();
         this.posterUrl = source.getPosterPath();
-        this.genre = "";//genreToString(source.getGenres());
-        this.director = "John Doe"; //getPersonFromCrew(source.getCrew(), job);
-        this.studio = ""; //studioToString(source.getProductionCompanies());
+        this.genre = genreToString(source.getGenres());
+        this.director = getPersonFromCrew(source.getCrew(), job);
+        this.studio = studioToString(source.getProductionCompanies());
         this.popularity = source.getPopularity();
         this.budget = source.getBudget();
         this.revenue = source.getRevenue();
@@ -110,7 +109,6 @@ public class Movie implements Parcelable {
         this.isLoaned = 0;
     }
 
-    // TODO: Decide whether we should store this in its own genre table
     // Returns genres in a tab-delimited string
     private String genreToString(List<Genre> genres) {
         StringBuilder genreBuilder = new StringBuilder();
@@ -133,10 +131,11 @@ public class Movie implements Parcelable {
 
     // Returns country's parental rating
     private String getReleaseRating(List<ReleaseInfo> releases, String country) {
-        String rating = null;
+        String rating = "";
         for (ReleaseInfo release : releases) {
             if (release.getCountry().equalsIgnoreCase(country)) {
                 rating = release.getCertification();
+                break;
             }
         }
         return rating;

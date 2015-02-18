@@ -86,9 +86,11 @@ public class OnlineResultsList extends Fragment {
                     MovieDb selected = adapter.getMovie(position);
                     Log.d("OnlineItemClick", "Movie selected : " + selected.getTitle());
                     onlineItems.setVisibility(View.GONE);
-                    MainActivity act = (MainActivity)getActivity();
-                    Movie movie = new Movie(selected);
-                    act.setMovie(movie);
+                    GetMovieInfoTask getInfo = new GetMovieInfoTask();
+                    getInfo.execute(selected);
+                    //MainActivity act = (MainActivity)getActivity();
+                    //Movie movie = new Movie(selected);
+                    //act.setMovie(movie);
                 }
             });
             getFragmentManager().executePendingTransactions();
@@ -159,7 +161,7 @@ public class OnlineResultsList extends Fragment {
                 TheMovieDbApi movieDB = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
                 return movieDB.searchMovie(query[0],0,null,false,0);
             } catch (MovieDbException e) {
-                Log.e("Search", "MovieDB  (MovieDbExcepiton) error");
+                Log.e("Search", "MovieDB  (MovieDbException) error");
                 String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
                 Log.e("Search", msg);
                 return null;
@@ -187,6 +189,39 @@ public class OnlineResultsList extends Fragment {
         protected void onCancelled(){
             super.onCancelled();
             onlineQueryTask.cancel(true);
+        }
+    }
+
+    private class GetMovieInfoTask extends AsyncTask<MovieDb, Void, Movie> {
+        protected Movie doInBackground(MovieDb... query) {
+            try {
+                Movie movie = null;
+                TheMovieDbApi api = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
+                // Request more movie info; need to explicitly request releases and cast info
+                movie = new Movie(api.getMovieInfo(query[0].getId(), null, "releases,casts"));
+                return movie;
+            } catch (MovieDbException e) {
+                Log.e("Search", "MovieDB  (MovieDbException) error");
+                String msg = (e.getMessage() == null) ? "MovieDB get movie info failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            } catch (Exception e) {
+                Log.e("Search", "MovieDB (Exception) error");
+                String msg = (e.getMessage() == null) ? "MovieDB get movie info failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Movie result) {
+            super.onPostExecute(result);
+            if (result != null) {
+                MainActivity act = (MainActivity) getActivity();
+                act.setMovie(result);
+            } else {
+                // TODO: Show an error
+                Toast.makeText(getActivity(), "Cannot fetch movie info", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
