@@ -23,6 +23,7 @@ import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.results.TmdbResultsList;
 import com.school.comp3717.moviecollection.MainActivity;
 import com.school.comp3717.moviecollection.Movie;
+import com.school.comp3717.moviecollection.MovieDbHelper;
 import com.school.comp3717.moviecollection.R;
 
 import java.util.List;
@@ -31,10 +32,11 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class OnlineResultsList extends Fragment {
+    private static final int YEAR_LENGTH = 4;
+
     private ProgressBar onlineProgressBar;
     private TextView onlineResults;
     private ListView onlineItems;
-    private QueryOnlineMoviesTask onlineQueryTask;
     public OnlineResultsList() {
         // Required empty public constructor
     }
@@ -64,19 +66,16 @@ public class OnlineResultsList extends Fragment {
         onlineItems.setVisibility(View.GONE);
         //send background query
 
-        if(onlineQueryTask != null){
-            onlineQueryTask.cancel(true);
-        }else {
-            onlineQueryTask = new QueryOnlineMoviesTask();
-            onlineQueryTask.execute(query);
-        }
+
+        QueryOnlineMoviesTask onlineQueryTask = new QueryOnlineMoviesTask();
+        onlineQueryTask.execute(query);
     }
 
-    public void setOnlineResults(TmdbResultsList<MovieDb> results){
+    public void setOnlineResults(TmdbResultsList<MovieDb> results, final List<Integer> inDb){
         if(getActivity() == null){return;} //stop the crash on rapid back-button presses
         if(results.getTotalResults() > 0){
             OnlineSearchItemArrayAdapter adapter = new OnlineSearchItemArrayAdapter(getActivity(),
-                    results.getResults());
+                    results.getResults(), inDb);
             onlineItems.setAdapter(adapter);
             onlineItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -88,12 +87,8 @@ public class OnlineResultsList extends Fragment {
                     onlineItems.setVisibility(View.GONE);
                     GetMovieInfoTask getInfo = new GetMovieInfoTask();
                     getInfo.execute(selected);
-                    //MainActivity act = (MainActivity)getActivity();
-                    //Movie movie = new Movie(selected);
-                    //act.setMovie(movie);
                 }
             });
-            getFragmentManager().executePendingTransactions();
             onlineItems.setVisibility(View.VISIBLE);
         } else {
             onlineResults.setText(R.string.no_results);
@@ -116,11 +111,13 @@ public class OnlineResultsList extends Fragment {
     private class OnlineSearchItemArrayAdapter extends ArrayAdapter<MovieDb> {
         private final Context context;
         private final List<MovieDb> movies;
+        private final List<Integer> inDb;
 
-        public OnlineSearchItemArrayAdapter(Context context, List<MovieDb> objects) {
+        public OnlineSearchItemArrayAdapter(Context context, List<MovieDb> objects, List<Integer> inDb) {
             super(context, R.layout.search_result_online_item, objects);
             this.context = context;
             this.movies = objects;
+            this.inDb = inDb;
         }
 
         @Override
@@ -133,20 +130,30 @@ public class OnlineResultsList extends Fragment {
             TextView movieYear = (TextView) rowView.findViewById(R.id.resultOnlineItemYear);
 
             movieTitle.setText(movies.get(position).getTitle());
-            movieYear.setText(movies.get(position).getReleaseDate());
+            movieTitle.setText(movies.get(position).getTitle());
+            String release = movies.get(position).getReleaseDate();
+            if (release == null || release.trim().isEmpty()){
+                movieYear.setText("");
+            } else{
+                movieYear.setText("(" + release.substring(0, YEAR_LENGTH) + ")");
+            }
 
-            ImageButton quickAdd = (ImageButton) rowView.findViewById(R.id.quickAddButton);
+            final ImageButton quickAdd = (ImageButton) rowView.findViewById(R.id.quickAddButton);
 
             quickAdd.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    //TODO: Do actual DB add here
-                    Toast.makeText(
-                            getActivity(),
-                            movies.get(position).getTitle() + " added to your collection!",
-                            Toast.LENGTH_LONG).show();
+                    MovieInfoForQuickAddTask quickAddTask = new MovieInfoForQuickAddTask(quickAdd);
+                    quickAddTask.execute(getMovie(position));
                 }
             });
+
+            boolean exists = inDb.contains(movies.get(position).getId());
+
+            if ( exists == true){
+                quickAdd.setVisibility(View.GONE);
+            }
+
             return rowView;
         }
 
@@ -175,21 +182,17 @@ public class OnlineResultsList extends Fragment {
 
         protected void onPostExecute(TmdbResultsList<MovieDb> result) {
             super.onPostExecute(result);
-            onlineQueryTask = null;
+
             onlineProgressBar.setVisibility(View.GONE);
             if (result == null){
                 setOnlineError();
             }else {
-                //logResults(result);
-                setOnlineResults(result);
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+                List<Integer> inDb = dbHelper.getMovieIDsExist(result.getResults());
+                setOnlineResults(result,inDb);
             }
         }
 
-        @Override
-        protected void onCancelled(){
-            super.onCancelled();
-            onlineQueryTask.cancel(true);
-        }
     }
 
     private class GetMovieInfoTask extends AsyncTask<MovieDb, Void, Movie> {
@@ -225,9 +228,57 @@ public class OnlineResultsList extends Fragment {
         }
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        onlineQueryTask = null;
+    private class MovieInfoForQuickAddTask extends AsyncTask<MovieDb, Void, Movie> {
+        ImageButton button;
+
+        public MovieInfoForQuickAddTask(ImageButton button){
+            super();
+            this.button = button;
+        }
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+            button.setVisibility(View.GONE);
+        }
+
+        protected Movie doInBackground(MovieDb... query) {
+            try {
+                Movie movie = null;
+                TheMovieDbApi api = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
+                // Request more movie info; need to explicitly request releases and cast info
+                movie = new Movie(api.getMovieInfo(query[0].getId(), null, "releases,casts"));
+                return movie;
+            } catch (MovieDbException e) {
+                Log.e("Search", "MovieDB  (MovieDbException) error");
+                String msg = (e.getMessage() == null) ? "MovieDB get movie info failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            } catch (Exception e) {
+                Log.e("Search", "MovieDB (Exception) error");
+                String msg = (e.getMessage() == null) ? "MovieDB get movie info failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Movie result) {
+            super.onPostExecute(result);
+            if (result != null) {
+
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+
+                //TODO: make sure addMovie actually works
+                dbHelper.addMovie(result);
+
+                Toast.makeText(
+                        getActivity(),
+                        result.getTitle() + " added to your collection!",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                button.setVisibility(View.VISIBLE);
+                Toast.makeText(getActivity(), "Cannot fetch movie info", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

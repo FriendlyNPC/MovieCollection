@@ -1,6 +1,7 @@
 package com.school.comp3717.moviecollection;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -10,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -37,6 +40,7 @@ public class MovieDetails extends Fragment {
     RatingBar myRatingBar;
     ImageView poster;
     EditText myReview;
+    Button addOrRemoveButton;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -57,6 +61,7 @@ public class MovieDetails extends Fragment {
         userRatingBar = (RatingBar) rootView.findViewById(R.id.userRatingBar);
         myRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
         myReview = (EditText) rootView.findViewById(R.id.myReview);
+        addOrRemoveButton = (Button) rootView.findViewById(R.id.addMovieButton);
 
         movie = this.getArguments().getParcelable("movie");
         setDetails();
@@ -81,6 +86,21 @@ public class MovieDetails extends Fragment {
         userRatingBar.setRating((float)movie.getVoteAverage() / 2);
         myRatingBar.setRating((float)movie.getMyRating());
         myReview.setText(movie.getMyReview());
+
+        MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+        boolean currentState;
+        if (dbHelper.getMovieById(movie.getMovieId()) == null){
+            addOrRemoveButton.setText(R.string.add_movie_text);
+            addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.green_300));
+            currentState = true;
+        }else{
+            addOrRemoveButton.setText(R.string.remove_movie_text);
+            addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.red_800));
+            currentState = false;
+        }
+
+        addOrRemoveButton.setOnClickListener(
+                new AddButtonOnClickListener(getActivity(), addOrRemoveButton, currentState));
     }
 
     private void setDirectorText(Movie movie, TextView director) {
@@ -152,6 +172,41 @@ public class MovieDetails extends Fragment {
 
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
+        }
+    }
+
+    private class AddButtonOnClickListener implements View.OnClickListener{
+        Context context;
+        Button addOrRemoveButton;
+        boolean showingAdd;
+
+        public AddButtonOnClickListener(Context context, Button addOrRemoveButton, boolean showAdd){
+            super();
+            this.context = context;
+            this.addOrRemoveButton = addOrRemoveButton;
+            this.showingAdd = showAdd;
+        }
+
+        @Override
+        public void onClick(View view) {
+            addOrRemoveButton.setEnabled(false);
+            MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+
+            if (showingAdd){
+                dbHelper.addMovie(movie);
+                addOrRemoveButton.setText(R.string.remove_movie_text);
+                addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.red_800));
+                Toast.makeText(context, movie.getTitle() + " added to collection.", Toast.LENGTH_LONG).show();
+            }else {
+                dbHelper.removeMovieByID(movie.getMovieId());
+                addOrRemoveButton.setText(R.string.add_movie_text);
+                addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.green_300));
+                Toast.makeText(context, movie.getTitle() + " removed from collection.", Toast.LENGTH_LONG).show();
+            }
+
+            showingAdd = !showingAdd;
+            addOrRemoveButton.setEnabled(true);
+
         }
     }
 }

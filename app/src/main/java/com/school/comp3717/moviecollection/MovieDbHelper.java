@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.omertron.themoviedbapi.model.MovieDb;
 import com.school.comp3717.moviecollection.MovieDbContract.MovieTable;
 
 import java.util.ArrayList;
@@ -140,6 +141,84 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         }
         return movie;
     }
+
+    public List<Integer> getMovieIDsExist(List<MovieDb> toSearch){
+
+
+        Cursor cr;
+        List<Integer> found = new ArrayList<>();
+        SQLiteDatabase sq = this.getReadableDatabase();
+
+        if (toSearch.isEmpty()){
+            return found;
+        }
+
+        String list = "(";
+
+        for(int i = 0; i < toSearch.size()-1; i++ ){
+           list += toSearch.get(i).getId() + ", ";
+        }
+        list += toSearch.get(toSearch.size() - 1).getId() + ")";
+
+        cr = sq.rawQuery("SELECT " + MovieTable.MOVIE_ID + " FROM " + MovieTable.TABLE_NAME
+                + " WHERE " + MovieTable.MOVIE_ID + " IN " + list , null);
+
+        if (cr.moveToFirst()) {
+            while (!cr.isAfterLast()) {
+                found.add(new Integer(cr.getInt(cr.getColumnIndex("movieId"))));
+                cr.moveToNext();
+            }
+        }
+        return found;
+    }
+
+    // Gets a movie from local DB using online DB ID; stores in Movie object
+    public List<Movie> searchMovie(String query) {
+        Cursor cr;
+        List<Movie> movies = new ArrayList<>();
+        SQLiteDatabase sq = this.getReadableDatabase();
+        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE LOWER(" +
+                MovieTable.TITLE + ") LIKE '%" + query.trim().toLowerCase() + "%' ORDER BY " +
+                MovieTable.POPULARITY + " DESC", null);
+        if (cr.moveToFirst()) {
+            while (!cr.isAfterLast()) {
+                movies.add(
+                        new Movie(cr.getInt(cr.getColumnIndex("movieId")),
+                                cr.getString(cr.getColumnIndex("title")),
+                                cr.getString(cr.getColumnIndex("releaseDate")),
+                                cr.getString(cr.getColumnIndex("filmRating")),
+                                cr.getInt(cr.getColumnIndex("runtime")),
+                                cr.getDouble(cr.getColumnIndex("voteAverage")),
+                                cr.getInt(cr.getColumnIndex("voteCount")),
+                                cr.getString(cr.getColumnIndex("tagLine")),
+                                cr.getString(cr.getColumnIndex("synopsis")),
+                                cr.getString(cr.getColumnIndex("posterUrl")),
+                                cr.getString(cr.getColumnIndex("genre")),
+                                cr.getString(cr.getColumnIndex("director")),
+                                cr.getString(cr.getColumnIndex("studio")),
+                                cr.getDouble(cr.getColumnIndex("popularity")),
+                                cr.getLong(cr.getColumnIndex("budget")),
+                                cr.getLong(cr.getColumnIndex("revenue")),
+                                cr.getInt(cr.getColumnIndex("myRating")),
+                                cr.getString(cr.getColumnIndex("myReview")),
+                                cr.getString(cr.getColumnIndex("lastWatched")),
+                                cr.getInt(cr.getColumnIndex("watchCount")),
+                                cr.getInt(cr.getColumnIndex("isLoaned")))
+                );
+                cr.moveToNext();
+            }
+        }
+        return movies;
+    }
+
+    public void removeMovieByID(int movieId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String removeMovieByIDCommand = "DELETE FROM " + MovieTable.TABLE_NAME + " WHERE " +
+                MovieTable.MOVIE_ID + " = " + movieId;
+        db.execSQL(removeMovieByIDCommand);
+
+    }
+
 
     // Gets all movies from local DB; stores in Movie ArrayList
     public List<Movie> getAllMovies() {
