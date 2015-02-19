@@ -179,7 +179,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sq = this.getReadableDatabase();
         cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE LOWER(" +
                 MovieTable.TITLE + ") LIKE '%" + query.trim().toLowerCase() + "%' ORDER BY " +
-                MovieTable.POPULARITY, null);
+                MovieTable.POPULARITY + " DESC", null);
         if (cr.moveToFirst()) {
             while (!cr.isAfterLast()) {
                 movies.add(
