@@ -1,5 +1,6 @@
 package com.school.comp3717.moviecollection.search;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,10 +8,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.omertron.themoviedbapi.model.MovieDb;
+import com.school.comp3717.moviecollection.MainActivity;
+import com.school.comp3717.moviecollection.Movie;
+import com.school.comp3717.moviecollection.MovieDbHelper;
 import com.school.comp3717.moviecollection.R;
 
 import java.util.ArrayList;
@@ -20,6 +27,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CollectionResultsList extends Fragment {
+    private static final int YEAR_LENGTH = 4;
+
     private ProgressBar collectionProgressBar;
     private TextView collectionResults;
     private ListView collectionItems;
@@ -42,41 +51,60 @@ public class CollectionResultsList extends Fragment {
         collectionItems.setVisibility(View.GONE);
 
         String query = this.getArguments().getString("QUERY");
-        Log.d("OnlineSearch", "Query: " + query);
+        Log.d("CollectionSearch", "Query: " + query);
         doQuery(query);
 
         return rootView;
     }
 
-    public void doQuery(String movie){
+    public void doQuery(String query){
         //TODO: do query stuff here
-        collectionResults.setVisibility(View.VISIBLE);
-        //collectionProgressBar.setVisibility(View.VISIBLE);
+
+        collectionResults.setVisibility(View.GONE);
+        collectionItems.setVisibility(View.GONE);
+        collectionProgressBar.setVisibility(View.VISIBLE);
+
+        QueryCollectionMoviesTask collectionMoviesTask = new QueryCollectionMoviesTask();
+        collectionMoviesTask.execute(query);
     }
 
-    public void setCollectionResults(){
-        //TODO:Display database results
-        //if we have results, we show list items
-        //collectionItems.setVisibility(View.VISIBLE);
+    public void setCollectionResults(List<Movie> results){
+        if(getActivity() == null){return;} //stop the crash on rapid back-button presses
+        if (results == null || results.isEmpty()){
+            collectionResults.setText(R.string.no_results);
+            collectionResults.setVisibility(View.VISIBLE);
+        }else{
+            CollectionSearchItemArrayAdapter adapter = new CollectionSearchItemArrayAdapter(getActivity(),
+                    results);
+            collectionItems.setAdapter(adapter);
+            collectionItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d("CollectionItemClick", "Collection item clicked at position : " + position);
+                    CollectionSearchItemArrayAdapter adapter = (CollectionSearchItemArrayAdapter)parent.getAdapter();
+                    Movie selected = adapter.getMovie(position);
+                    Log.d("CollectionItemClick", "Movie selected : " + selected.getTitle());
+                    collectionItems.setVisibility(View.GONE);
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    mainActivity.setMovie(selected);
+                }
+            });
+            collectionItems.setVisibility(View.VISIBLE);
+        }
 
-        //otherwise we show the results text and say 0
-        collectionResults.setVisibility(View.VISIBLE);
     }
 
     public void setCollectionError(){
-        //display error message
-        //collectionResults.setText("Error");
+        collectionResults.setText(R.string.db_error);
         collectionResults.setVisibility(View.VISIBLE);
     }
 
-    //TODO: set ArrayAdapter to our DB movie
-    /*
-    private class OnlineSearchItemArrayAdapter extends ArrayAdapter<MovieDb> {
+    private class CollectionSearchItemArrayAdapter extends ArrayAdapter<Movie> {
         private final Context context;
-        private final List<MovieDb> movies;
+        private final List<Movie> movies;
 
-        public OnlineSearchItemArrayAdapter(Context context, List<MovieDb> objects) {
-            super(context, R.layout.search_result_online_item, objects);
+        public CollectionSearchItemArrayAdapter(Context context, List<Movie> objects) {
+            super(context, R.layout.search_result_collection_item, objects);
             this.context = context;
             this.movies = objects;
         }
@@ -91,23 +119,26 @@ public class CollectionResultsList extends Fragment {
             TextView movieYear = (TextView) rowView.findViewById(R.id.resultCollectionItemYear);
 
             movieTitle.setText(movies.get(position).getTitle());
-            movieYear.setText(movies.get(position).getReleaseDate());
+            String release = movies.get(position).getReleaseDate();
+            if (release == null || release.trim().isEmpty()){
+                movieYear.setText("");
+            } else{
+                movieYear.setText("(" + release.substring(0, YEAR_LENGTH) + ")");
+            }
 
             return rowView;
         }
 
-        public MovieDb getMovie(int position){
+        public Movie getMovie(int position){
             return movies.get(position);
         }
     }
-    */
 
-    //TODO: Fix this up for our DB
-    private class QueryOnlineMoviesTask extends AsyncTask<String, Void, List<String>> {
-        protected List<String> doInBackground(String... query) {
+    private class QueryCollectionMoviesTask extends AsyncTask<String, Void, List<Movie>> {
+        protected List<Movie> doInBackground(String... query) {
             try {
-                //TODO: do DB search here
-                return new ArrayList<String>();
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+                return dbHelper.searchMovie(query[0]);
             } catch (Exception e) {
                 String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
                 Log.e("Search", msg);
@@ -115,12 +146,13 @@ public class CollectionResultsList extends Fragment {
             }
         }
 
-        protected void onPostExecute(List<String> result) {
+        protected void onPostExecute(List<Movie> result) {
+
             collectionProgressBar.setVisibility(View.GONE);
             if (result == null){
                 setCollectionError();
             }else {
-                setCollectionResults();
+                setCollectionResults(result);
             }
         }
 
