@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,20 +28,27 @@ import java.text.DecimalFormat;
 public class MovieDetails extends Fragment {
 
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.#");
-    private static final int YEAR_LENGTH = 4;
+    private static final NumberFormat  DOLLAR_FORMAT = NumberFormat.getCurrencyInstance();
+    private static final int           YEAR_LENGTH = 4;
 
-    Movie movie;
-    TextView title;
-    TextView year;
-    TextView tagLine;
-    TextView synopsis;
-    TextView director;
-    TextView userRating;
+    Movie     movie;
+    TextView  title;
+    TextView  tagLine;
+    TextView  synopsis;
+    TextView  director;
+    TextView  userRating;
+    TextView  releaseDate;
+    TextView  filmRating;
+    TextView  runtime;
+    TextView  genre;
+    TextView  studio;
+    TextView  budget;
+    TextView  revenue;
     RatingBar userRatingBar;
     RatingBar myRatingBar;
     ImageView poster;
-    EditText myReview;
-    Button addOrRemoveButton;
+    EditText  myReview;
+    Button    addOrRemoveButton;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -51,9 +59,9 @@ public class MovieDetails extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
+
         poster = (ImageView) rootView.findViewById(R.id.moviePoster);
         title = (TextView) rootView.findViewById(R.id.movieTitle);
-        year = (TextView) rootView.findViewById(R.id.movieYear);
         tagLine = (TextView) rootView.findViewById(R.id.tagLine);
         synopsis = (TextView) rootView.findViewById(R.id.synopsisBody);
         director = (TextView) rootView.findViewById(R.id.movieDirector);
@@ -61,6 +69,14 @@ public class MovieDetails extends Fragment {
         userRatingBar = (RatingBar) rootView.findViewById(R.id.userRatingBar);
         myRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
         myReview = (EditText) rootView.findViewById(R.id.myReview);
+        releaseDate = (TextView) rootView.findViewById(R.id.releaseDateField);
+        filmRating = (TextView) rootView.findViewById(R.id.filmRatingField);
+        runtime = (TextView) rootView.findViewById(R.id.runtimeField);
+        genre = (TextView) rootView.findViewById(R.id.genreField);
+        studio = (TextView) rootView.findViewById(R.id.studioField);
+        budget = (TextView) rootView.findViewById(R.id.budgetField);
+        revenue = (TextView) rootView.findViewById(R.id.revenueField);
+
         addOrRemoveButton = (Button) rootView.findViewById(R.id.addMovieButton);
 
         movie = this.getArguments().getParcelable("movie");
@@ -75,8 +91,7 @@ public class MovieDetails extends Fragment {
     }
 
     private void setDetails() {
-        title.setText(movie.getTitle());
-        setYearText(movie, year);
+        setTitleText(movie, title);
         setDirectorText(movie, director);
         setTagLineText(movie, tagLine);
         setSynopsisText(movie, synopsis);
@@ -87,13 +102,21 @@ public class MovieDetails extends Fragment {
         myRatingBar.setRating((float)movie.getMyRating());
         myReview.setText(movie.getMyReview());
 
+        setFieldFromText(movie.getReleaseDate(), releaseDate);
+        setFieldFromText(movie.getFilmRating(), filmRating);
+        setRuntimeText(movie, runtime);
+        setFieldFromArray(movie.getGenre(), genre);
+        setFieldFromArray(movie.getStudio(), studio);
+        setDollarText(movie.getBudget(), budget);
+        setDollarText(movie.getRevenue(), revenue);
+
         MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
         boolean currentState;
-        if (dbHelper.getMovieById(movie.getMovieId()) == null){
+        if (dbHelper.getMovieById(movie.getMovieId()) == null) {
             addOrRemoveButton.setText(R.string.add_movie_text);
             addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.green_300));
             currentState = true;
-        }else{
+        } else {
             addOrRemoveButton.setText(R.string.remove_movie_text);
             addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.red_800));
             currentState = false;
@@ -101,6 +124,28 @@ public class MovieDetails extends Fragment {
 
         addOrRemoveButton.setOnClickListener(
                 new AddButtonOnClickListener(getActivity(), addOrRemoveButton, currentState));
+    }
+
+    private void setDollarText(long value, TextView text) {
+        String dollarValue;
+        int centsIndex;
+        if (value > 0) {
+            dollarValue = DOLLAR_FORMAT.format(value);
+            if (dollarValue.endsWith(".00")) {
+                centsIndex = dollarValue.lastIndexOf(".00");
+                if (centsIndex != -1) {
+                    dollarValue = dollarValue.substring(1, centsIndex);
+                }
+            }
+            text.setText(dollarValue);
+        }
+    }
+
+    private void setRuntimeText(Movie movie, TextView runtime) {
+        String runtimeStr = Integer.toString(movie.getRuntime());
+        if (runtimeStr != null && !runtimeStr.isEmpty() && !runtimeStr.equals("0")) {
+            runtime.setText(runtimeStr + " minutes");
+        }
     }
 
     private void setDirectorText(Movie movie, TextView director) {
@@ -118,6 +163,21 @@ public class MovieDetails extends Fragment {
         } else {
             director.setVisibility(View.VISIBLE);
             director.setText(directedBy);
+        }
+    }
+
+    private void setFieldFromArray(String tabbedText, TextView field) {
+        String fieldStr = "";
+        String[] fieldArray = tabbedText.split("\t");
+        int num = 0;
+        for (String fieldName : fieldArray) {
+            fieldStr += (num == 0) ? "" : ",\n";
+            fieldStr += fieldName;
+            num++;
+        }
+        fieldStr = fieldStr.trim();
+        if (!fieldStr.isEmpty()) {
+            field.setText(fieldStr);
         }
     }
 
@@ -141,12 +201,20 @@ public class MovieDetails extends Fragment {
         }
     }
 
-    private void setYearText(Movie movie, TextView year) {
-        if (movie.getReleaseDate() == null || movie.getReleaseDate().isEmpty()) {
-            year.setVisibility(View.GONE);
-        } else {
-            year.setVisibility(View.VISIBLE);
-            year.setText("(" + movie.getReleaseDate().substring(0, YEAR_LENGTH) + ")");
+    private void setTitleText(Movie movie, TextView movieTitle) {
+        String title = movie.getTitle();
+        String year;
+        if (movie.getReleaseDate() != null && !movie.getReleaseDate().isEmpty()) {
+            year = " (" + movie.getReleaseDate().substring(0, YEAR_LENGTH) + ")";
+            title += year;
+        }
+        movieTitle.setText(title);
+    }
+
+    private void setFieldFromText(String str, TextView field) {
+        str = str.trim();
+        if (str != null && !str.isEmpty()) {
+            field.setText(str);
         }
     }
 
