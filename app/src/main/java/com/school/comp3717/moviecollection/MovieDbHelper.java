@@ -18,7 +18,7 @@ import java.util.List;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     // If DB schema changed, must increment DB version; otherwise, DB errors
-    public static final int              DATABASE_VERSION = 4;
+    public static final int              DATABASE_VERSION = 6;
     public static final String           DATABASE_NAME = "Movie.db";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -47,7 +47,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
             + MovieTable.POPULARITY +   REAL_TYPE + COMMA
             + MovieTable.BUDGET +       INT_TYPE  + COMMA
             + MovieTable.REVENUE +      INT_TYPE  + COMMA
-            + MovieTable.MY_RATING +    INT_TYPE +  COMMA
+            + MovieTable.MY_RATING +    REAL_TYPE + COMMA
             + MovieTable.MY_REVIEW +    TEXT_TYPE + COMMA
             + MovieTable.LAST_WATCHED + TEXT_TYPE + COMMA
             + MovieTable.WATCH_COUNT +  INT_TYPE +  COMMA
@@ -85,7 +85,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Add movie to local DB
+    // Adds movie to local DB
     public void addMovie(Movie movie) {
         if (!checkMovieExists(movie.getMovieId())) {
             SQLiteDatabase sq = this.getWritableDatabase();
@@ -121,7 +121,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Add movie to collection; adds movie to Movie table if it doesn't already exist
+    // Adds movie to collection; adds movie to Movie table if it doesn't already exist
     public void addMovieToCollection(Movie movie) {
         Date now = new Date();
         String date = DATE_FORMAT.format(now);
@@ -139,7 +139,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Movie added to collection");
     }
 
-    // Remove movie from Movie table
+    // Removes movie from Movie table
     public void removeMovieByID(int movieId){
         SQLiteDatabase db = this.getWritableDatabase();
         String removeMovieByIDCommand = "DELETE FROM " + MovieTable.TABLE_NAME + " WHERE " +
@@ -149,7 +149,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Movie removed from Movie table");
     }
 
-    // Remove movie from collection but remains in Movie table (for watch count, review, rating, etc.)
+    // Removes movie from collection but remains in Movie table (for watch count, review, rating, etc.)
     public void removeMovieFromCollection(int movieId){
         SQLiteDatabase db = this.getWritableDatabase();
         String setCollectionCmd = "UPDATE " + MovieTable.TABLE_NAME + " SET " + MovieTable.IS_COLLECTED
@@ -186,7 +186,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                               cr.getDouble(cr.getColumnIndex("popularity")),
                               cr.getLong(cr.getColumnIndex("budget")),
                               cr.getLong(cr.getColumnIndex("revenue")),
-                              cr.getInt(cr.getColumnIndex("myRating")),
+                              cr.getDouble(cr.getColumnIndex("myRating")),
                               cr.getString(cr.getColumnIndex("myReview")),
                               cr.getString(cr.getColumnIndex("lastWatched")),
                               cr.getInt(cr.getColumnIndex("watchCount")),
@@ -199,7 +199,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return movie;
     }
 
-    // Checks if movie exists in local DB
+    // Checks if movie exists in local DB; includes movies not in collection
     public Boolean checkMovieExists(int movieId) {
         Cursor cr;
         SQLiteDatabase sq = this.getReadableDatabase();
@@ -208,7 +208,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return (cr.getCount() > 0);
     }
 
-    // Gets movies that exist in collection
+    // Gets movies in collection that exist in MovieDb list provided
     public List<Integer> getMovieIDsExist(List<MovieDb> toSearch){
 
         Cursor cr;
@@ -267,7 +267,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                                 cr.getDouble(cr.getColumnIndex("popularity")),
                                 cr.getLong(cr.getColumnIndex("budget")),
                                 cr.getLong(cr.getColumnIndex("revenue")),
-                                cr.getInt(cr.getColumnIndex("myRating")),
+                                cr.getDouble(cr.getColumnIndex("myRating")),
                                 cr.getString(cr.getColumnIndex("myReview")),
                                 cr.getString(cr.getColumnIndex("lastWatched")),
                                 cr.getInt(cr.getColumnIndex("watchCount")),
@@ -283,12 +283,13 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return movies;
     }
 
-    // Gets all movies from local DB; stores in Movie ArrayList
-    public List<Movie> getAllMovies() {
+    // Gets entire movie collection in local DB; stores in Movie ArrayList
+    public List<Movie> getMovieCollection() {
         Cursor cr;
         List<Movie> movies = new ArrayList<>();
         SQLiteDatabase sq = this.getReadableDatabase();
-        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME, null);
+        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
+                         + MovieTable.IS_COLLECTED + " = 1", null);
         if (cr.moveToFirst()) {
             while (!cr.isAfterLast()) {
                 movies.add(
@@ -308,7 +309,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                               cr.getDouble(cr.getColumnIndex("popularity")),
                               cr.getLong(cr.getColumnIndex("budget")),
                               cr.getLong(cr.getColumnIndex("revenue")),
-                              cr.getInt(cr.getColumnIndex("myRating")),
+                              cr.getDouble(cr.getColumnIndex("myRating")),
                               cr.getString(cr.getColumnIndex("myReview")),
                               cr.getString(cr.getColumnIndex("lastWatched")),
                               cr.getInt(cr.getColumnIndex("watchCount")),
@@ -339,6 +340,17 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         sq.execSQL(lastWatchedCmd);
         sq.execSQL(watchCountCmd);
         sq.close();
-        Log.d(TAG, "Movie lastWatched and watchCount updated");
+        Log.d(TAG, "Movie's lastWatched and watchCount updated");
+    }
+
+    public void updateMyRating(Movie movie, float rating) {
+        SQLiteDatabase sq = this.getWritableDatabase();
+        movie.setMyRating(rating);
+        String myRatingCmd = "UPDATE " + MovieTable.TABLE_NAME + " SET " + MovieTable.MY_RATING
+                + " = " + movie.getMyRating() + " WHERE " + MovieTable.MOVIE_ID + " = "
+                + movie.getMovieId();
+        sq.execSQL(myRatingCmd);
+        sq.close();
+        Log.d(TAG, "Movie's myRating updated");
     }
 }

@@ -56,8 +56,8 @@
     <string name="add_movie_text">Add Movie</string>
     <string name="remove_movie_text">Remove Movie</string>
     <string name="synopsis_header_text">Synopsis</string>
-    <string name="synopsis_text">Synopsis of movie...</string>
-    <string name="user_rating_text">User Rating:\n##/10 (### votes)</string>
+    <string name="synopsis_text">Synopsis of movie</string>
+    <string name="user_rating_text">User Rating:\n##/5 (### votes)</string>
     <string name="my_rating_text">My Rating</string>
     <string name="review_header_text">My Review</string>
     <string name="movie_details_header">Movie Details</string>

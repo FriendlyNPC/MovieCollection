@@ -29,7 +29,7 @@ public class Movie implements Parcelable {
     private double popularity;
     private long budget;
     private long revenue;
-    private int myRating;
+    private double myRating;
     private String myReview;
     private String lastWatched;
     private int watchCount;
@@ -54,7 +54,7 @@ public class Movie implements Parcelable {
                  double popularity,
                  long budget,
                  long revenue,
-                 int myRating,
+                 double myRating,
                  String myReview,
                  String lastWatched,
                  int watchCount,
@@ -96,7 +96,7 @@ public class Movie implements Parcelable {
         this.releaseDate = source.getReleaseDate();
         this.filmRating = getReleaseRating(source.getReleases(), country);
         this.runtime = source.getRuntime();
-        this.voteAverage = source.getVoteAverage();
+        this.voteAverage = source.getVoteAverage() / 2; // Make it out of 5 instead of 10
         this.voteCount = source.getVoteCount();
         this.tagLine = source.getTagline();
         this.synopsis = source.getOverview();
@@ -184,7 +184,7 @@ public class Movie implements Parcelable {
         out.writeDouble(popularity);
         out.writeLong(budget);
         out.writeLong(revenue);
-        out.writeInt(myRating);
+        out.writeDouble(myRating);
         out.writeString(myReview);
         out.writeString(lastWatched);
         out.writeInt(watchCount);
@@ -222,7 +222,7 @@ public class Movie implements Parcelable {
         this.popularity = in.readDouble();
         this.budget = in.readLong();
         this.revenue = in.readLong();
-        this.myRating = in.readInt();
+        this.myRating = in.readDouble();
         this.myReview = in.readString();
         this.lastWatched = in.readString();
         this.watchCount = in.readInt();
@@ -359,11 +359,11 @@ public class Movie implements Parcelable {
         this.revenue = revenue;
     }
 
-    public int getMyRating() {
+    public double getMyRating() {
         return myRating;
     }
 
-    public void setMyRating(int myRating) {
+    public void setMyRating(double myRating) {
         this.myRating = myRating;
     }
 

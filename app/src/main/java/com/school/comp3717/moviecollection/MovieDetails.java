@@ -104,8 +104,8 @@ public class MovieDetails extends Fragment {
         setSynopsisText(movie, synopsis);
         synopsis.setText(movie.getSynopsis());
         userRating.setText("User Rating:\n" + RATING_FORMAT.format(movie.getVoteAverage())
-                           + "/10 (" + movie.getVoteCount() + " votes)");
-        userRatingBar.setRating((float)movie.getVoteAverage() / 2);
+                           + "/5 (" + movie.getVoteCount() + " votes)");
+        userRatingBar.setRating((float)movie.getVoteAverage());
         myRatingBar.setRating((float)movie.getMyRating());
         myReview.setText(movie.getMyReview());
 
@@ -135,6 +135,8 @@ public class MovieDetails extends Fragment {
                 new AddButtonOnClickListener(getActivity(), addOrRemoveButton, currentState));
         watchButton.setOnClickListener(
                 new WatchButtonOnClickListener(getActivity(), watchButton));
+        myRatingBar.setOnRatingBarChangeListener(
+                new RatingBarOnChangeListener(getActivity(), myRatingBar));
     }
 
     private void setDollarText(long value, TextView text) {
@@ -321,4 +323,27 @@ public class MovieDetails extends Fragment {
             watchButton.setEnabled(true);
         }
     }
+
+    private class RatingBarOnChangeListener implements RatingBar.OnRatingBarChangeListener {
+        Context context;
+        RatingBar myRating;
+
+        public RatingBarOnChangeListener(Context context, RatingBar myRating) {
+            super();
+            this.context = context;
+            this.myRating = myRating;
+        }
+
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean userTouch) {
+            myRating.setEnabled(false);
+            MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+            dbHelper.addMovie(movie);
+            dbHelper.updateMyRating(movie, rating);
+            Toast.makeText(context, movie.getTitle() + " has been rated "
+                    + movie.getMyRating() + " out of 5", Toast.LENGTH_SHORT).show();
+            myRating.setEnabled(true);
+        }
+    }
+
 }
