@@ -60,6 +60,7 @@
     <string name="user_rating_text">User Rating:\n##/5 (### votes)</string>
     <string name="my_rating_text">My Rating</string>
     <string name="review_header_text">My Review</string>
+    <string name="save_review_text">Save Review</string>
     <string name="movie_details_header">Movie Details</string>
     <string name="film_rating_label">Film Rating:</string>
     <string name="film_rating_field">N/A</string>

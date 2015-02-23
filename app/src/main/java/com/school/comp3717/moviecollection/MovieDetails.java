@@ -53,6 +53,7 @@ public class MovieDetails extends Fragment {
     EditText  myReview;
     Button    watchButton;
     Button    addOrRemoveButton;
+    Button    reviewButton;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -85,6 +86,7 @@ public class MovieDetails extends Fragment {
 
         watchButton = (Button) rootView.findViewById(R.id.watchMovieButton);
         addOrRemoveButton = (Button) rootView.findViewById(R.id.addMovieButton);
+        reviewButton = (Button) rootView.findViewById(R.id.saveReviewButton);
 
         movie = this.getArguments().getParcelable("movie");
         setDetails();
@@ -137,6 +139,8 @@ public class MovieDetails extends Fragment {
                 new WatchButtonOnClickListener(getActivity(), watchButton));
         myRatingBar.setOnRatingBarChangeListener(
                 new RatingBarOnChangeListener(getActivity(), myRatingBar));
+        reviewButton.setOnClickListener(
+                new ReviewButtonOnClickListener(getActivity(), reviewButton, myReview));
     }
 
     private void setDollarText(long value, TextView text) {
@@ -346,4 +350,27 @@ public class MovieDetails extends Fragment {
         }
     }
 
+    private class ReviewButtonOnClickListener implements View.OnClickListener {
+        Context context;
+        Button reviewButton;
+        EditText review;
+
+        public ReviewButtonOnClickListener(Context context, Button reviewButton, EditText review) {
+            super();
+            this.context = context;
+            this.reviewButton = reviewButton;
+            this.review = review;
+        }
+
+        @Override
+        public void onClick(View view) {
+            String reviewText = review.getText().toString();
+            reviewButton.setEnabled(false);
+            MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+            dbHelper.addMovie(movie);
+            dbHelper.updateMyReview(movie, reviewText);
+            Toast.makeText(context, "Your review has been saved.", Toast.LENGTH_SHORT).show();
+            reviewButton.setEnabled(true);
+        }
+    }
 }

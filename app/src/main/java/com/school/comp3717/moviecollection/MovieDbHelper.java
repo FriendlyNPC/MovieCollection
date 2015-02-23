@@ -18,7 +18,7 @@ import java.util.List;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     // If DB schema changed, must increment DB version; otherwise, DB errors
-    public static final int              DATABASE_VERSION = 6;
+    public static final int              DATABASE_VERSION = 7;
     public static final String           DATABASE_NAME = "Movie.db";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -347,10 +347,21 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sq = this.getWritableDatabase();
         movie.setMyRating(rating);
         String myRatingCmd = "UPDATE " + MovieTable.TABLE_NAME + " SET " + MovieTable.MY_RATING
-                + " = " + movie.getMyRating() + " WHERE " + MovieTable.MOVIE_ID + " = "
-                + movie.getMovieId();
+                             + " = " + movie.getMyRating() + " WHERE " + MovieTable.MOVIE_ID + " = "
+                             + movie.getMovieId();
         sq.execSQL(myRatingCmd);
         sq.close();
         Log.d(TAG, "Movie's myRating updated");
+    }
+
+    public void updateMyReview(Movie movie, String review) {
+        SQLiteDatabase sq = this.getWritableDatabase();
+        movie.setMyReview(review);
+        String myReviewCmd = "UPDATE " + MovieTable.TABLE_NAME + " SET " + MovieTable.MY_REVIEW
+                             + " = \"" + movie.getMyReview() + "\" WHERE " + MovieTable.MOVIE_ID
+                             + " = " + movie.getMovieId();
+        sq.execSQL(myReviewCmd);
+        sq.close();
+        Log.d(TAG, "Movie's myReview updated");
     }
 }
