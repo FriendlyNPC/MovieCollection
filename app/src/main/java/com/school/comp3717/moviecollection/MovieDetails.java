@@ -30,6 +30,7 @@ public class MovieDetails extends Fragment {
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.#");
     private static final NumberFormat  DOLLAR_FORMAT = NumberFormat.getCurrencyInstance();
     private static final int           YEAR_LENGTH = 4;
+    private static final int           DATE_LENGTH = 10;
 
     Movie     movie;
     TextView  title;
@@ -44,10 +45,13 @@ public class MovieDetails extends Fragment {
     TextView  studio;
     TextView  budget;
     TextView  revenue;
+    TextView  lastWatched;
+    TextView  watchCount;
     RatingBar userRatingBar;
     RatingBar myRatingBar;
     ImageView poster;
     EditText  myReview;
+    Button    watchButton;
     Button    addOrRemoveButton;
 
     public MovieDetails() {
@@ -76,7 +80,10 @@ public class MovieDetails extends Fragment {
         studio = (TextView) rootView.findViewById(R.id.studioField);
         budget = (TextView) rootView.findViewById(R.id.budgetField);
         revenue = (TextView) rootView.findViewById(R.id.revenueField);
+        lastWatched = (TextView) rootView.findViewById(R.id.lastWatchedField);
+        watchCount = (TextView) rootView.findViewById(R.id.watchCountField);
 
+        watchButton = (Button) rootView.findViewById(R.id.watchMovieButton);
         addOrRemoveButton = (Button) rootView.findViewById(R.id.addMovieButton);
 
         movie = this.getArguments().getParcelable("movie");
@@ -109,10 +116,12 @@ public class MovieDetails extends Fragment {
         setFieldFromArray(movie.getStudio(), studio);
         setDollarText(movie.getBudget(), budget);
         setDollarText(movie.getRevenue(), revenue);
+        setWatchFields(movie, lastWatched, watchCount);
 
         MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
         boolean currentState;
-        if (dbHelper.getMovieById(movie.getMovieId()) == null) {
+        if (dbHelper.getMovieById(movie.getMovieId()) == null ||
+            dbHelper.getMovieById(movie.getMovieId()).isCollected() == 0) {
             addOrRemoveButton.setText(R.string.add_movie_text);
             addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.green_300));
             currentState = true;
@@ -124,6 +133,8 @@ public class MovieDetails extends Fragment {
 
         addOrRemoveButton.setOnClickListener(
                 new AddButtonOnClickListener(getActivity(), addOrRemoveButton, currentState));
+        watchButton.setOnClickListener(
+                new WatchButtonOnClickListener(getActivity(), watchButton));
     }
 
     private void setDollarText(long value, TextView text) {
@@ -212,9 +223,18 @@ public class MovieDetails extends Fragment {
     }
 
     private void setFieldFromText(String str, TextView field) {
-        str = str.trim();
         if (str != null && !str.isEmpty()) {
             field.setText(str);
+        }
+    }
+
+    private void setWatchFields(Movie movie, TextView lastWatched, TextView watchCount) {
+        String count = Integer.toString(movie.getWatchCount());
+        String watched;
+        if (movie.getLastWatched() != null && !movie.getLastWatched().isEmpty()) {
+            watched = movie.getLastWatched().substring(0, DATE_LENGTH);
+            lastWatched.setText(watched);
+            watchCount.setText(count);
         }
     }
 
@@ -243,12 +263,12 @@ public class MovieDetails extends Fragment {
         }
     }
 
-    private class AddButtonOnClickListener implements View.OnClickListener{
+    private class AddButtonOnClickListener implements View.OnClickListener {
         Context context;
         Button addOrRemoveButton;
         boolean showingAdd;
 
-        public AddButtonOnClickListener(Context context, Button addOrRemoveButton, boolean showAdd){
+        public AddButtonOnClickListener(Context context, Button addOrRemoveButton, boolean showAdd) {
             super();
             this.context = context;
             this.addOrRemoveButton = addOrRemoveButton;
@@ -260,13 +280,13 @@ public class MovieDetails extends Fragment {
             addOrRemoveButton.setEnabled(false);
             MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
 
-            if (showingAdd){
-                dbHelper.addMovie(movie);
+            if (showingAdd) {
+                dbHelper.addMovieToCollection(movie);
                 addOrRemoveButton.setText(R.string.remove_movie_text);
                 addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.red_800));
                 Toast.makeText(context, movie.getTitle() + " added to collection.", Toast.LENGTH_LONG).show();
-            }else {
-                dbHelper.removeMovieByID(movie.getMovieId());
+            } else {
+                dbHelper.removeMovieFromCollection(movie.getMovieId());
                 addOrRemoveButton.setText(R.string.add_movie_text);
                 addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.green_300));
                 Toast.makeText(context, movie.getTitle() + " removed from collection.", Toast.LENGTH_LONG).show();
@@ -275,6 +295,30 @@ public class MovieDetails extends Fragment {
             showingAdd = !showingAdd;
             addOrRemoveButton.setEnabled(true);
 
+        }
+    }
+
+    private class WatchButtonOnClickListener implements View.OnClickListener {
+        Context context;
+        Button watchButton;
+
+        public WatchButtonOnClickListener(Context context, Button watchButton) {
+            super();
+            this.context = context;
+            this.watchButton = watchButton;
+        }
+
+        @Override
+        public void onClick(View view) {
+            watchButton.setEnabled(false);
+            MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+            dbHelper.addMovie(movie);
+            dbHelper.updateWatchCount(movie);
+            String times = (movie.getWatchCount() > 1) ? " times." : " time.";
+            Toast.makeText(context, movie.getTitle() + " has been watched "
+                           + movie.getWatchCount() + times, Toast.LENGTH_SHORT).show();
+            setWatchFields(movie, lastWatched, watchCount);
+            watchButton.setEnabled(true);
         }
     }
 }

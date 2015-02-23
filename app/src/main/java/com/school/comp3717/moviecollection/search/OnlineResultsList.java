@@ -150,7 +150,7 @@ public class OnlineResultsList extends Fragment {
 
             boolean exists = inDb.contains(movies.get(position).getId());
 
-            if ( exists == true){
+            if (exists) {
                 quickAdd.setVisibility(View.GONE);
             }
 
@@ -199,10 +199,17 @@ public class OnlineResultsList extends Fragment {
         protected Movie doInBackground(MovieDb... query) {
             try {
                 Movie movie = null;
-                TheMovieDbApi api = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
-                // Request more movie info; need to explicitly request releases and cast info
-                movie = new Movie(api.getMovieInfo(query[0].getId(), null, "releases,casts"));
-                return movie;
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+                // If movie in local DB, populate Movie Details with local DB data
+                if (dbHelper.checkMovieExists(query[0].getId())) {
+                    return dbHelper.getMovieById(query[0].getId());
+                } else {
+                    // If not in local DB, get info from online DB
+                    TheMovieDbApi api = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
+                    // Need to explicitly request releases and cast info
+                    movie = new Movie(api.getMovieInfo(query[0].getId(), null, "releases,casts"));
+                    return movie;
+                }
             } catch (MovieDbException e) {
                 Log.e("Search", "MovieDB  (MovieDbException) error");
                 String msg = (e.getMessage() == null) ? "MovieDB get movie info failed!" : e.getMessage();
@@ -268,8 +275,7 @@ public class OnlineResultsList extends Fragment {
 
                 MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
 
-                //TODO: make sure addMovie actually works
-                dbHelper.addMovie(result);
+                dbHelper.addMovieToCollection(result);
 
                 Toast.makeText(
                         getActivity(),

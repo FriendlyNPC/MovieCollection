@@ -49,12 +49,22 @@
             android:layout_marginTop="5dp" />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:id="@+id/watchMovieButton"
+            android:drawableTop="@drawable/eye_white"
+            android:layout_marginLeft="10dp"
+            android:layout_alignBottom="@+id/moviePoster"
+            android:layout_toRightOf="@id/moviePoster" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
             android:id="@+id/addMovieButton"
             android:text="@string/add_movie_text"
-            android:layout_alignBottom="@id/moviePoster"
-            android:layout_toRightOf="@id/moviePoster"
+            android:gravity="center"
+            android:layout_alignBottom="@id/watchMovieButton"
+            android:layout_toRightOf="@id/watchMovieButton"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp" />
 
@@ -84,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris..."
+            android:text="@string/synopsis_text"
             android:id="@+id/synopsisBody"
             android:textColor="@color/grey_600"
             android:layout_below="@id/synopsisHeader"
@@ -256,6 +266,50 @@
                 <TextView
                     android:text="@string/release_date_field"
                     android:id="@+id/releaseDateField"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/grey_600"
+                    android:layout_marginLeft="10dp" />
+
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/lastWatchedRow"
+                android:padding="5dp" >
+
+                <TextView
+                    android:text="@string/last_watched_label"
+                    android:id="@+id/lastWatchedLabel"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:text="@string/last_watched_field"
+                    android:id="@+id/lastWatchedField"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/grey_600"
+                    android:layout_marginLeft="10dp" />
+
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/watchCountRow"
+                android:padding="5dp" >
+
+                <TextView
+                    android:text="@string/watch_count_label"
+                    android:id="@+id/watchCountLabel"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:text="@string/watch_count_field"
+                    android:id="@+id/watchCountField"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/grey_600"
                     android:layout_marginLeft="10dp" />

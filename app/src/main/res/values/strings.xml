@@ -56,6 +56,7 @@
     <string name="add_movie_text">Add Movie</string>
     <string name="remove_movie_text">Remove Movie</string>
     <string name="synopsis_header_text">Synopsis</string>
+    <string name="synopsis_text">Synopsis of movie...</string>
     <string name="user_rating_text">User Rating:\n##/10 (### votes)</string>
     <string name="my_rating_text">My Rating</string>
     <string name="review_header_text">My Review</string>
@@ -74,6 +75,10 @@
     <string name="revenue_field">N/A</string>
     <string name="release_date_label">Release Date:</string>
     <string name="release_date_field">N/A</string>
+    <string name="last_watched_label">Last Watched:</string>
+    <string name="last_watched_field">Never</string>
+    <string name="watch_count_label">Watch Count:</string>
+    <string name="watch_count_field">0 times</string>
 
     // About fragment
     <string name="version_text">Version 0.1\n© 2015 Team KGY</string>

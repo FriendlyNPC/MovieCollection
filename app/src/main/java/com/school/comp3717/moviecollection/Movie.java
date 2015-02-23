@@ -34,6 +34,8 @@ public class Movie implements Parcelable {
     private String lastWatched;
     private int watchCount;
     private int isLoaned;
+    private String dateAdded;
+    private int isCollected;
 
     // Create a movie object from app database
     public Movie(int movieId,
@@ -56,7 +58,9 @@ public class Movie implements Parcelable {
                  String myReview,
                  String lastWatched,
                  int watchCount,
-                 int isLoaned) {
+                 int isLoaned,
+                 String dateAdded,
+                 int isCollected) {
         this.movieId = movieId;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -78,6 +82,8 @@ public class Movie implements Parcelable {
         this.lastWatched = lastWatched;
         this.watchCount = watchCount;
         this.isLoaned = isLoaned;
+        this.dateAdded = dateAdded;
+        this.isCollected = isCollected;
     }
 
     // Create a movie object from online database using MovieDb wrapper
@@ -107,6 +113,8 @@ public class Movie implements Parcelable {
         this.lastWatched = null;
         this.watchCount = 0;
         this.isLoaned = 0;
+        this.dateAdded = null;
+        this.isCollected = 0;
     }
 
     // Returns genres in a tab-delimited string
@@ -181,6 +189,8 @@ public class Movie implements Parcelable {
         out.writeString(lastWatched);
         out.writeInt(watchCount);
         out.writeInt(isLoaned);
+        out.writeString(dateAdded);
+        out.writeInt(isCollected);
     }
 
     // This is used to regenerate the object; all Parcelables must have a CREATOR that implements these two methods
@@ -217,6 +227,8 @@ public class Movie implements Parcelable {
         this.lastWatched = in.readString();
         this.watchCount = in.readInt();
         this.isLoaned = in.readInt();
+        this.dateAdded = in.readString();
+        this.isCollected = in.readInt();
     }
 
     public int getMovieId() {
@@ -385,5 +397,21 @@ public class Movie implements Parcelable {
 
     public void setLoaned(int isLoaned) {
         this.isLoaned = isLoaned;
+    }
+
+    public String getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(String dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
+    public int isCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(int isCollected) {
+        this.isCollected = isCollected;
     }
 }

@@ -30,6 +30,8 @@ public final class MovieDbContract {
         public static final String LAST_WATCHED = "lastWatched";
         public static final String WATCH_COUNT = "watchCount";
         public static final String IS_LOANED = "isLoaned";
+        public static final String DATE_ADDED = "dateAdded";
+        public static final String IS_COLLECTED = "isCollected";
     }
 
     // public abstract class GenreTable implements BaseColumns {}
