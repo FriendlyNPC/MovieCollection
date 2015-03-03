@@ -18,6 +18,7 @@
 
     <string name="search_toolbar">Search</string>
     <string name="movie_details_toolbar">Movie Details</string>
+    <string name="random_picks_result_toolbar">Random Picks Result</string>
 
     // Home fragment
     <string name="new_releases">New Releases</string>
@@ -85,8 +86,15 @@
     <string name="preferences_header">Set Preferences for Random Picks</string>
     <string name="genre_pref_label">Genre</string>
     <string name="runtime_pref_label">Max Runtime</string>
+    <string name="runtime_value">60 min</string>
     <string name="film_rating_pref_label">Film Rating</string>
-    <string name="watched_pref_label">Not Watched</string>
+    <string name="unwatched_pref_label">Unwatched</string>
+    <string name="pref_submit">Get Random Pick</string>
+
+    // Random Picks Result fragment
+    <string name="random_picks_result_tag">random_picks_result_tag</string>
+    <string name="random_picks_title">Movie Title\n(Year)</string>
+    <string name="next_pick">Next Random Pick</string>
 
     // About fragment
     <string name="version_text">Version 0.1\n© 2015 Team KGY</string>

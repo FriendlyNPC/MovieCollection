@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import com.school.comp3717.moviecollection.tools.DownloadPosterTask;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -241,31 +243,6 @@ public class MovieDetails extends Fragment {
             watched = movie.getLastWatched().substring(0, DATE_LENGTH);
             lastWatched.setText(watched);
             watchCount.setText(count);
-        }
-    }
-
-    private class DownloadPosterTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadPosterTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urlDisplay = urls[0];
-            Bitmap mIcon = null;
-            try {
-                InputStream in = new java.net.URL(urlDisplay).openStream();
-                mIcon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
         }
     }
 

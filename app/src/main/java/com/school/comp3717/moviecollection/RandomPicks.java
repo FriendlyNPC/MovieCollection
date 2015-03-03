@@ -1,14 +1,28 @@
 package com.school.comp3717.moviecollection;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,8 +31,21 @@ import java.util.List;
  */
 public class RandomPicks extends Fragment {
 
-    private Spinner genreSpinner;
-    private Spinner filmRatingSpinner;
+    private static final int SEEKBAR_STEP = 5;
+    private static final int SEEKBAR_MAX  = 185;
+    private static final int SEEKBAR_MIN  = 60;
+
+    private Spinner          genreSpinner;
+    private Spinner          filmRatingSpinner;
+    private SeekBar          runtimeSeekBar;
+    private TextView         runtimeValue;
+    private CheckBox         unwatchedCheckBox;
+    private Button           submitButton;
+    private String           genre;
+    private String           filmRating;
+    private int              runtime = 60;
+    private boolean          isUnwatched = false;
+    private ArrayList<Movie> randomPicks = new ArrayList<>();
 
     public RandomPicks() {
         // Required empty public constructor
@@ -27,10 +54,19 @@ public class RandomPicks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_random_picks, container, false);
+
         genreSpinner = (Spinner) rootView.findViewById(R.id.genreSpinner);
         filmRatingSpinner = (Spinner) rootView.findViewById(R.id.filmRatingSpinner);
+        runtimeSeekBar = (SeekBar) rootView.findViewById(R.id.runtimeSeekBar);
+        runtimeValue = (TextView) rootView.findViewById(R.id.runtimeValue);
+        unwatchedCheckBox = (CheckBox) rootView.findViewById(R.id.unwatchedCheckBox);
+        submitButton = (Button) rootView.findViewById(R.id.prefSubmitButton);
+
         genreSpinner.setAdapter(loadSpinnerData("genre"));
         filmRatingSpinner.setAdapter(loadSpinnerData("filmRating"));
+        setSeekBar(runtimeSeekBar, runtimeValue);
+
+        setSubmitButton(submitButton);
 
         // Inflate the layout for this fragment
         return rootView;
@@ -48,5 +84,48 @@ public class RandomPicks extends Fragment {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         return dataAdapter;
+    }
+
+    public void setSeekBar(final SeekBar seekBar, final TextView value) {
+        /* If you want values from 3 to 5 with a step of 0.1 (3, 3.1, 3.2, ..., 5)
+        *  this means that you have 21 possible values in the seekBar.
+        *  So the range of the seek bar will be [0 ; (5-3)/0.1 = 20].
+        */
+        seekBar.setMax((SEEKBAR_MAX - SEEKBAR_MIN) / SEEKBAR_STEP);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar runtimeSeekBar) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar runtimeSeekBar) {}
+
+            @Override
+            public void onProgressChanged(SeekBar runtimeSeekBar, int progress, boolean fromUser) {
+                int seekBarValue = SEEKBAR_MIN + (progress * SEEKBAR_STEP);
+                if (seekBarValue == SEEKBAR_MAX) {
+                    runtime = 9999;
+                    value.setText("No limit");
+                } else {
+                    runtime = seekBarValue;
+                    value.setText(Integer.valueOf(seekBarValue).toString() + " min");
+                }
+            }
+        });
+    }
+
+    public void setSubmitButton(Button button) {
+        final MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+        button.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                genre = (String)genreSpinner.getSelectedItem();
+                filmRating = (String)filmRatingSpinner.getSelectedItem();
+                isUnwatched = unwatchedCheckBox.isChecked();
+                randomPicks = dbHelper.getRandomPicks(genre, filmRating, runtime, isUnwatched);
+                MainActivity mainActivity = (MainActivity)getActivity();
+                mainActivity.setRandomPicks(randomPicks);
+            }
+        });
     }
 }

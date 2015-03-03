@@ -21,16 +21,16 @@ import android.widget.ListView;
 
 import com.school.comp3717.moviecollection.search.SearchResults;
 
+import java.util.ArrayList;
+
 public class MainActivity extends ActionBarActivity {
-    private DrawerLayout            drawerLayoutt;
+    private DrawerLayout            drawerLayout;
     private ListView                listView;
     private ActionBarDrawerToggle   actionBarDrawerToggle;
     private Toolbar                 toolbar;
 
     private String[]                navigationDrawerItems;
     private Fragment[]              appFragments;
-
-    private MovieDbHelper           mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         navigationDrawerItems = getResources().getStringArray(R.array.navigation_drawer_items);
-        drawerLayoutt = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         listView = (ListView) findViewById(R.id.left_drawer);
 
         setSupportActionBar(toolbar);
@@ -52,13 +52,14 @@ public class MainActivity extends ActionBarActivity {
         listView.setAdapter(new ArrayAdapter<String>(this, R.layout.nav_item, navigationDrawerItems));
         listView.setOnItemClickListener(new DrawerItemClickListener());
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayoutt, toolbar, R.string.app_name, R.string.app_name);
-        drawerLayoutt.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        // secondary screens
         appFragments = new Fragment[7];
         appFragments[0] = new Home();
         appFragments[1] = new MyCollection();
@@ -67,14 +68,9 @@ public class MainActivity extends ActionBarActivity {
         appFragments[4] = new RandomPicks();
         appFragments[5] = new MovieMetrics();
         appFragments[6] = new About();
-        //secondary screens
 
-        //set homescreen
+        // set home screen
         selectItem(0);
-
-
-        // Create and initialize database and movie table
-        mDbHelper = new MovieDbHelper(this);
     }
 
     @Override
@@ -103,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
         // update selected item and title, then close the drawer
         listView.setItemChecked(position, true);
         setTitle(navigationDrawerItems[position]);
-        drawerLayoutt.closeDrawer(listView);
+        drawerLayout.closeDrawer(listView);
     }
 
     @Override
@@ -126,7 +122,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggles
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -205,7 +201,7 @@ public class MainActivity extends ActionBarActivity {
             // update selected item and title, then close the drawer
             //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
             setTitle(R.string.search_results);
-            drawerLayoutt.closeDrawer(listView);
+            drawerLayout.closeDrawer(listView);
         }
     }
 
@@ -239,7 +235,28 @@ public class MainActivity extends ActionBarActivity {
         // update selected item and title, then close the drawer
         //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
         setTitle(R.string.movie_details_toolbar);
-        drawerLayoutt.closeDrawer(listView);
+        drawerLayout.closeDrawer(listView);
+    }
+
+    public void setRandomPicks(ArrayList<Movie> picks) {
+        Log.d("SetRandomPicks" , "Random picks set");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        RandomPicksResult picksResultFragment = new RandomPicksResult();
+
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("randomPicks", picks);
+
+        picksResultFragment.setArguments(args);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, picksResultFragment, getResources().getString(R.string.random_picks_result_tag))
+                .addToBackStack(getResources().getString(R.string.random_picks_result_tag))
+                .commit();
+
+        // update selected item and title, then close the drawer
+        setTitle(R.string.random_picks_result_toolbar);
+        drawerLayout.closeDrawer(listView);
     }
 
     public void listDetailsClick(View v) {

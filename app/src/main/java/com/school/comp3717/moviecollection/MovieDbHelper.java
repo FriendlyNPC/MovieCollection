@@ -144,7 +144,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     }
 
     // Removes movie from Movie table
-    public void removeMovieByID(int movieId){
+    public void removeMovieByID(int movieId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String removeMovieByIDCommand = "DELETE FROM " + MovieTable.TABLE_NAME + " WHERE " +
                                         MovieTable.MOVIE_ID + " = " + movieId;
@@ -154,7 +154,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     }
 
     // Removes movie from collection but remains in Movie table (for watch count, review, rating, etc.)
-    public void removeMovieFromCollection(int movieId){
+    public void removeMovieFromCollection(int movieId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String setCollectionCmd = "UPDATE " + MovieTable.TABLE_NAME + " SET " + MovieTable.IS_COLLECTED
                                   + " = " + "0 WHERE " + MovieTable.MOVIE_ID + " = " + movieId;
@@ -369,7 +369,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Movie's myReview updated");
     }
 
-    public List<String> getAllChoices(String column){
+    public List<String> getAllChoices(String column) {
         List<String> choices = new ArrayList<>();
         Set<String> tempSet = new TreeSet<>();
 
@@ -398,5 +398,59 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         db.close();
 
         return choices;
+    }
+
+    // Gets random picks from movie collection in local DB using filters provided
+    public ArrayList<Movie> getRandomPicks(String genre,
+                                      String filmRating,
+                                      int runtime,
+                                      boolean isUnwatched) {
+        String query;
+        Cursor cr;
+        ArrayList<Movie> movies = new ArrayList<>();
+        SQLiteDatabase sq = this.getReadableDatabase();
+        query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
+                + MovieTable.GENRE        + " LIKE \"%"   + genre      + "%\" AND "
+                + MovieTable.FILM_RATING  + " = \""       + filmRating + "\" AND "
+                + MovieTable.RUNTIME      + " <= "        + runtime;
+        if (isUnwatched) {
+            query += " AND " + MovieTable.WATCH_COUNT + " = NULL";
+        }
+        cr = sq.rawQuery(query, null);
+
+        if (cr.moveToFirst()) {
+            while (!cr.isAfterLast()) {
+                movies.add(
+                        new Movie(cr.getInt(cr.getColumnIndex("movieId")),
+                                cr.getString(cr.getColumnIndex("title")),
+                                cr.getString(cr.getColumnIndex("releaseDate")),
+                                cr.getString(cr.getColumnIndex("filmRating")),
+                                cr.getInt(cr.getColumnIndex("runtime")),
+                                cr.getDouble(cr.getColumnIndex("voteAverage")),
+                                cr.getInt(cr.getColumnIndex("voteCount")),
+                                cr.getString(cr.getColumnIndex("tagLine")),
+                                cr.getString(cr.getColumnIndex("synopsis")),
+                                cr.getString(cr.getColumnIndex("posterUrl")),
+                                cr.getString(cr.getColumnIndex("genre")),
+                                cr.getString(cr.getColumnIndex("director")),
+                                cr.getString(cr.getColumnIndex("studio")),
+                                cr.getDouble(cr.getColumnIndex("popularity")),
+                                cr.getLong(cr.getColumnIndex("budget")),
+                                cr.getLong(cr.getColumnIndex("revenue")),
+                                cr.getDouble(cr.getColumnIndex("myRating")),
+                                cr.getString(cr.getColumnIndex("myReview")),
+                                cr.getString(cr.getColumnIndex("lastWatched")),
+                                cr.getInt(cr.getColumnIndex("watchCount")),
+                                cr.getInt(cr.getColumnIndex("isLoaned")),
+                                cr.getString(cr.getColumnIndex("dateAdded")),
+                                cr.getInt(cr.getColumnIndex("isCollected")))
+                );
+                cr.moveToNext();
+            }
+        }
+        cr.close();
+        sq.close();
+
+        return movies;
     }
 }
