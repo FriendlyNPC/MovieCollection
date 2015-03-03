@@ -59,20 +59,19 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (savedInstanceState == null) {
-            appFragments = new Fragment[7];
-            appFragments[0] = new Home();
-            appFragments[1] = new MyCollection();
-            appFragments[2] = new MyLists();
-            appFragments[3] = new MyRatings();
-            appFragments[4] = new RandomPicks();
-            appFragments[5] = new MovieMetrics();
-            appFragments[6] = new About();
-            //secondary screens
+        appFragments = new Fragment[7];
+        appFragments[0] = new Home();
+        appFragments[1] = new MyCollection();
+        appFragments[2] = new MyLists();
+        appFragments[3] = new MyRatings();
+        appFragments[4] = new RandomPicks();
+        appFragments[5] = new MovieMetrics();
+        appFragments[6] = new About();
+        //secondary screens
 
-            //set homescreen
-            selectItem(0);
-        }
+        //set homescreen
+        selectItem(0);
+
 
         // Create and initialize database and movie table
         mDbHelper = new MovieDbHelper(this);

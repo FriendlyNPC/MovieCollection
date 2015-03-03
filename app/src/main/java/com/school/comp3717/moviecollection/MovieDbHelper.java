@@ -12,8 +12,12 @@ import com.school.comp3717.moviecollection.MovieDbContract.MovieTable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 public class MovieDbHelper extends SQLiteOpenHelper {
 
@@ -363,5 +367,36 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         sq.execSQL(myReviewCmd);
         sq.close();
         Log.d(TAG, "Movie's myReview updated");
+    }
+
+    public List<String> getAllChoices(String column){
+        List<String> choices = new ArrayList<>();
+        Set<String> tempSet = new TreeSet<>();
+
+        // Select all query
+        String selectQuery = "SELECT DISTINCT " + column + " FROM " + MovieTable.TABLE_NAME;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cr = db.rawQuery(selectQuery, null);
+
+        // Loop through all rows, parse them, and add to set (remove duplicates)
+        if (cr.moveToFirst()) {
+            while (!cr.isAfterLast()) {
+                String temp = cr.getString(0);
+                StringTokenizer st = new StringTokenizer(temp, "\t");
+                while(st.hasMoreTokens())
+                    tempSet.add(st.nextToken());
+                cr.moveToNext();
+            }
+        }
+
+        for (String item : tempSet) {
+            choices.add(item);
+        }
+
+        cr.close();
+        db.close();
+
+        return choices;
     }
 }
