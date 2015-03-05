@@ -48,8 +48,8 @@ public class Home extends Fragment {
         layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         layoutManager3.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setAdapter(myAdapter);
-        recyclerView.setAdapter(myAdapter2);
-        recyclerView.setAdapter(myAdapter3);
+        recyclerView2.setAdapter(myAdapter2);
+        recyclerView3.setAdapter(myAdapter3);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView3.setItemAnimator(new DefaultItemAnimator());
