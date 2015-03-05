@@ -37,6 +37,8 @@ public class Movie implements Parcelable {
     private String dateAdded;
     private int isCollected;
 
+    // Dummy Movie item for filler
+    public Movie(){}
     // Create a movie object from app database
     public Movie(int movieId,
                  String title,

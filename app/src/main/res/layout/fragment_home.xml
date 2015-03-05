@@ -1,16 +1,17 @@
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.school.comp3717.moviecollection.Home"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="@color/grey_300" >
 
-        <TextView
+       <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -21,48 +22,13 @@
             android:textStyle="italic"
             android:layout_margin="5dp" />
 
-        <LinearLayout
-            android:id="@+id/recentlyAddedWrapper"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/recyclerView"
             android:layout_below="@id/recentlyAddedHeader"
-            android:layout_alignParentLeft="true"
-            android:weightSum="1.0" >
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/recentlyAddedPoster1"
-                android:elevation="8dp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/recentlyAddedPoster2"
-                android:elevation="8dp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/recentlyAddedPoster3"
-                android:elevation="8dp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,52 +36,19 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/just_watched"
             android:id="@+id/justWatchedHeader"
-            android:layout_below="@id/recentlyAddedWrapper"
             android:layout_alignParentLeft="true"
             android:textColor="@color/grey_800"
             android:textStyle="italic"
             android:paddingTop="10dp"
             android:layout_margin="5dp" />
 
-        <LinearLayout
-            android:id="@+id/justWatchedWrapper"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/recyclerView2"
             android:layout_below="@id/justWatchedHeader"
-            android:layout_alignParentLeft="true"
-            android:weightSum="1.0" >
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/justWatchedPoster1"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/justWatchedPoster2"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/justWatchedPoster3"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -123,51 +56,20 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/new_releases"
             android:id="@+id/newReleasesHeader"
-            android:layout_below="@id/justWatchedWrapper"
+            android:layout_below="@id/recyclerView2"
             android:layout_alignParentLeft="true"
             android:textColor="@color/grey_800"
             android:textStyle="italic"
             android:paddingTop="10dp"
             android:layout_margin="5dp" />
 
-        <LinearLayout
-            android:id="@+id/newReleasesWrapper"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/recyclerView3"
             android:layout_below="@id/newReleasesHeader"
-            android:layout_alignParentLeft="true"
-            android:weightSum="1.0" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/newReleasesPoster1"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/newReleasesPoster2"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-            <ImageButton
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/newReleasesPoster3"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:src="@drawable/default_poster"
-                android:layout_weight=".33" />
-
-        </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+    </LinearLayout>
+</RelativeLayout>
