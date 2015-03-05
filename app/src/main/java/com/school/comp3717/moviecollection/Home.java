@@ -15,20 +15,6 @@ import android.view.ViewGroup;
  */
 public class Home extends Fragment {
 
-    //Dummy movie array for filler
-    Movie movies[] = {new Movie(), new Movie(), new Movie(), new Movie(), new Movie()};
-    Movie movies2[] = {new Movie(), new Movie(), new Movie(), new Movie(), new Movie()};
-    Movie movies3[] = {new Movie(), new Movie(), new Movie(), new Movie(), new Movie()};
-    RecyclerView recyclerView;
-    RecyclerView recyclerView2;
-    RecyclerView recyclerView3;
-    RecyclerAdapter myAdapter = new RecyclerAdapter(movies);
-    RecyclerAdapter myAdapter2 = new RecyclerAdapter(movies2);
-    RecyclerAdapter myAdapter3 = new RecyclerAdapter(movies3);
-    final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-    final LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
-    final LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity());
-
     public Home() {
         // Required empty public constructor
     }
@@ -38,6 +24,19 @@ public class Home extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        //Dummy movie array for filler
+        Movie movies[] = {new Movie(), new Movie(), new Movie(), new Movie(), new Movie()};
+        Movie movies2[] = {new Movie(), new Movie(), new Movie(), new Movie(), new Movie()};
+        Movie movies3[] = {new Movie(), new Movie(), new Movie(), new Movie(), new Movie()};
+        RecyclerView recyclerView;
+        RecyclerView recyclerView2;
+        RecyclerView recyclerView3;
+        RecyclerAdapter myAdapter = new RecyclerAdapter(movies);
+        RecyclerAdapter myAdapter2 = new RecyclerAdapter(movies2);
+        RecyclerAdapter myAdapter3 = new RecyclerAdapter(movies3);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView2 = (RecyclerView) rootView.findViewById(R.id.recyclerView2);
         recyclerView3 = (RecyclerView) rootView.findViewById(R.id.recyclerView3);
