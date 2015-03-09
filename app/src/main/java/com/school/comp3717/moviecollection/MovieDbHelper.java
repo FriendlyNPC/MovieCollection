@@ -12,7 +12,6 @@ import com.school.comp3717.moviecollection.MovieDbContract.MovieTable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -409,10 +408,32 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Cursor cr;
         ArrayList<Movie> movies = new ArrayList<>();
         SQLiteDatabase sq = this.getReadableDatabase();
+        String ratingQuery = MovieTable.FILM_RATING + " IN (";
+
+        switch (filmRating) {
+            case "No preference":
+                break;
+            case "N-17":
+                ratingQuery += "\"NC-17\", ";
+            case "R":
+                ratingQuery += "\"R\", ";
+            case "PG-13":
+                ratingQuery += "\"PG-13\", ";
+            case "PG":
+                ratingQuery += "\"PG\", ";
+            case "G":
+                ratingQuery += "\"G\") AND ";
+                break;
+        }
+
+        if (ratingQuery.equals(MovieTable.FILM_RATING + " IN (")) {
+            ratingQuery = "";
+        }
+
         query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
-                + MovieTable.GENRE        + " LIKE \"%"   + genre      + "%\" AND "
-                + MovieTable.FILM_RATING  + " = \""       + filmRating + "\" AND "
-                + MovieTable.RUNTIME      + " <= "        + runtime;
+                + MovieTable.GENRE + " LIKE \"%" + genre + "%\" AND "
+                + ratingQuery + MovieTable.RUNTIME + " <= " + runtime + " AND "
+                + MovieTable.IS_COLLECTED + " = 1";
         if (isUnwatched) {
             query += " AND " + MovieTable.WATCH_COUNT + " = NULL";
         }

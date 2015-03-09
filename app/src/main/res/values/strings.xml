@@ -83,18 +83,22 @@
     <string name="watch_count_field">0 times</string>
 
     // Random Picks fragment
+    <string name="random_picks_tag">random_picks_tag</string>
+    <string name="random_picks_header">Random Picks</string>
     <string name="preferences_header">Set Preferences for Random Picks</string>
     <string name="genre_pref_label">Genre</string>
     <string name="runtime_pref_label">Max Runtime</string>
     <string name="runtime_value">60 min</string>
-    <string name="film_rating_pref_label">Film Rating</string>
+    <string name="film_rating_pref_label">Max Rating</string>
     <string name="unwatched_pref_label">Unwatched</string>
     <string name="pref_submit">Get Random Pick</string>
 
     // Random Picks Result fragment
     <string name="random_picks_result_tag">random_picks_result_tag</string>
+    <string name="random_picks_result_header">Random Picks Result</string>
     <string name="random_picks_title">Movie Title\n(Year)</string>
     <string name="next_pick">Next Random Pick</string>
+    <string name="results_criteria">We did not find any movies matching that criteria in your collection.</string>
 
     // About fragment
     <string name="version_text">Version 0.1\n© 2015 Team KGY</string>

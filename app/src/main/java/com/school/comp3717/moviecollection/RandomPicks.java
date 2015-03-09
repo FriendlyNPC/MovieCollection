@@ -1,27 +1,18 @@
 package com.school.comp3717.moviecollection;
 
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +28,7 @@ public class RandomPicks extends Fragment {
 
     private Spinner          genreSpinner;
     private Spinner          filmRatingSpinner;
-    private SeekBar          runtimeSeekBar;
-    private TextView         runtimeValue;
     private CheckBox         unwatchedCheckBox;
-    private Button           submitButton;
     private String           genre;
     private String           filmRating;
     private int              runtime = 60;
@@ -53,6 +41,10 @@ public class RandomPicks extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        SeekBar  runtimeSeekBar;
+        TextView runtimeValue;
+        Button   submitButton;
+
         View rootView = inflater.inflate(R.layout.fragment_random_picks, container, false);
 
         genreSpinner = (Spinner) rootView.findViewById(R.id.genreSpinner);
@@ -65,7 +57,6 @@ public class RandomPicks extends Fragment {
         genreSpinner.setAdapter(loadSpinnerData("genre"));
         filmRatingSpinner.setAdapter(loadSpinnerData("filmRating"));
         setSeekBar(runtimeSeekBar, runtimeValue);
-
         setSubmitButton(submitButton);
 
         // Inflate the layout for this fragment
@@ -77,9 +68,9 @@ public class RandomPicks extends Fragment {
         // Spinner Drop down elements
         List<String> choices = db.getAllChoices(column);
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                                                                    android.R.layout.simple_spinner_item,
-                                                                    choices);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                                                              android.R.layout.simple_spinner_item,
+                                                              choices);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
@@ -115,10 +106,10 @@ public class RandomPicks extends Fragment {
     }
 
     public void setSubmitButton(Button button) {
-        final MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
                 genre = (String)genreSpinner.getSelectedItem();
                 filmRating = (String)filmRatingSpinner.getSelectedItem();
                 isUnwatched = unwatchedCheckBox.isChecked();

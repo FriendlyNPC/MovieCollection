@@ -1,13 +1,16 @@
 package com.school.comp3717.moviecollection;
 
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.school.comp3717.moviecollection.tools.DownloadPosterTask;
@@ -26,8 +29,6 @@ public class RandomPicksResult extends Fragment {
     private Movie            movie;
     private ArrayList<Movie> randomPicks;
     private TextView         title;
-    private ImageButton      posterButton;
-    private Button           nextPickButton;
 
     public RandomPicksResult() {
         // Required empty public constructor
@@ -36,6 +37,9 @@ public class RandomPicksResult extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int choice;
+        ImageButton posterButton;
+        Button nextPickButton;
+
         View rootView = inflater.inflate(R.layout.fragment_random_picks_result, container, false);
 
         randomPicks = this.getArguments().getParcelableArrayList("randomPicks");
@@ -44,24 +48,30 @@ public class RandomPicksResult extends Fragment {
         title = (TextView) rootView.findViewById(R.id.randomPicksTitle);
         nextPickButton = (Button) rootView.findViewById(R.id.nextPickButton);
 
-        choice = randomizer.nextInt(randomPicks.size());
-        movie = randomPicks.get(choice);
-        //randomPicks.remove(choice);
-        // TODO: Remove previously seen picks while still allowing back functionality
-
         if (randomPicks.isEmpty()) {
+            posterButton.setImageResource(R.drawable.sad_face);
+            title.setText(getResources().getString(R.string.results_criteria));
             nextPickButton.setVisibility(View.INVISIBLE);
+        } else {
+            choice = randomizer.nextInt(randomPicks.size());
+            movie = randomPicks.get(choice);
+            //randomPicks.remove(choice);
+            // TODO: Remove previously seen picks while still allowing back functionality
+
+            if (randomPicks.isEmpty()) {
+                nextPickButton.setVisibility(View.INVISIBLE);
+            }
+
+            setDetails();
+
+            if (movie.getPosterUrl() != null) {
+                new DownloadPosterTask((ImageButton) rootView.findViewById(R.id.randomPicksPoster))
+                        .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
+            }
+
+            setPosterButton(posterButton);
+            setNextPickButton(nextPickButton);
         }
-
-        setDetails();
-
-        if (movie.getPosterUrl() != null) {
-            new DownloadPosterTask((ImageButton) rootView.findViewById(R.id.randomPicksPoster))
-                    .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
-        }
-
-        setPosterButton(posterButton);
-        setNextPickButton(nextPickButton);
 
         // Inflate the layout for this fragment
         return rootView;

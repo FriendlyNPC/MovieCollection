@@ -116,6 +116,30 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/yearRangePrefRow"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/yearRangePrefLabel"
+                    android:textColor="@color/grey_800"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/film_rating_pref_label"/>
+
+                <SeekBar
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/yearRangeSeekBar"
+                    android:layout_marginLeft="10dp"
+                    android:layout_span="2">
+                </SeekBar>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/unwatchedPrefRow"
                 android:layout_marginTop="20dp">
 
