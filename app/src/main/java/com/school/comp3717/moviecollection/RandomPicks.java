@@ -3,6 +3,7 @@ package com.school.comp3717.moviecollection;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.school.comp3717.moviecollection.tools.RangeSeekBar;
+import com.school.comp3717.moviecollection.tools.ViewGroupUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,18 +30,19 @@ import java.util.List;
  */
 public class RandomPicks extends Fragment {
 
-    private static final int SEEKBAR_STEP = 5;
-    private static final int SEEKBAR_MAX  = 185;
-    private static final int SEEKBAR_MIN  = 60;
+    private static final int    SEEKBAR_STEP = 5;
+    private static final int    SEEKBAR_MAX  = 185;
+    private static final int    SEEKBAR_MIN  = 60;
+    private static final String TAG          = "RandomPicks";
 
     private Spinner          genreSpinner;
     private Spinner          filmRatingSpinner;
     private CheckBox         unwatchedCheckBox;
     private String           genre;
     private String           filmRating;
-    private int              runtime = 60;
-    private boolean          isUnwatched = false;
-    private ArrayList<Movie> randomPicks = new ArrayList<>();
+    private int              runtime            = 60;
+    private boolean          isUnwatched        = false;
+    private ArrayList<Movie> randomPicks        = new ArrayList<>();
 
     public RandomPicks() {
         // Required empty public constructor
@@ -44,20 +53,23 @@ public class RandomPicks extends Fragment {
         SeekBar  runtimeSeekBar;
         TextView runtimeValue;
         Button   submitButton;
+        SeekBar  oldSeekBar;
 
         View rootView = inflater.inflate(R.layout.fragment_random_picks, container, false);
 
-        genreSpinner = (Spinner) rootView.findViewById(R.id.genreSpinner);
-        filmRatingSpinner = (Spinner) rootView.findViewById(R.id.filmRatingSpinner);
-        runtimeSeekBar = (SeekBar) rootView.findViewById(R.id.runtimeSeekBar);
-        runtimeValue = (TextView) rootView.findViewById(R.id.runtimeValue);
+        genreSpinner      = (Spinner)  rootView.findViewById(R.id.genreSpinner);
+        filmRatingSpinner = (Spinner)  rootView.findViewById(R.id.filmRatingSpinner);
+        runtimeSeekBar    = (SeekBar)  rootView.findViewById(R.id.runtimeSeekBar);
+        runtimeValue      = (TextView) rootView.findViewById(R.id.runtimeValue);
         unwatchedCheckBox = (CheckBox) rootView.findViewById(R.id.unwatchedCheckBox);
-        submitButton = (Button) rootView.findViewById(R.id.prefSubmitButton);
+        submitButton      = (Button)   rootView.findViewById(R.id.prefSubmitButton);
+        oldSeekBar        = (SeekBar)  rootView.findViewById(R.id.yearRangeSeekBar);
 
         genreSpinner.setAdapter(loadSpinnerData("genre"));
         filmRatingSpinner.setAdapter(loadSpinnerData("filmRating"));
         setSeekBar(runtimeSeekBar, runtimeValue);
         setSubmitButton(submitButton);
+        setRangeSeekBar(oldSeekBar);
 
         // Inflate the layout for this fragment
         return rootView;
@@ -118,5 +130,47 @@ public class RandomPicks extends Fragment {
                 mainActivity.setRandomPicks(randomPicks);
             }
         });
+    }
+
+    private Date getMinDate() {
+        MovieDbHelper db = new MovieDbHelper(getActivity());
+        String dateStr = db.getMinReleaseDate();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+        } catch (ParseException e) {
+            Log.e(TAG, "DB min date parse exception", e);
+        }
+        return date;
+    }
+
+    public void setRangeSeekBar(View oldView) {
+        // create RangeSeekBar as Date range between 1950-12-01 and now
+        Date minDate = new Date();
+        if (getMinDate() != null) {
+            minDate = getMinDate();
+        } else {
+            try {
+                minDate = new SimpleDateFormat("yyyy-MM-dd").parse("1900-01-01");
+            } catch (ParseException e) {
+                Log.e(TAG, "Default min date parse exception", e);
+            }
+        }
+        Date maxDate = new Date();
+        RangeSeekBar<Long> seekBar = new RangeSeekBar<>(minDate.getTime(), maxDate.getTime(), getActivity());
+
+        seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Long>() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Long minValue, Long maxValue) {
+                // handle changed range values
+                Log.d(TAG, "Date range selected: MIN = " + new Date(minValue) + ", MAX = " + new Date(maxValue));
+            }
+        });
+
+        // Replace a view with the RangeSeekBar that spans two columns
+        ViewGroupUtils.replaceView(oldView, seekBar);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
+        layoutParams.span = 2;
+        seekBar.setLayoutParams(layoutParams);
     }
 }

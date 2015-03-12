@@ -126,7 +126,7 @@
                     android:text="@string/year_range_pref_label"/>
 
                 <SeekBar
-                    android:layout_width="80dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/yearRangeSeekBar"
                     android:layout_marginStart="10dp"

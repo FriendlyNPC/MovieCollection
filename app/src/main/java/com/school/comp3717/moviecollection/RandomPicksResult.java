@@ -22,7 +22,7 @@ public class RandomPicksResult extends Fragment {
 
     private static final int YEAR_LENGTH = 4;
 
-    private Random           randomizer = new Random();
+    private Random           randomizer  = new Random();
     private Movie            movie;
     private ArrayList<Movie> randomPicks;
     private TextView         title;
