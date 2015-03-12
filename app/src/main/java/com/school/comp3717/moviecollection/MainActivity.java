@@ -242,9 +242,11 @@ public class MainActivity extends ActionBarActivity {
         Log.d("SetRandomPicks" , "Random picks set");
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        RandomPicksResult picksResultFragment = new RandomPicksResult();
+        // TODO: Look into whether this is the correct way to implement this
+        // Pop previous RandomPicksResult fragments
+        fragmentManager.popBackStack();
 
-        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        RandomPicksResult picksResultFragment = new RandomPicksResult();
 
         Bundle args = new Bundle();
         args.putParcelableArrayList("randomPicks", picks);
@@ -253,10 +255,10 @@ public class MainActivity extends ActionBarActivity {
 
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, picksResultFragment, getResources().getString(R.string.random_picks_result_tag))
-                .addToBackStack(getResources().getString(R.string.random_picks_tag))
+                .addToBackStack(getResources().getString(R.string.random_picks_result_tag))
                 .commit();
 
-        // update selected item and title, then close the drawer
+        // Update selected item and title, then close the drawer
         setTitle(R.string.random_picks_result_toolbar);
         drawerLayout.closeDrawer(listView);
     }
