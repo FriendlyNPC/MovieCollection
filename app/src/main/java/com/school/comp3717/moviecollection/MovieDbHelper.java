@@ -404,7 +404,9 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     public ArrayList<Movie> getRandomPicks(String genre,
                                       String filmRating,
                                       int runtime,
-                                      boolean isUnwatched) {
+                                      boolean isUnwatched,
+                                      String minReleaseDate,
+                                      String maxReleaseDate) {
         String query;
         Cursor cr;
         ArrayList<Movie> movies = new ArrayList<>();
@@ -434,9 +436,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
                 + MovieTable.GENRE + " LIKE \"%" + genre + "%\" AND "
                 + ratingQuery + MovieTable.RUNTIME + " <= " + runtime + " AND "
-                + MovieTable.IS_COLLECTED + " = 1";
+                + MovieTable.RELEASE_DATE + " BETWEEN \"" + minReleaseDate + "\" AND \""
+                + maxReleaseDate + "\" AND " + MovieTable.IS_COLLECTED + " = 1";
         if (isUnwatched) {
-            query += " AND " + MovieTable.WATCH_COUNT + " = NULL";
+            query += " AND " + MovieTable.WATCH_COUNT + " = 0";
         }
         cr = sq.rawQuery(query, null);
 

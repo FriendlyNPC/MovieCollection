@@ -88,7 +88,7 @@
     <string name="preferences_header">Set Your Preferences</string>
     <string name="genre_pref_label">Genre</string>
     <string name="runtime_pref_label">Max Runtime</string>
-    <string name="runtime_value">60 min</string>
+    <string name="runtime_value">No limit</string>
     <string name="film_rating_pref_label">Max Rating</string>
     <string name="year_range_pref_label">Year Range</string>
     <string name="unwatched_pref_label">Unwatched</string>

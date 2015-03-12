@@ -46,7 +46,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private double normalizedMinValue = 0d;
     private double normalizedMaxValue = 1d;
     private Thumb pressedThumb = null;
-    private boolean notifyWhileDragging = false;
+    private boolean notifyWhileDragging = true;
     private OnRangeSeekBarChangeListener<T> listener;
 
     /**

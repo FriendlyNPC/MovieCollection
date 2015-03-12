@@ -40,8 +40,6 @@ public class RandomPicksResult extends Fragment {
         if (rootView != null) {
             // Remove the view from the parent
             ((ViewGroup) rootView.getParent()).removeView(rootView);
-            // Inflate the layout for this fragment
-            return rootView;
         } else {
             ImageButton posterButton;
             Button nextPickButton;
@@ -77,9 +75,9 @@ public class RandomPicksResult extends Fragment {
                 setPosterButton(posterButton);
                 setNextPickButton(nextPickButton);
             }
-            // Inflate the layout for this fragment
-            return rootView;
         }
+        // Inflate the layout for this fragment
+        return rootView;
     }
 
     private void setDetails() {
