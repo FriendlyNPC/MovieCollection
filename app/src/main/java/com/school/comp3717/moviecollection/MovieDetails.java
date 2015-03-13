@@ -2,12 +2,8 @@ package com.school.comp3717.moviecollection;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -31,8 +26,8 @@ public class MovieDetails extends Fragment {
 
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.#");
     private static final NumberFormat  DOLLAR_FORMAT = NumberFormat.getCurrencyInstance();
-    private static final int           YEAR_LENGTH = 4;
-    private static final int           DATE_LENGTH = 10;
+    private static final int           YEAR_LENGTH   = 4;
+    private static final int           DATE_LENGTH   = 10;
 
     Movie     movie;
     TextView  title;
@@ -53,9 +48,9 @@ public class MovieDetails extends Fragment {
     RatingBar myRatingBar;
     ImageView poster;
     EditText  myReview;
-    Button    watchButton;
-    Button    addOrRemoveButton;
-    Button    reviewButton;
+    Button    watchBtn;
+    Button    addRemoveBtn;
+    Button    reviewBtn;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -67,28 +62,27 @@ public class MovieDetails extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
-        poster = (ImageView) rootView.findViewById(R.id.moviePoster);
-        title = (TextView) rootView.findViewById(R.id.movieTitle);
-        tagLine = (TextView) rootView.findViewById(R.id.tagLine);
-        synopsis = (TextView) rootView.findViewById(R.id.synopsisBody);
-        director = (TextView) rootView.findViewById(R.id.movieDirector);
-        userRating = (TextView) rootView.findViewById(R.id.userRatingText);
+        poster        = (ImageView) rootView.findViewById(R.id.moviePoster);
+        title         = (TextView)  rootView.findViewById(R.id.movieTitle);
+        tagLine       = (TextView)  rootView.findViewById(R.id.tagLine);
+        synopsis      = (TextView)  rootView.findViewById(R.id.synopsisBody);
+        director      = (TextView)  rootView.findViewById(R.id.movieDirector);
+        userRating    = (TextView)  rootView.findViewById(R.id.userRatingText);
         userRatingBar = (RatingBar) rootView.findViewById(R.id.userRatingBar);
-        myRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
-        myReview = (EditText) rootView.findViewById(R.id.myReview);
-        releaseDate = (TextView) rootView.findViewById(R.id.releaseDateField);
-        filmRating = (TextView) rootView.findViewById(R.id.filmRatingField);
-        runtime = (TextView) rootView.findViewById(R.id.runtimeField);
-        genre = (TextView) rootView.findViewById(R.id.genreField);
-        studio = (TextView) rootView.findViewById(R.id.studioField);
-        budget = (TextView) rootView.findViewById(R.id.budgetField);
-        revenue = (TextView) rootView.findViewById(R.id.revenueField);
-        lastWatched = (TextView) rootView.findViewById(R.id.lastWatchedField);
-        watchCount = (TextView) rootView.findViewById(R.id.watchCountField);
-
-        watchButton = (Button) rootView.findViewById(R.id.watchMovieButton);
-        addOrRemoveButton = (Button) rootView.findViewById(R.id.addMovieButton);
-        reviewButton = (Button) rootView.findViewById(R.id.saveReviewButton);
+        myRatingBar   = (RatingBar) rootView.findViewById(R.id.myRatingBar);
+        myReview      = (EditText)  rootView.findViewById(R.id.myReview);
+        releaseDate   = (TextView)  rootView.findViewById(R.id.releaseDateField);
+        filmRating    = (TextView)  rootView.findViewById(R.id.filmRatingField);
+        runtime       = (TextView)  rootView.findViewById(R.id.runtimeField);
+        genre         = (TextView)  rootView.findViewById(R.id.genreField);
+        studio        = (TextView)  rootView.findViewById(R.id.studioField);
+        budget        = (TextView)  rootView.findViewById(R.id.budgetField);
+        revenue       = (TextView)  rootView.findViewById(R.id.revenueField);
+        lastWatched   = (TextView)  rootView.findViewById(R.id.lastWatchedField);
+        watchCount    = (TextView)  rootView.findViewById(R.id.watchCountField);
+        watchBtn      = (Button)    rootView.findViewById(R.id.watchMovieButton);
+        addRemoveBtn  = (Button)    rootView.findViewById(R.id.addMovieButton);
+        reviewBtn     = (Button)    rootView.findViewById(R.id.saveReviewButton);
 
         movie = this.getArguments().getParcelable("movie");
         setDetails();
@@ -126,23 +120,23 @@ public class MovieDetails extends Fragment {
         boolean currentState;
         if (dbHelper.getMovieById(movie.getMovieId()) == null ||
             dbHelper.getMovieById(movie.getMovieId()).isCollected() == 0) {
-            addOrRemoveButton.setText(R.string.add_movie_text);
-            addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.green_300));
+            addRemoveBtn.setText(R.string.add_movie_text);
+            addRemoveBtn.setBackgroundColor(getResources().getColor(R.color.green_300));
             currentState = true;
         } else {
-            addOrRemoveButton.setText(R.string.remove_movie_text);
-            addOrRemoveButton.setBackgroundColor(getResources().getColor(R.color.red_800));
+            addRemoveBtn.setText(R.string.remove_movie_text);
+            addRemoveBtn.setBackgroundColor(getResources().getColor(R.color.red_800));
             currentState = false;
         }
 
-        addOrRemoveButton.setOnClickListener(
-                new AddButtonOnClickListener(getActivity(), addOrRemoveButton, currentState));
-        watchButton.setOnClickListener(
-                new WatchButtonOnClickListener(getActivity(), watchButton));
+        addRemoveBtn.setOnClickListener(
+                new AddButtonOnClickListener(getActivity(), addRemoveBtn, currentState));
+        watchBtn.setOnClickListener(
+                new WatchButtonOnClickListener(getActivity(), watchBtn));
         myRatingBar.setOnRatingBarChangeListener(
                 new RatingBarOnChangeListener(getActivity(), myRatingBar));
-        reviewButton.setOnClickListener(
-                new ReviewButtonOnClickListener(getActivity(), reviewButton, myReview));
+        reviewBtn.setOnClickListener(
+                new ReviewButtonOnClickListener(getActivity(), reviewBtn, myReview));
     }
 
     private void setDollarText(long value, TextView text) {

@@ -168,39 +168,14 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     // Gets a movie from local DB using online DB ID; stores in Movie object
     public Movie getMovieById(int movieId) {
-        Cursor cr;
-        Movie movie = null;
-        SQLiteDatabase sq = this.getReadableDatabase();
-        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE " +
-                         MovieTable.MOVIE_ID + " = " + movieId, null);
-        if (cr.moveToFirst()) {
-            movie = new Movie(cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
-                              cr.getString( cr.getColumnIndex( MovieTable.TITLE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.RELEASE_DATE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.FILM_RATING )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.RUNTIME )),
-                              cr.getDouble( cr.getColumnIndex( MovieTable.VOTE_AVERAGE )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.VOTE_COUNT )),
-                              cr.getString( cr.getColumnIndex( MovieTable.TAG_LINE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.SYNOPSIS )),
-                              cr.getString( cr.getColumnIndex( MovieTable.POSTER_URL )),
-                              cr.getString( cr.getColumnIndex( MovieTable.GENRE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.DIRECTOR )),
-                              cr.getString( cr.getColumnIndex( MovieTable.STUDIO )),
-                              cr.getDouble( cr.getColumnIndex( MovieTable.POPULARITY )),
-                              cr.getLong(   cr.getColumnIndex( MovieTable.BUDGET )),
-                              cr.getLong(   cr.getColumnIndex( MovieTable.REVENUE )),
-                              cr.getDouble( cr.getColumnIndex( MovieTable.MY_RATING )),
-                              cr.getString( cr.getColumnIndex( MovieTable.MY_REVIEW )),
-                              cr.getString( cr.getColumnIndex( MovieTable.LAST_WATCHED )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.WATCH_COUNT )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.IS_LOANED )),
-                              cr.getString( cr.getColumnIndex( MovieTable.DATE_ADDED )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.IS_COLLECTED )));
+        String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE " +
+                       MovieTable.MOVIE_ID + " = " + movieId;
+        ArrayList<Movie> movies = movieListQuery(query);
+        if (movies.isEmpty()) {
+            return null;
+        } else {
+            return movies.get(0);
         }
-        cr.close();
-        sq.close();
-        return movie;
     }
 
     // Checks if movie exists in local DB; includes movies not in collection
@@ -243,90 +218,19 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     }
 
     // Gets a movie from collection using online DB ID; stores in Movie object
-    public List<Movie> searchMovie(String query) {
-        Cursor cr;
-        List<Movie> movies = new ArrayList<>();
-        SQLiteDatabase sq = this.getReadableDatabase();
-        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE LOWER(" +
-                         MovieTable.TITLE + ") LIKE '%" + query.trim().toLowerCase() + "%' AND "
-                         + MovieTable.IS_COLLECTED + " = 1 ORDER BY " + MovieTable.POPULARITY
-                         + " DESC", null);
-        if (cr.moveToFirst()) {
-            while (!cr.isAfterLast()) {
-                movies.add(
-                        new Movie(
-                                cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
-                                cr.getString( cr.getColumnIndex( MovieTable.TITLE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.RELEASE_DATE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.FILM_RATING )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.RUNTIME )),
-                                cr.getDouble( cr.getColumnIndex( MovieTable.VOTE_AVERAGE )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.VOTE_COUNT )),
-                                cr.getString( cr.getColumnIndex( MovieTable.TAG_LINE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.SYNOPSIS )),
-                                cr.getString( cr.getColumnIndex( MovieTable.POSTER_URL )),
-                                cr.getString( cr.getColumnIndex( MovieTable.GENRE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.DIRECTOR )),
-                                cr.getString( cr.getColumnIndex( MovieTable.STUDIO )),
-                                cr.getDouble( cr.getColumnIndex( MovieTable.POPULARITY )),
-                                cr.getLong(   cr.getColumnIndex( MovieTable.BUDGET )),
-                                cr.getLong(   cr.getColumnIndex( MovieTable.REVENUE )),
-                                cr.getDouble( cr.getColumnIndex( MovieTable.MY_RATING )),
-                                cr.getString( cr.getColumnIndex( MovieTable.MY_REVIEW )),
-                                cr.getString( cr.getColumnIndex( MovieTable.LAST_WATCHED )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.WATCH_COUNT )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.IS_LOANED )),
-                                cr.getString( cr.getColumnIndex( MovieTable.DATE_ADDED )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.IS_COLLECTED )))
-                );
-                cr.moveToNext();
-            }
-        }
-        cr.close();
-        sq.close();
-        return movies;
+    public ArrayList<Movie> searchMovie(String title) {
+        String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE LOWER(" +
+                       MovieTable.TITLE + ") LIKE '%" + title.trim().toLowerCase() + "%' AND "
+                       + MovieTable.IS_COLLECTED + " = 1 ORDER BY " + MovieTable.POPULARITY + " DESC";
+        return movieListQuery(query);
     }
 
     // Gets entire movie collection in local DB; stores in Movie ArrayList
-    public List<Movie> getMovieCollection() {
-        Cursor cr;
-        List<Movie> movies = new ArrayList<>();
-        SQLiteDatabase sq = this.getReadableDatabase();
-        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
-                         + MovieTable.IS_COLLECTED + " = 1", null);
-        if (cr.moveToFirst()) {
-            while (!cr.isAfterLast()) {
-                movies.add(
-                    new Movie(cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
-                              cr.getString( cr.getColumnIndex( MovieTable.TITLE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.RELEASE_DATE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.FILM_RATING )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.RUNTIME )),
-                              cr.getDouble( cr.getColumnIndex( MovieTable.VOTE_AVERAGE )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.VOTE_COUNT )),
-                              cr.getString( cr.getColumnIndex( MovieTable.TAG_LINE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.SYNOPSIS )),
-                              cr.getString( cr.getColumnIndex( MovieTable.POSTER_URL )),
-                              cr.getString( cr.getColumnIndex( MovieTable.GENRE )),
-                              cr.getString( cr.getColumnIndex( MovieTable.DIRECTOR )),
-                              cr.getString( cr.getColumnIndex( MovieTable.STUDIO )),
-                              cr.getDouble( cr.getColumnIndex( MovieTable.POPULARITY )),
-                              cr.getLong(   cr.getColumnIndex( MovieTable.BUDGET )),
-                              cr.getLong(   cr.getColumnIndex( MovieTable.REVENUE )),
-                              cr.getDouble( cr.getColumnIndex( MovieTable.MY_RATING )),
-                              cr.getString( cr.getColumnIndex( MovieTable.MY_REVIEW )),
-                              cr.getString( cr.getColumnIndex( MovieTable.LAST_WATCHED )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.WATCH_COUNT )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.IS_LOANED )),
-                              cr.getString( cr.getColumnIndex( MovieTable.DATE_ADDED )),
-                              cr.getInt(    cr.getColumnIndex( MovieTable.IS_COLLECTED )))
-                );
-                cr.moveToNext();
-            }
-        }
-        cr.close();
-        sq.close();
-        return movies;
+    public ArrayList<Movie> getMovieCollection() {
+        String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
+                       + MovieTable.IS_COLLECTED + " = 1";
+
+        return movieListQuery(query);
     }
 
     public void updateWatchCount(Movie movie) {
@@ -408,9 +312,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                                       String minReleaseDate,
                                       String maxReleaseDate) {
         String query;
-        Cursor cr;
-        ArrayList<Movie> movies = new ArrayList<>();
-        SQLiteDatabase sq = this.getReadableDatabase();
         String ratingQuery = MovieTable.FILM_RATING + " IN (";
 
         switch (filmRating) {
@@ -441,12 +342,56 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         if (isUnwatched) {
             query += " AND " + MovieTable.WATCH_COUNT + " = 0";
         }
-        cr = sq.rawQuery(query, null);
 
+        return movieListQuery(query);
+    }
+
+    public String getMinReleaseDate() {
+        Cursor cr;
+        SQLiteDatabase sq = this.getReadableDatabase();
+        cr = sq.rawQuery("SELECT MIN(" + MovieTable.RELEASE_DATE + ") FROM "
+                         + MovieTable.TABLE_NAME + " WHERE " + MovieTable.IS_COLLECTED + " = 1", null);
+        String strDate = "";
+        if (cr.moveToFirst()) {
+            if (!cr.isAfterLast()) {
+                strDate = cr.getString(0);
+            }
+        }
+        cr.close();
+        sq.close();
+
+        return strDate;
+    }
+
+    // Gets movies recently added to collection
+    public ArrayList<Movie> getRecentlyAdded() {
+        String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
+                       + MovieTable.IS_COLLECTED + " = 1 ORDER BY " + MovieTable.DATE_ADDED
+                       + " DESC";
+
+        return movieListQuery(query);
+    }
+
+    // Gets movies recently added to collection
+    public ArrayList<Movie> getJustWatched() {
+        String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
+                + MovieTable.WATCH_COUNT + " > 0 ORDER BY " + MovieTable.LAST_WATCHED
+                + " DESC";
+
+        return movieListQuery(query);
+    }
+
+
+    // Helper function for retrieving movie lists from local DB
+    private ArrayList<Movie> movieListQuery(String query) {
+        ArrayList<Movie> movies = new ArrayList<>();
+        Cursor cr;
+        SQLiteDatabase sq = this.getReadableDatabase();
+        cr = sq.rawQuery(query, null);
         if (cr.moveToFirst()) {
             while (!cr.isAfterLast()) {
                 movies.add(
-                      new Movie(cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
+                        new Movie(cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
                                 cr.getString( cr.getColumnIndex( MovieTable.TITLE )),
                                 cr.getString( cr.getColumnIndex( MovieTable.RELEASE_DATE )),
                                 cr.getString( cr.getColumnIndex( MovieTable.FILM_RATING )),
@@ -477,22 +422,5 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         sq.close();
 
         return movies;
-    }
-
-    public String getMinReleaseDate() {
-        Cursor cr;
-        SQLiteDatabase sq = this.getReadableDatabase();
-        cr = sq.rawQuery("SELECT MIN(" + MovieTable.RELEASE_DATE + ") FROM "
-                         + MovieTable.TABLE_NAME + " WHERE " + MovieTable.IS_COLLECTED + " = 1", null);
-        String strDate = "";
-        if (cr.moveToFirst()) {
-            if (!cr.isAfterLast()) {
-                strDate = cr.getString(0);
-            }
-        }
-        cr.close();
-        sq.close();
-
-        return strDate;
     }
 }
