@@ -30,6 +30,23 @@
     <string name="home_blank_fragment">Hello blank fragment. From Home Screen</string>
     <string name="about_blank_fragment">Hello blank fragment. From About Screen</string>
 
+    // My Collection Fragment
+    <string name="filter_pane_text">Filter Collection</string>
+    <string name="filter_pane_genre">Filter Genre(s)</string>
+    <string name="filter_pane_rating">Max Rating</string>
+    <string name="filter_pane_length">Max Length</string>
+    <string name="filter_pane_sort_option_title">Sort By</string>
+    <string-array name="filter_sort_options">
+        <item>Title</item>
+        <item>Rating</item>
+        <item>Runtime</item>
+        <item>Release Date</item>
+    </string-array>
+    <string-array name="filter_sort_order_by">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+
     // My Lists Fragment
     <string name="my_lists_header">My Lists</string>
     <string name="my_list_1">My List 1</string>
