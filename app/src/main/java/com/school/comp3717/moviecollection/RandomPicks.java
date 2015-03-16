@@ -48,7 +48,6 @@ public class RandomPicks extends Fragment {
     private ArrayList<Movie> randomPicks        = new ArrayList<>();
     private String           minReleaseDate;
     private String           maxReleaseDate;
-    private View             rootView;
 
     public RandomPicks() {
         // Required empty public constructor
@@ -57,37 +56,31 @@ public class RandomPicks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // TODO: If settings reused, settings will not update when new movies added until app reopened. Should it work this way?
-        // If rootView not null, use again so same random pick settings are shown when pressing back
-        if (rootView != null) {
-            // Remove the view from the parent
-            ((ViewGroup) rootView.getParent()).removeView(rootView);
-        } else {
-            SeekBar runtimeSeekBar;
-            TextView runtimeValue;
-            Button submitButton;
-            SeekBar oldSeekBar;
-            TextView yearRangeMin;
-            TextView yearRangeMax;
+        SeekBar runtimeSeekBar;
+        TextView runtimeValue;
+        Button submitButton;
+        SeekBar oldSeekBar;
+        TextView yearRangeMin;
+        TextView yearRangeMax;
 
-            rootView = inflater.inflate(R.layout.fragment_random_picks, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_random_picks, container, false);
 
-            genreSpinner      = (Spinner)  rootView.findViewById(R.id.genreSpinner);
-            filmRatingSpinner = (Spinner)  rootView.findViewById(R.id.filmRatingSpinner);
-            runtimeSeekBar    = (SeekBar)  rootView.findViewById(R.id.runtimeSeekBar);
-            runtimeValue      = (TextView) rootView.findViewById(R.id.runtimeValue);
-            unwatchedCheckBox = (CheckBox) rootView.findViewById(R.id.unwatchedCheckBox);
-            submitButton      = (Button)   rootView.findViewById(R.id.prefSubmitButton);
-            oldSeekBar        = (SeekBar)  rootView.findViewById(R.id.yearRangeSeekBar);
-            yearRangeMin      = (TextView) rootView.findViewById(R.id.yearRangeMin);
-            yearRangeMax      = (TextView) rootView.findViewById(R.id.yearRangeMax);
+        genreSpinner      = (Spinner)  rootView.findViewById(R.id.genreSpinner);
+        filmRatingSpinner = (Spinner)  rootView.findViewById(R.id.filmRatingSpinner);
+        runtimeSeekBar    = (SeekBar)  rootView.findViewById(R.id.runtimeSeekBar);
+        runtimeValue      = (TextView) rootView.findViewById(R.id.runtimeValue);
+        unwatchedCheckBox = (CheckBox) rootView.findViewById(R.id.unwatchedCheckBox);
+        submitButton      = (Button)   rootView.findViewById(R.id.prefSubmitButton);
+        oldSeekBar        = (SeekBar)  rootView.findViewById(R.id.yearRangeSeekBar);
+        yearRangeMin      = (TextView) rootView.findViewById(R.id.yearRangeMin);
+        yearRangeMax      = (TextView) rootView.findViewById(R.id.yearRangeMax);
 
-            genreSpinner.setAdapter(loadSpinnerData("genre"));
-            filmRatingSpinner.setAdapter(loadSpinnerData("filmRating"));
-            setSeekBar(runtimeSeekBar, runtimeValue);
-            setSubmitButton(submitButton);
-            setRangeSeekBar(oldSeekBar, yearRangeMin, yearRangeMax);
-        }
+        genreSpinner.setAdapter(loadSpinnerData("genre"));
+        filmRatingSpinner.setAdapter(loadSpinnerData("filmRating"));
+        setSeekBar(runtimeSeekBar, runtimeValue);
+        setSubmitButton(submitButton);
+        setRangeSeekBar(oldSeekBar, yearRangeMin, yearRangeMax);
+
         // Inflate the layout for this fragment
         return rootView;
     }

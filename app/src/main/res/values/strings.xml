@@ -21,7 +21,7 @@
     <string name="random_picks_result_toolbar">Random Picks</string>
 
     // Home fragment
-    <string name="new_releases">New Releases</string>
+    <string name="new_releases">Now Playing</string>
     <string name="recently_added">Recently Added</string>
     <string name="just_watched">Just Watched</string>
     <string name="most_popular">Most Popular</string>

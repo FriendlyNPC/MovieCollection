@@ -22,15 +22,16 @@ import android.widget.ListView;
 import com.school.comp3717.moviecollection.search.SearchResults;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout            drawerLayout;
     private ListView                listView;
     private ActionBarDrawerToggle   actionBarDrawerToggle;
     private Toolbar                 toolbar;
-
     private String[]                navigationDrawerItems;
     private Fragment[]              appFragments;
+    private Random                  randomizer  = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,8 +239,13 @@ public class MainActivity extends ActionBarActivity {
         drawerLayout.closeDrawer(listView);
     }
 
-    public void setRandomPicks(ArrayList<Movie> picks) {
+    public void setRandomPicks(ArrayList<Movie> randomPicks) {
         Log.d("SetRandomPicks" , "Random picks set");
+
+        int choice = randomizer.nextInt(randomPicks.size());
+        Movie movie = randomPicks.get(choice);
+        randomPicks.remove(choice);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         // TODO: Look into whether this is the correct way to implement this
@@ -249,7 +255,8 @@ public class MainActivity extends ActionBarActivity {
         RandomPicksResult picksResultFragment = new RandomPicksResult();
 
         Bundle args = new Bundle();
-        args.putParcelableArrayList("randomPicks", picks);
+        args.putParcelable("pick", movie);
+        args.putParcelableArrayList("randomPicks", randomPicks);
 
         picksResultFragment.setArguments(args);
 

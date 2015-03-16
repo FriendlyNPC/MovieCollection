@@ -25,6 +25,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     private static final String           DATABASE_NAME    = "Movie.db";
     private static final SimpleDateFormat DATE_FORMAT      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String           TAG              = "MovieDbHelper";
+    private static final String           NO_PREF          = "No Preference";
     private static final String           INT_TYPE         = " INTEGER";
     private static final String           TEXT_TYPE        = " TEXT";
     private static final String           REAL_TYPE        = " REAL";
@@ -294,6 +295,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
             }
         }
 
+        choices.add(NO_PREF);
         for (String item : tempSet) {
             choices.add(item);
         }
@@ -306,12 +308,18 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     // Gets random picks from movie collection in local DB using filters provided
     public ArrayList<Movie> getRandomPicks(String genre,
-                                      String filmRating,
-                                      int runtime,
-                                      boolean isUnwatched,
-                                      String minReleaseDate,
-                                      String maxReleaseDate) {
+                                           String filmRating,
+                                           int runtime,
+                                           boolean isUnwatched,
+                                           String minReleaseDate,
+                                           String maxReleaseDate) {
         String query;
+        String genreQuery = "";
+
+        if (!genre.equals(NO_PREF)) {
+            genreQuery = MovieTable.GENRE + " LIKE \"%" + genre + "%\" AND ";
+        }
+
         String ratingQuery = MovieTable.FILM_RATING + " IN (";
 
         switch (filmRating) {
@@ -328,6 +336,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
             case "G":
                 ratingQuery += "\"G\") AND ";
                 break;
+            default:
+                break;
         }
 
         if (ratingQuery.equals(MovieTable.FILM_RATING + " IN (")) {
@@ -335,8 +345,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         }
 
         query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
-                + MovieTable.GENRE + " LIKE \"%" + genre + "%\" AND "
-                + ratingQuery + MovieTable.RUNTIME + " <= " + runtime + " AND "
+                + genreQuery + ratingQuery + MovieTable.RUNTIME + " <= " + runtime + " AND "
                 + MovieTable.RELEASE_DATE + " BETWEEN \"" + minReleaseDate + "\" AND \""
                 + maxReleaseDate + "\" AND " + MovieTable.IS_COLLECTED + " = 1";
         if (isUnwatched) {

@@ -16,16 +16,12 @@ import android.widget.TextView;
 
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
-import com.omertron.themoviedbapi.model.Discover;
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.omertron.themoviedbapi.results.TmdbResultsList;
 import com.school.comp3717.moviecollection.tools.RecyclerAdapter;
 import com.school.comp3717.moviecollection.tools.RecyclerItemClickListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,17 +29,14 @@ import java.util.List;
  */
 public class Home extends Fragment {
 
-    private static final int              LIST_SIZE   = 8;
-    private static final int              WEEK        = 7;
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
+    private static final int LIST_SIZE = 8;
 
     private MovieDbHelper    movieDbHelper;
-    private RecyclerAdapter  adapterNR;
+    private RecyclerAdapter  adapterNP;
     private RecyclerAdapter  adapterMP;
-    private RecyclerView     recyclerViewNR;
+    private RecyclerView     recyclerViewNP;
     private RecyclerView     recyclerViewMP;
-    private TextView         headerNR;
+    private TextView         headerNP;
     private TextView         headerMP;
 
     public Home() {
@@ -68,18 +61,18 @@ public class Home extends Fragment {
         TextView         headerJW       = (TextView) rootView.findViewById(R.id.justWatchedHeader);
 
         // Online Lists
-        ArrayList<Movie> newReleases    = new ArrayList<>();
+        ArrayList<Movie> nowPlaying     = new ArrayList<>();
         ArrayList<Movie> mostPopular    = new ArrayList<>();
-        recyclerViewNR                  = (RecyclerView) rootView.findViewById(R.id.recyclerViewNR);
+        recyclerViewNP                  = (RecyclerView) rootView.findViewById(R.id.recyclerViewNR);
         recyclerViewMP                  = (RecyclerView) rootView.findViewById(R.id.recyclerViewMP);
-        adapterNR                       = new RecyclerAdapter(newReleases);
+        adapterNP                       = new RecyclerAdapter(nowPlaying);
         adapterMP                       = new RecyclerAdapter(mostPopular);
-        headerNR                        = (TextView) rootView.findViewById(R.id.newReleasesHeader);
+        headerNP                        = (TextView) rootView.findViewById(R.id.newReleasesHeader);
         headerMP                        = (TextView) rootView.findViewById(R.id.mostPopularHeader);
 
         setRecyclerView(recentlyAdded, recyclerViewRA, adapterRA, headerRA, false);
         setRecyclerView(justWatched,   recyclerViewJW, adapterJW, headerJW, false);
-        setRecyclerView(newReleases,   recyclerViewNR, adapterNR, headerNR, true);
+        setRecyclerView(nowPlaying,    recyclerViewNP, adapterNP, headerNP, true);
         setRecyclerView(mostPopular,   recyclerViewMP, adapterMP, headerMP, true);
 
         // Inflate the layout for this fragment
@@ -89,8 +82,8 @@ public class Home extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        QueryNewReleasesTask newReleasesTask = new QueryNewReleasesTask();
-        newReleasesTask.execute(getDiscoverObject());
+        QueryNowPlayingTask nowPlayingTask = new QueryNowPlayingTask();
+        nowPlayingTask.execute("en");
         QueryPopularMoviesTask popularMoviesTask = new QueryPopularMoviesTask();
         popularMoviesTask.execute("en");
     }
@@ -145,49 +138,11 @@ public class Home extends Fragment {
         return justWatched;
     }
 
-    private Discover getDiscoverObject() {
-        Date     today          = new Date();
-        Calendar calendar       = Calendar.getInstance();
-        calendar.setTime(today);
-        calendar.add(Calendar.DATE, -WEEK); // subtract a week
-        Date     oneWeekAgo     = calendar.getTime();
-
-        int      page           = 0;
-        String   language       = "en";
-        String   sortBy         = "popularity.desc";
-        boolean  includeAdult   = false;
-        int      year           = Integer.valueOf(YEAR_FORMAT.format(today));
-        int      minVoteCount   = 0;
-        float    minVoteAverage = 0;
-        String   withGenres     = null;
-        String   minReleaseDate = DATE_FORMAT.format(oneWeekAgo);
-        String   maxReleaseDate = DATE_FORMAT.format(today);
-        String   certCountry    = null;
-        String   certLte        = null;
-        String   withCompanies  = null;
-
-
-        return new Discover().page(page)
-                             .language(language)
-                             .sortBy(sortBy)
-                             .includeAdult(includeAdult)
-                             .year(year)
-                             .primaryReleaseYear(year)
-                             .voteCountGte(minVoteCount)
-                             .voteAverageGte(minVoteAverage)
-                             .withGenres(withGenres)
-                             .releaseDateGte(minReleaseDate)
-                             .releaseDateLte(maxReleaseDate)
-                             .certificationCountry(certCountry)
-                             .certificationLte(certLte)
-                             .withCompanies(withCompanies);
-    }
-
-    private class QueryNewReleasesTask extends AsyncTask<Discover, Void, TmdbResultsList<MovieDb>> {
-        protected TmdbResultsList<MovieDb> doInBackground(Discover... discover) {
+    private class QueryNowPlayingTask extends AsyncTask<String, Void, TmdbResultsList<MovieDb>> {
+        protected TmdbResultsList<MovieDb> doInBackground(String... language) {
             try {
                 TheMovieDbApi movieDB = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
-                return movieDB.getDiscover(discover[0]);
+                return movieDB.getNowPlayingMovies(language[0], 0);
             } catch (MovieDbException e) {
                 Log.e("Search", "MovieDB  (MovieDbException) error");
                 String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
@@ -210,17 +165,16 @@ public class Home extends Fragment {
                 if (myListSize > LIST_SIZE) {
                     movieResults.subList(LIST_SIZE, myListSize).clear();
                 }
-                GetNewReleaseInfoTask infoTask = new GetNewReleaseInfoTask();
+                GetNowPlayingInfoTask infoTask = new GetNowPlayingInfoTask();
                 infoTask.execute(movieResults);
             }
         }
     }
 
-    private class GetNewReleaseInfoTask extends AsyncTask<ArrayList<MovieDb>, Void, ArrayList<Movie>> {
+    private class GetNowPlayingInfoTask extends AsyncTask<ArrayList<MovieDb>, Void, ArrayList<Movie>> {
         protected ArrayList<Movie> doInBackground(ArrayList<MovieDb>... movies) {
             try {
                 ArrayList<Movie> results = new ArrayList<>();
-                //ArrayList<MovieDb> movies = movieList[0];
                 for(MovieDb movie : movies[0]) {
                     // If movie in local DB, populate Movie Details with local DB data
                     if (movieDbHelper.checkMovieExists(movie.getId())) {
@@ -249,10 +203,10 @@ public class Home extends Fragment {
         protected void onPostExecute(ArrayList<Movie> results) {
             super.onPostExecute(results);
             if (results != null) {
-                headerNR.setVisibility(View.VISIBLE);
-                recyclerViewNR.setVisibility(View.VISIBLE);
+                headerNP.setVisibility(View.VISIBLE);
+                recyclerViewNP.setVisibility(View.VISIBLE);
                 for(Movie movie : results) {
-                    adapterNR.add(movie);
+                    adapterNP.add(movie);
                 }
             }
         }
@@ -295,7 +249,6 @@ public class Home extends Fragment {
         protected ArrayList<Movie> doInBackground(ArrayList<MovieDb>... movies) {
             try {
                 ArrayList<Movie> results = new ArrayList<>();
-                //ArrayList<MovieDb> movies = movieList[0];
                 for(MovieDb movie : movies[0]) {
                     // If movie in local DB, populate Movie Details with local DB data
                     if (movieDbHelper.checkMovieExists(movie.getId())) {
