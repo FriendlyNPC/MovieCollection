@@ -88,7 +88,7 @@ public class MovieDetails extends Fragment {
         setDetails();
 
         if (movie.getPosterUrl() != null) {
-            new DownloadPosterTask((ImageView) rootView.findViewById(R.id.moviePoster))
+            new DownloadPosterTask(getActivity(), (ImageView) rootView.findViewById(R.id.moviePoster))
                     .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
         }
 
@@ -143,7 +143,7 @@ public class MovieDetails extends Fragment {
         String dollarValue;
         int centsIndex;
         if (value > 0) {
-            dollarValue = DOLLAR_FORMAT.format(value);
+            dollarValue = "$" + DOLLAR_FORMAT.format(value);
             if (dollarValue.endsWith(".00")) {
                 centsIndex = dollarValue.lastIndexOf(".00");
                 if (centsIndex != -1) {

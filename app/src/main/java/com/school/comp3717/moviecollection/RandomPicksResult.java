@@ -68,7 +68,7 @@ public class RandomPicksResult extends Fragment {
                 setDetails();
 
                 if (movie.getPosterUrl() != null) {
-                    new DownloadPosterTask((ImageButton) rootView.findViewById(R.id.randomPicksPoster))
+                    new DownloadPosterTask(getActivity(), (ImageButton) rootView.findViewById(R.id.randomPicksPoster))
                             .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
                 }
 
