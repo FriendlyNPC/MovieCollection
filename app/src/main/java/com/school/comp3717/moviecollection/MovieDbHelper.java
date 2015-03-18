@@ -226,56 +226,15 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return movieListQuery(query);
     }
 
-    // Gets entire movie collection in local DB; stores in Movie ArrayList
-    public ArrayList<Movie> getMovieCollection() {
+    // Gets the entire collection, sorted by title (default collection filter)
+    public List<Movie> getMovieCollectionSorted() {
         String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
-                       + MovieTable.IS_COLLECTED + " = 1";
+                       + MovieTable.IS_COLLECTED + " = 1 ORDER BY " + MovieTable.TITLE + " ASC";
 
         return movieListQuery(query);
     }
 
-    //gets the entire collection, sorted by title (default collection filter)
-    public List<Movie> getMovieCollectionSorted() {
-        Cursor cr;
-        List<Movie> movies = new ArrayList<>();
-        SQLiteDatabase sq = this.getReadableDatabase();
-        cr = sq.rawQuery("SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
-                + MovieTable.IS_COLLECTED + " = 1 ORDER BY " + MovieTable.TITLE + " ASC", null);
-        if (cr.moveToFirst()) {
-            while (!cr.isAfterLast()) {
-                movies.add(
-                        new Movie(cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
-                                cr.getString( cr.getColumnIndex( MovieTable.TITLE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.RELEASE_DATE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.FILM_RATING )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.RUNTIME )),
-                                cr.getDouble( cr.getColumnIndex( MovieTable.VOTE_AVERAGE )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.VOTE_COUNT )),
-                                cr.getString( cr.getColumnIndex( MovieTable.TAG_LINE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.SYNOPSIS )),
-                                cr.getString( cr.getColumnIndex( MovieTable.POSTER_URL )),
-                                cr.getString( cr.getColumnIndex( MovieTable.GENRE )),
-                                cr.getString( cr.getColumnIndex( MovieTable.DIRECTOR )),
-                                cr.getString( cr.getColumnIndex( MovieTable.STUDIO )),
-                                cr.getDouble( cr.getColumnIndex( MovieTable.POPULARITY )),
-                                cr.getLong(   cr.getColumnIndex( MovieTable.BUDGET )),
-                                cr.getLong(   cr.getColumnIndex( MovieTable.REVENUE )),
-                                cr.getDouble( cr.getColumnIndex( MovieTable.MY_RATING )),
-                                cr.getString( cr.getColumnIndex( MovieTable.MY_REVIEW )),
-                                cr.getString( cr.getColumnIndex( MovieTable.LAST_WATCHED )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.WATCH_COUNT )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.IS_LOANED )),
-                                cr.getString( cr.getColumnIndex( MovieTable.DATE_ADDED )),
-                                cr.getInt(    cr.getColumnIndex( MovieTable.IS_COLLECTED )))
-                );
-                cr.moveToNext();
-            }
-        }
-        cr.close();
-        sq.close();
-        return movies;
-    }
-
+    // Update watch count of movie
     public void updateWatchCount(Movie movie) {
         Date now = new Date();
         String date = DATE_FORMAT.format(now);
@@ -294,6 +253,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Movie's lastWatched and watchCount updated");
     }
 
+    // Update myRating of movie
     public void updateMyRating(Movie movie, float rating) {
         SQLiteDatabase sq = this.getWritableDatabase();
         movie.setMyRating(rating);
@@ -305,6 +265,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Movie's myRating updated");
     }
 
+    // Update myReview of movie
     public void updateMyReview(Movie movie, String review) {
         SQLiteDatabase sq = this.getWritableDatabase();
         movie.setMyReview(review);
@@ -316,6 +277,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Movie's myReview updated");
     }
 
+    // Gets choices for spinner dropdown menu
     public List<String> getAllChoices(String column) {
         List<String> choices = new ArrayList<>();
         Set<String> tempSet = new TreeSet<>();
@@ -347,8 +309,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
         return choices;
     }
-
-
 
     // Gets random picks from movie collection in local DB using filters provided
     public ArrayList<Movie> getRandomPicks(String genre,
@@ -399,6 +359,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return movieListQuery(query);
     }
 
+    // Gets minimum (furthest back) release date of movies in collection
     public String getMinReleaseDate() {
         Cursor cr;
         SQLiteDatabase sq = this.getReadableDatabase();
@@ -443,8 +404,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         cr = sq.rawQuery(query, null);
         if (cr.moveToFirst()) {
             while (!cr.isAfterLast()) {
-                movies.add(
-                        new Movie(cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
+                movies.add(new Movie(
+                                cr.getInt(    cr.getColumnIndex( MovieTable.MOVIE_ID )),
                                 cr.getString( cr.getColumnIndex( MovieTable.TITLE )),
                                 cr.getString( cr.getColumnIndex( MovieTable.RELEASE_DATE )),
                                 cr.getString( cr.getColumnIndex( MovieTable.FILM_RATING )),
@@ -475,5 +436,16 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         sq.close();
 
         return movies;
+    }
+
+    // Gets all rated movies in collection, sorted by title (default collection filter)
+    public ArrayList<Movie> getRatedMovies() {
+        String query = "SELECT * FROM " + MovieTable.TABLE_NAME + " WHERE "
+                + MovieTable.MY_RATING + " > 0 OR " + MovieTable.MY_REVIEW
+                + " NOT NULL ORDER BY " + MovieTable.TITLE + " ASC";
+
+        Log.d(TAG, "getRatedMovies() called");
+
+        return movieListQuery(query);
     }
 }

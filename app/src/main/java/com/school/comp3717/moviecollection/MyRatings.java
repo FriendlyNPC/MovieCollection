@@ -1,11 +1,22 @@
 package com.school.comp3717.moviecollection;
 
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -13,18 +24,168 @@ import android.view.ViewGroup;
  */
 public class MyRatings extends Fragment {
 
+    private static final int YEAR_LENGTH = 4;
+
+    private ProgressBar ratingProgressBar;
+    private TextView    ratingResults;
+    private ListView    ratingItems;
 
     public MyRatings() {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_my_ratings, container, false);
+
+        ratingResults     = (TextView)    rootView.findViewById(R.id.myRatingsResultsStatus);
+        ratingProgressBar = (ProgressBar) rootView.findViewById(R.id.myRatingsProgressBar);
+        ratingItems       = (ListView)    rootView.findViewById(R.id.myRatingsItemList);
+
+        ratingResults.setVisibility(View.GONE);
+        ratingProgressBar.setVisibility(View.GONE);
+        ratingItems.setVisibility(View.GONE);
+
+        new GetAllRatingsTask().execute();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_ratings, container, false);
+        return rootView;
     }
 
+    private class GetAllRatingsTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
+        protected ArrayList<Movie> doInBackground(Void... params) {
+            try {
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+                return dbHelper.getRatedMovies();
+            } catch (Exception e) {
+                String msg = (e.getMessage() == null) ? "Movie DB search failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            }
+        }
 
+        protected void onPostExecute(ArrayList<Movie> result) {
+
+            ratingProgressBar.setVisibility(View.GONE);
+            if (result == null){
+                setRatingError();
+            }else {
+                setRatingResults(result);
+            }
+        }
+    }
+
+    public void setRatingError(){
+        ratingResults.setText(R.string.db_error);
+        ratingResults.setVisibility(View.VISIBLE);
+    }
+
+    public void setRatingResults(ArrayList<Movie> results){
+        if (getActivity() == null) { return; } // Stop the crash on rapid back-button presses
+        if (results == null || results.isEmpty()) {
+            ratingResults.setText(R.string.no_results);
+            ratingResults.setVisibility(View.VISIBLE);
+        } else {
+            RatingSearchItemArrayAdapter adapter = new RatingSearchItemArrayAdapter(getActivity(), results);
+            ratingItems.setAdapter(adapter);
+            ratingItems.setFastScrollEnabled(true);
+
+            /*ratingItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    RatingSearchItemArrayAdapter adapter = (RatingSearchItemArrayAdapter) parent.getAdapter();
+                    Movie selected = adapter.getMovie(position);
+                    ratingItems.setVisibility(View.GONE);
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.setMovie(selected);
+                }
+            });*/
+
+
+
+
+            /*{
+                @Override
+                public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+
+                    View reviewWrapper = view.findViewById(R.id.ratingItemReviewWrapper);
+
+                    // Creating the expand animation for the item
+                    ExpandAnimation expandAni = new ExpandAnimation(reviewWrapper, 500);
+
+                    // Start the animation on the toolbar
+                    reviewWrapper.startAnimation(expandAni);
+                }
+            });*/
+            ratingItems.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class RatingSearchItemArrayAdapter extends ArrayAdapter<Movie> {
+        private final Context          context;
+        private final ArrayList<Movie> movies;
+
+        public RatingSearchItemArrayAdapter(Context context, ArrayList<Movie> movies) {
+            super(context, R.layout.my_ratings_item, movies);
+            this.context = context;
+            this.movies = movies;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View rowView = inflater.inflate(R.layout.my_ratings_item, parent, false);
+
+            final ImageButton  expandButton  = (ImageButton)  rowView.findViewById(R.id.expandCollapseButton);
+            final TextView     reviewBody    = (TextView)     rowView.findViewById(R.id.ratingItemReviewBody);
+            final LinearLayout reviewWrapper = (LinearLayout) rowView.findViewById(R.id.ratingItemReviewWrapper);
+
+            TextView    title         = (TextView)    rowView.findViewById(R.id.ratingItemTitle);
+            TextView    reviewHeader  = (TextView)    rowView.findViewById(R.id.ratingItemReviewHeader);
+            Movie       movie         = movies.get(position);
+            String      release       = movie.getReleaseDate();
+
+            if (release == null || release.trim().isEmpty()) {
+                title.setText(movie.getTitle());
+            } else {
+                title.setText(movie.getTitle() + " (" + release.substring(0, YEAR_LENGTH) + ")");
+            }
+
+            LinearLayout.LayoutParams wrapperParams =
+                    (LinearLayout.LayoutParams) reviewWrapper.getLayoutParams();
+
+            if (movie.getMyReview() != null) {
+                reviewBody.setText(movie.getMyReview());
+
+                expandButton.setOnClickListener(new ImageButton.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (reviewWrapper.getVisibility() == View.GONE) {
+                            reviewWrapper.setVisibility(View.VISIBLE);
+                            expandButton.setImageDrawable(getContext().getResources()
+                                                              .getDrawable(R.drawable.arrow_up));
+                        } else {
+                            reviewWrapper.setVisibility(View.GONE);
+                            expandButton.setImageDrawable(getContext().getResources()
+                                                              .getDrawable(R.drawable.arrow_down));
+                        }
+                    }
+                });
+            } else {
+                reviewBody.setVisibility(View.GONE);
+                reviewHeader.setVisibility(View.GONE);
+                reviewWrapper.setVisibility(View.GONE);
+                expandButton.setVisibility(View.GONE);
+            }
+
+            return rowView;
+        }
+
+        public Movie getMovie(int position){
+            return movies.get(position);
+        }
+    }
 }

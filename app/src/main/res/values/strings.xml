@@ -102,6 +102,13 @@
     <string name="review_header_text">My Review</string>
     <string name="save_review_text">Save Review</string>
 
+    // My Ratings fragment
+    <string name="rating_item_title">Movie Title (Year)</string>
+    <string name="rating_item_review">Show Review</string>
+    <string name="rating_item_review_body">Review Body</string>
+    <string name="expand_button">Expand</string>
+    <string name="collapse_button">Collapse</string>
+
     // Random Picks fragment
     <string name="random_picks_tag">random_picks_tag</string>
     <string name="random_picks_header">Random Picks</string>
