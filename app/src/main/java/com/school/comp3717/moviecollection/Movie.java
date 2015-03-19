@@ -110,7 +110,7 @@ public class Movie implements Parcelable {
         this.budget = source.getBudget();
         this.revenue = source.getRevenue();
 
-        this.myRating = 0;
+        this.myRating = -1; // Negative until user rates it from 0 to 5
         this.myReview = null;
         this.lastWatched = null;
         this.watchCount = 0;

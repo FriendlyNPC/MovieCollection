@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ public class MyRatings extends Fragment {
         ratingItems       = (ListView)    rootView.findViewById(R.id.myRatingsItemList);
 
         ratingResults.setVisibility(View.GONE);
-        ratingProgressBar.setVisibility(View.GONE);
         ratingItems.setVisibility(View.GONE);
 
         new GetAllRatingsTask().execute();
@@ -89,34 +89,6 @@ public class MyRatings extends Fragment {
             RatingSearchItemArrayAdapter adapter = new RatingSearchItemArrayAdapter(getActivity(), results);
             ratingItems.setAdapter(adapter);
             ratingItems.setFastScrollEnabled(true);
-
-            /*ratingItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    RatingSearchItemArrayAdapter adapter = (RatingSearchItemArrayAdapter) parent.getAdapter();
-                    Movie selected = adapter.getMovie(position);
-                    ratingItems.setVisibility(View.GONE);
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.setMovie(selected);
-                }
-            });*/
-
-
-
-
-            /*{
-                @Override
-                public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-
-                    View reviewWrapper = view.findViewById(R.id.ratingItemReviewWrapper);
-
-                    // Creating the expand animation for the item
-                    ExpandAnimation expandAni = new ExpandAnimation(reviewWrapper, 500);
-
-                    // Start the animation on the toolbar
-                    reviewWrapper.startAnimation(expandAni);
-                }
-            });*/
             ratingItems.setVisibility(View.VISIBLE);
         }
     }
@@ -133,19 +105,21 @@ public class MyRatings extends Fragment {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View rowView = inflater.inflate(R.layout.my_ratings_item, parent, false);
 
             final ImageButton  expandButton  = (ImageButton)  rowView.findViewById(R.id.expandCollapseButton);
+            final TextView     reviewHeader  = (TextView)     rowView.findViewById(R.id.ratingItemReviewHeader);
             final TextView     reviewBody    = (TextView)     rowView.findViewById(R.id.ratingItemReviewBody);
             final LinearLayout reviewWrapper = (LinearLayout) rowView.findViewById(R.id.ratingItemReviewWrapper);
+            final Movie        movie         = movies.get(position);
 
-            TextView    title         = (TextView)    rowView.findViewById(R.id.ratingItemTitle);
-            TextView    reviewHeader  = (TextView)    rowView.findViewById(R.id.ratingItemReviewHeader);
-            Movie       movie         = movies.get(position);
-            String      release       = movie.getReleaseDate();
+            TextView  title        = (TextView)  rowView.findViewById(R.id.ratingItemTitle);
+            RatingBar ratingBar    = (RatingBar) rowView.findViewById(R.id.ratingItemValue);
+            String    release      = movie.getReleaseDate();
 
             if (release == null || release.trim().isEmpty()) {
                 title.setText(movie.getTitle());
@@ -153,8 +127,19 @@ public class MyRatings extends Fragment {
                 title.setText(movie.getTitle() + " (" + release.substring(0, YEAR_LENGTH) + ")");
             }
 
-            LinearLayout.LayoutParams wrapperParams =
-                    (LinearLayout.LayoutParams) reviewWrapper.getLayoutParams();
+            title.setOnClickListener(new TextView.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.setMovie(movie);
+                }
+            });
+
+            if (movie.getMyRating() < 0) {
+                ratingBar.setVisibility(View.GONE);
+            } else {
+                ratingBar.setRating((float)movie.getMyRating());
+            }
 
             if (movie.getMyReview() != null) {
                 reviewBody.setText(movie.getMyReview());
@@ -162,15 +147,19 @@ public class MyRatings extends Fragment {
                 expandButton.setOnClickListener(new ImageButton.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        String show = "Show Review";
+                        String hide = "Hide Review";
 
                         if (reviewWrapper.getVisibility() == View.GONE) {
                             reviewWrapper.setVisibility(View.VISIBLE);
                             expandButton.setImageDrawable(getContext().getResources()
                                                               .getDrawable(R.drawable.arrow_up));
+                            reviewHeader.setText(hide);
                         } else {
                             reviewWrapper.setVisibility(View.GONE);
                             expandButton.setImageDrawable(getContext().getResources()
                                                               .getDrawable(R.drawable.arrow_down));
+                            reviewHeader.setText(show);
                         }
                     }
                 });
@@ -182,10 +171,6 @@ public class MyRatings extends Fragment {
             }
 
             return rowView;
-        }
-
-        public Movie getMovie(int position){
-            return movies.get(position);
         }
     }
 }

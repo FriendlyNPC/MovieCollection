@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/myRatingsItemList"
-        android:divider="@color/grey_500"
-        android:dividerHeight="1dp"/>
+        android:divider="@color/grey_400"
+        android:dividerHeight="2dp"/>
 
 </RelativeLayout>

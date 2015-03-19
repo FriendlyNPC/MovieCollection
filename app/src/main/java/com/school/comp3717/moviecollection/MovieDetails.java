@@ -104,7 +104,8 @@ public class MovieDetails extends Fragment {
         userRating.setText("User Rating:\n" + RATING_FORMAT.format(movie.getVoteAverage())
                            + "/5 (" + movie.getVoteCount() + " votes)");
         userRatingBar.setRating((float)movie.getVoteAverage());
-        myRatingBar.setRating((float)movie.getMyRating());
+        // If myRating < 0, means user has not rated it yet; show rating bar as 0 out of 5
+        myRatingBar.setRating((movie.getMyRating() < 0) ? 0 : (float)movie.getMyRating());
         myReview.setText(movie.getMyReview());
 
         setFieldFromText(movie.getReleaseDate(), releaseDate);
