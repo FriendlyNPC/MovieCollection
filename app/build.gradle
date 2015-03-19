@@ -32,5 +32,10 @@ dependencies {
         exclude module: 'httpclient'
     }
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+
+    repositories {
+        mavenCentral()
+    }
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
 }
 

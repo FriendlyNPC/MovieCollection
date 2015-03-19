@@ -42,10 +42,14 @@
         <item>Runtime</item>
         <item>Release Date</item>
     </string-array>
-    <string-array name="filter_sort_order_by">
-        <item>Ascending</item>
-        <item>Descending</item>
-    </string-array>
+    <string name="asc">ASC</string>
+    <string name="desc">DESC</string>
+
+    //genre_filter dialog
+    <string name="genre_filter_dialog_title">Filter Genre(s)</string>
+    <string name="genre_filter_positive">OK</string>
+    <string name="genre_filter_negative">Cancel</string>
+
 
     // My Lists Fragment
     <string name="my_lists_header">My Lists</string>
