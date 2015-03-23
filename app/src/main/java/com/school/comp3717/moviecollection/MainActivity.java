@@ -19,6 +19,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.school.comp3717.moviecollection.search.SearchResults;
 
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private Toolbar                 toolbar;
     private String[]                navigationDrawerItems;
     private Fragment[]              appFragments;
-    private Random                  randomizer  = new Random();
+    private Random                  randomizer = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,21 @@ public class MainActivity extends ActionBarActivity {
 
         // set home screen
         selectItem(0);
+
+        // Create default options which will be used for every
+        // displayImage(...) call if no options will be passed to this method
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .displayer(new FadeInBitmapDisplayer(500))
+                .build();
+
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+
+        ImageLoader.getInstance().init(config);
     }
 
     @Override

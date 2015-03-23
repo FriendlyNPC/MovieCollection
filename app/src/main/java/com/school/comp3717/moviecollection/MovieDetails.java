@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import com.school.comp3717.moviecollection.tools.DownloadPoster;
 import com.school.comp3717.moviecollection.tools.DownloadPosterTask;
 
 /**
@@ -88,8 +89,9 @@ public class MovieDetails extends Fragment {
         setDetails();
 
         if (movie.getPosterUrl() != null) {
-            new DownloadPosterTask(getActivity(), (ImageView) rootView.findViewById(R.id.moviePoster))
-                    .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
+            DownloadPoster.getPoster(getActivity(),
+                                     movie.getPosterUrl(),
+                                     poster);
         }
 
         return rootView;

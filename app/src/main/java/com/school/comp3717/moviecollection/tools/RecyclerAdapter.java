@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.school.comp3717.moviecollection.Movie;
 import com.school.comp3717.moviecollection.R;
 
@@ -42,8 +43,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         viewHolder.imgViewIcon.setImageResource(R.drawable.default_poster);
         // TODO: Cache the posters and only make API call if not in cache
         if (movie.getPosterUrl() != null) {
-            new DownloadPosterTask(viewHolder.imgViewIcon.getContext(), viewHolder.imgViewIcon)
-                    .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
+            DownloadPoster.getPoster(viewHolder.imgViewIcon.getContext(),
+                                     movie.getPosterUrl(),
+                                     viewHolder.imgViewIcon);
+
+            //ImageLoader.getInstance().displayImage("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl(), viewHolder.imgViewIcon);
+            /*new DownloadPosterTask(viewHolder.imgViewIcon.getContext(), viewHolder.imgViewIcon)
+                    .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());*/
             Log.d(TAG, "Grabbed poster for " + movie.getTitle());
         }
         viewHolder.itemView.setTag(movie);
