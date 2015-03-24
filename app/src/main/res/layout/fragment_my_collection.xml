@@ -54,7 +54,7 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/filter_pane"
         android:background="@color/grey_0"
@@ -78,7 +78,7 @@
                 />
 
             <TableLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/filter_table"
                 android:layout_below="@id/filter_text"
@@ -92,7 +92,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp">
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -104,7 +104,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/filter_sort_by" />
-
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp">
                     <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -112,9 +116,10 @@
                         android:textOff="@string/desc"
                         android:checked="true"
                         android:textColor="@color/grey_0"
+                        android:layout_span="2"
                         android:id="@+id/filter_sort_switch" />
-
                 </TableRow>
+
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -149,7 +154,7 @@
                         android:textColor="@color/green_800"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="@string/runtime_value"
-                        android:layout_span="3"
+                        android:layout_span="2"
                         android:gravity="end"/>
 
                 </TableRow>
@@ -173,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/filter_runtimeSeekBar"
-                        android:layout_span="2"/>
+                        />
 
                 </TableRow>
 
@@ -220,41 +225,36 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/filter_yearRangeSeekBar"
-                        android:layout_span="2"/>
+                        />
 
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp">
-
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/filter_pane_genre"
-                        android:id="@+id/filter_genre_button"
-                        android:background="@color/green_300"
-                        android:layout_gravity="center"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:layout_span="2"
-                        android:textColor="@color/grey_0"/>
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/filter_pane_OK"
-                        android:id="@+id/filter_ok_button"
-                        android:background="@color/green_300"
-                        android:layout_gravity="center"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:layout_span="1"
-                        android:onClick="closeFilterPanel"
-                        android:textColor="@color/grey_0"/>
                 </TableRow>
             </TableLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/filter_table"
+                android:layout_alignStart="@id/filter_table"
+                android:text="@string/filter_pane_genre"
+                android:id="@+id/filter_genre_button"
+                android:background="@color/green_300"
+                android:layout_gravity="start"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/grey_0"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/filter_table"
+                android:layout_alignEnd="@id/filter_table"
+                android:text="@string/filter_pane_OK"
+                android:id="@+id/filter_ok_button"
+                android:background="@color/green_300"
+                android:layout_gravity="right"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/grey_0"/>
         </RelativeLayout>
     </FrameLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
