@@ -151,7 +151,7 @@ public class OnlineResultsList extends Fragment {
             boolean exists = inDb.contains(movies.get(position).getId());
 
             if (exists) {
-                quickAdd.setVisibility(View.GONE);
+                quickAdd.setVisibility(View.INVISIBLE);
             }
 
             return rowView;
@@ -246,7 +246,7 @@ public class OnlineResultsList extends Fragment {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            button.setVisibility(View.GONE);
+            button.setVisibility(View.INVISIBLE);
         }
 
         protected Movie doInBackground(MovieDb... query) {

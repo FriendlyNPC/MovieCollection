@@ -20,12 +20,13 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/feedbackLink"
-        android:text="@string/feedback_link_text"
+        android:id="@+id/feedbackButton"
+        android:text="@string/feedback_button_text"
         android:textColor="@color/green_300"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp" />
 
@@ -38,12 +39,13 @@
         android:textStyle="italic"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/reportLink"
-        android:text="@string/report_link_text"
+        android:id="@+id/reportButton"
+        android:text="@string/report_button_text"
         android:textColor="@color/green_300"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp" />
 
@@ -56,32 +58,30 @@
         android:textStyle="italic"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/promoteLink"
-        android:text="@string/promote_link_text"
+        android:id="@+id/shareButton"
+        android:text="@string/share_button_text"
         android:textColor="@color/green_300"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/promoteText"
-        android:text="@string/promote_description_text"
+        android:id="@+id/shareText"
+        android:text="@string/share_description_text"
         android:textColor="@color/grey_600"
         android:textStyle="italic"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lineBreak"
-        android:text="@string/line_break_text"
-        android:textColor="@color/grey_600"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/grey_600"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -92,23 +92,5 @@
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/termsOfServiceLink"
-        android:text="@string/terms_of_service_text"
-        android:textColor="@color/green_300"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/privacyPolicyLink"
-        android:text="@string/privacy_policy_text"
-        android:textColor="@color/green_300"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp" />
 
 </LinearLayout>
