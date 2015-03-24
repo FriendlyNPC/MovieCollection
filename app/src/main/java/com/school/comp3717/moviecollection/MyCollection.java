@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
@@ -27,6 +28,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.school.comp3717.moviecollection.collection.GenreFilterDialog;
+import com.school.comp3717.moviecollection.collection.MovieFilter;
 import com.school.comp3717.moviecollection.tools.RangeSeekBar;
 import com.school.comp3717.moviecollection.tools.ViewGroupUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -69,6 +71,10 @@ public class MyCollection extends Fragment{
     private String[]    genres;
     private Switch      orderBy;
     private Button      filterGenres;
+    private Button      filterOk;
+
+    //filtering stuff;
+    private MovieFilter filter;
 
     public MyCollection() {
         // Required empty public constructor
@@ -86,6 +92,10 @@ public class MyCollection extends Fragment{
         SeekBar oldSeekBar;
         TextView yearRangeMin;
         TextView yearRangeMax;
+
+        //filter
+        filter = new MovieFilter();
+
 
         //main view stuff
         collectionResults       = (TextView)            rootView.findViewById(R.id.myCollectionResultsStatus);
@@ -105,16 +115,27 @@ public class MyCollection extends Fragment{
         yearRangeMax      = (TextView) rootView.findViewById(R.id.filter_yearRangeMax);
         orderBy           = (Switch) rootView.findViewById(R.id.filter_sort_switch);
         filterGenres      = (Button) rootView.findViewById(R.id.filter_genre_button);
+        filterOk          = (Button) rootView.findViewById(R.id.filter_ok_button);
 
         String[] myResSortByArray = getResources().getStringArray(R.array.filter_sort_options);
         List<String> sortByList = Arrays.asList(myResSortByArray);
 
+        orderBy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filter.setIsAscending(isChecked);
+            }
+        });
+
+
         sortBySpinner.setAdapter(loadSpinnerData(sortByList));
+
         filmRatingSpinner.setAdapter(loadSpinnerData("filmRating"));
 
 
         setSeekBar(runtimeSeekBar, runtimeValue);
         setFilterButton(filterGenres);
+        setOkButton(filterOk);
         setRangeSeekBar(oldSeekBar, yearRangeMin, yearRangeMax);
 
 
@@ -132,6 +153,11 @@ public class MyCollection extends Fragment{
             public void onPanelCollapsed(View view) {
                 collectionItems.setEnabled(true);
                 collectionItems.refreshDrawableState();
+
+                filter.setSort(sortBySpinner.getSelectedItemPosition());
+                filter.setMaxRating((String) filmRatingSpinner.getSelectedItem());
+                doFilterQuery();
+
             }
 
             @Override
@@ -150,6 +176,7 @@ public class MyCollection extends Fragment{
             }
         });
 
+        collectionProgressBar.setVisibility(View.VISIBLE);
         new GetAllMoviesTask().execute();
 
         return rootView;
@@ -162,7 +189,15 @@ public class MyCollection extends Fragment{
                 createFilterDialog();
             }
         });
+    }
 
+    private void setOkButton(Button button){
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                slidePanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
     }
 
     private ArrayAdapter loadSpinnerData(String column) {
@@ -179,7 +214,7 @@ public class MyCollection extends Fragment{
                 View v = super.getView(position,
                         convertView,
                         parent);
-                ((TextView) v).setTextColor(getResources().getColorStateList(R.color.grey_800));
+                ((TextView) v).setTextColor(getResources().getColorStateList(R.color.green_800));
                 return v;
             }
         };
@@ -200,7 +235,7 @@ public class MyCollection extends Fragment{
                 View v = super.getView(position,
                         convertView,
                         parent);
-                ((TextView) v).setTextColor(getResources().getColorStateList(R.color.grey_800));
+                ((TextView) v).setTextColor(getResources().getColorStateList(R.color.green_800));
                 return v;
             }
         };
@@ -209,6 +244,7 @@ public class MyCollection extends Fragment{
         // attaching data adapter to spinner
         return dataAdapter;
     }
+
 
     public void setSeekBar(final SeekBar seekBar, final TextView value) {
         /* If you want values from 3 to 5 with a step of 0.1 (3, 3.1, 3.2, ..., 5)
@@ -221,10 +257,12 @@ public class MyCollection extends Fragment{
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onStopTrackingTouch(SeekBar runtimeSeekBar) {}
+            public void onStopTrackingTouch(SeekBar runtimeSeekBar) {
+            }
 
             @Override
-            public void onStartTrackingTouch(SeekBar runtimeSeekBar) {}
+            public void onStartTrackingTouch(SeekBar runtimeSeekBar) {
+            }
 
             @Override
             public void onProgressChanged(SeekBar runtimeSeekBar, int progress, boolean fromUser) {
@@ -232,24 +270,24 @@ public class MyCollection extends Fragment{
                 if (seekBarValue == SEEKBAR_MAX) {
                     runtime = NO_LIMIT;
                     value.setText("No limit");
+                    filter.setMaxRuntime(filter.MAX_RUNTIME);
                 } else {
                     runtime = seekBarValue;
+                    filter.setMaxRuntime(seekBarValue);
                     value.setText(Integer.valueOf(seekBarValue).toString() + " min");
+
                 }
             }
         });
     }
 
-
-    public void doQuery(String query){
-        //TODO: do query stuff here
-
+    public void doFilterQuery(){
         collectionResults.setVisibility(View.GONE);
         collectionItems.setVisibility(View.GONE);
         collectionProgressBar.setVisibility(View.VISIBLE);
 
-        QueryCollectionMoviesTask collectionMoviesTask = new QueryCollectionMoviesTask();
-        collectionMoviesTask.execute(query);
+        getFilteredMoviesTask collectionMoviesTask = new getFilteredMoviesTask();
+        collectionMoviesTask.execute(filter);
     }
 
 
@@ -260,9 +298,8 @@ public class MyCollection extends Fragment{
             collectionResults.setVisibility(View.VISIBLE);
         }else{
             CollectionSearchItemArrayAdapter adapter = new CollectionSearchItemArrayAdapter(getActivity(),
-                    results,SortType.TITLE);
+                    results, filter.getSortEnum() );
             collectionItems.setAdapter(adapter);
-            collectionItems.setFastScrollEnabled(true);
 
             collectionItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -276,7 +313,6 @@ public class MyCollection extends Fragment{
             });
             collectionItems.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void setCollectionError(){
@@ -338,9 +374,9 @@ public class MyCollection extends Fragment{
         private String[] sections;
         private SparseIntArray positionToSection;
         private SparseIntArray sectionToPosition;
-        private SortType sortingMethod;
+        private MovieFilter.SortOrder sortingMethod;
 
-        public CollectionSearchItemArrayAdapter(Context context, List<Movie> objects, SortType sort) {
+        public CollectionSearchItemArrayAdapter(Context context, List<Movie> objects, MovieFilter.SortOrder sort) {
             super(context, R.layout.search_result_collection_item, objects);
             this.context = context;
             this.movies = objects;
@@ -352,13 +388,13 @@ public class MyCollection extends Fragment{
                 case TITLE:
                     sections = getTitleSections();
                     break;
-                case RATING:
+                case FILM_RATING:
                     sections = getRatingSections();
                     break;
                 case RUNTIME:
                     sections = getRuntimeSections();
                     break;
-                case YEAR:
+                case RELEASE_DATE:
                     sections = getYearSections();
                     break;
                 default:
@@ -433,7 +469,6 @@ public class MyCollection extends Fragment{
                     sectionToPosition.put(i, sectionIndex);
                 }
             }
-
             return section.toArray(new String[section.size()]);
         }
 
@@ -497,13 +532,6 @@ public class MyCollection extends Fragment{
         }
     }
 
-    public enum SortType{
-        TITLE,
-        YEAR,
-        RATING,
-        RUNTIME,
-    }
-
     public void setRangeSeekBar(SeekBar oldSeekBar,
                                 final TextView yearRangeMin,
                                 final TextView yearRangeMax) {
@@ -536,6 +564,7 @@ public class MyCollection extends Fragment{
                         new Date(minValue),
                         new Date(maxValue));
                 Log.d(TAG, "Date range selected: MIN = " + minReleaseDate + ", MAX = " + maxReleaseDate);
+
             }
         });
 
@@ -568,7 +597,11 @@ public class MyCollection extends Fragment{
         yearRangeMax.setText(maxReleaseDate);
         minReleaseDate += "-01-01";
         maxReleaseDate += "-12-31";
+        filter.setMinDate(minReleaseDate);
+        filter.setMaxDate(maxReleaseDate);
     }
+
+
 
     public void createFilterDialog(){
         MovieDbHelper db = new MovieDbHelper(getActivity());
@@ -582,23 +615,47 @@ public class MyCollection extends Fragment{
         DialogFragment dialog = new GenreFilterDialog();
 
         dialog.setArguments(args);
-        dialog.setTargetFragment(this, 0);
+        dialog.setTargetFragment(this, DIALOG_FRAGMENT);
         dialog.show(getFragmentManager(), "dialog");
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
         switch(requestCode) {
             case DIALOG_FRAGMENT:
-
                 if (resultCode == Activity.RESULT_OK) {
-                    // After Ok code.
-
+                    Log.d("Filter Query", "dialog got results " + data.getStringArrayListExtra("selected").toString());
+                    filter.setGenres(data.getStringArrayListExtra("selected"));
                 } else if (resultCode == Activity.RESULT_CANCELED){
                     // After Cancel code.
                 }
-
                 break;
+        }
+    }
+
+
+    public class getFilteredMoviesTask extends AsyncTask<MovieFilter, Void, List<Movie>> {
+
+        @Override
+        protected List<Movie> doInBackground(MovieFilter... params) {
+            try {
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+                return dbHelper.getMovieByFilter(params[0]);
+            } catch (Exception e) {
+                String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();
+                Log.e("Search", msg);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> results){
+            collectionProgressBar.setVisibility(View.GONE);
+            if (results == null){
+                setCollectionError();
+            }else {
+                setCollectionResults(results);
+            }
         }
     }
 

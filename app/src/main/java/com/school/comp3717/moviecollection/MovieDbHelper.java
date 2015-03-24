@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.omertron.themoviedbapi.model.MovieDb;
 import com.school.comp3717.moviecollection.MovieDbContract.MovieTable;
+import com.school.comp3717.moviecollection.collection.MovieFilter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     private static final String           DATABASE_NAME    = "Movie.db";
     private static final SimpleDateFormat DATE_FORMAT      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String           TAG              = "MovieDbHelper";
-    private static final String           NO_PREF          = "No Preference";
+    public  static final String           NO_PREF          = "No Preference";
     private static final String           INT_TYPE         = " INTEGER";
     private static final String           TEXT_TYPE        = " TEXT";
     private static final String           REAL_TYPE        = " REAL";
@@ -446,6 +447,85 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
         return movieListQuery(query);
     }
+
+    /**
+     * gets movies in the collection based on a filter object
+     * @param filter
+     * @return list of movies that fit query
+     */
+    public ArrayList<Movie> getMovieByFilter(MovieFilter filter){
+        String query = buildQueryFromFilter(filter);
+        Log.d( "Filter Query", query );
+        return movieListQuery(query);
+    }
+
+    /**
+     * Helper function that builds a raw query from a filter object
+     * @param filter
+     * @return raw sql query string
+     */
+    private String buildQueryFromFilter(MovieFilter filter){
+        String query = "";
+        boolean addAndToQuery = false;
+        query += "SELECT * FROM " + MovieDbContract.MovieTable.TABLE_NAME + " ";
+        query += "WHERE ";
+
+        if(!filter.getMaxRating().equals(MovieDbHelper.NO_PREF)){
+            query += MovieDbContract.MovieTable.FILM_RATING + " IN  ( ";
+            switch (filter.getMaxRating()) {
+                case "N-17":
+                    query += "\"NC-17\", ";
+                case "R":
+                    query += "\"R\", ";
+                case "PG-13":
+                    query += "\"PG-13\", ";
+                case "PG":
+                    query += "\"PG\", ";
+                case "G":
+                    query += "\"G\" ) ";
+                    break;
+                default:
+                    query += ") ";
+                    break;
+            }
+            addAndToQuery = true;
+        }
+
+        if (addAndToQuery){
+            query += "AND ";
+            addAndToQuery = false;
+        }
+
+        if ( !filter.getGenres().equals(MovieDbHelper.NO_PREF) ){
+            query += filter.getGenres();
+            addAndToQuery = true;
+        }
+
+        if (addAndToQuery){
+            query += "AND ";
+            addAndToQuery = false;
+        }
+
+        if(filter.getMaxRuntime() < filter.MAX_RUNTIME) {
+            query += MovieDbContract.MovieTable.RUNTIME + " <= " + filter.getMaxRuntime() + " ";
+            addAndToQuery = true;
+        }
+
+        if (addAndToQuery){
+            query += "AND ";
+            addAndToQuery = false;
+        }
+
+        query += MovieDbContract.MovieTable.RELEASE_DATE + " BETWEEN '" + filter.getMinDate() + "'"
+                + " AND '" + filter.getMaxDate() + "' ";
+
+        query += "AND " + MovieDbContract.MovieTable.IS_COLLECTED + " = 1 ";
+
+        query += "ORDER BY " + filter.getSort() + " " + filter.isAscendingString();
+
+        return query;
+    }
+
 
     // Helper function for retrieving movie lists from local Db
     private ArrayList<Movie> movieListQuery(String query) {

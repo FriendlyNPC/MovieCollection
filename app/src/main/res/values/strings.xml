@@ -2,6 +2,7 @@
 <resources>
     <string name="apiKey">48a5ee87fadc129033207cea80b86b81</string>
 
+    //TODO: Change to My Movies for final project
     <string name="app_name">3R_MovieCollection</string>
     <string name="movie_collection">Movie Collection!</string>
     <string name="action_settings">Settings</string>
@@ -32,13 +33,14 @@
 
     // My Collection Fragment
     <string name="filter_pane_text">Filter Collection</string>
-    <string name="filter_pane_genre">Filter Genre(s)</string>
+    <string name="filter_pane_genre">Show Genre(s)</string>
+    <string name="filter_pane_OK">OK</string>
     <string name="filter_pane_rating">Max Rating</string>
     <string name="filter_pane_length">Max Length</string>
     <string name="filter_pane_sort_option_title">Sort By</string>
     <string-array name="filter_sort_options">
         <item>Title</item>
-        <item>Rating</item>
+        <item>Film Rating</item>
         <item>Runtime</item>
         <item>Release Date</item>
     </string-array>
@@ -46,7 +48,7 @@
     <string name="desc">DESC</string>
 
     //genre_filter dialog
-    <string name="genre_filter_dialog_title">Filter Genre(s)</string>
+    <string name="genre_filter_dialog_title">Display Which Genre(s)?</string>
     <string name="genre_filter_positive">OK</string>
     <string name="genre_filter_negative">Cancel</string>
 
