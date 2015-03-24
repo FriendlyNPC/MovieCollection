@@ -28,8 +28,6 @@
     <string name="most_popular">Most Popular</string>
     <string name="searchActivity">MovieSearch</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="home_blank_fragment">Hello blank fragment. From Home Screen</string>
-    <string name="about_blank_fragment">Hello blank fragment. From About Screen</string>
 
     // My Collection Fragment
     <string name="filter_pane_text">Filter Collection</string>
@@ -136,17 +134,18 @@
     <string name="results_criteria">We did not find any movies matching that criteria in your collection.</string>
 
     // About fragment
-    <string name="version_text">Version 0.1\n© 2015 Team KGY</string>
-    <string name="feedback_link_text">Send feedback</string>
+    <string name="version_text">Version 1.0\n© 2015 Team KGY</string>
+    <string name="feedback_button_text">Send Feedback</string>
     <string name="feedback_description_text">Tell us what you think</string>
-    <string name="report_link_text">Report a problem</string>
+    <string name="report_button_text">Report Bugs</string>
     <string name="report_description_text">Let us know about a bug or problem</string>
-    <string name="promote_link_text">Spread the word</string>
-    <string name="promote_description_text">Tell your friends where they can get this app</string>
-    <string name="line_break_text">....................................................................</string>
-    <string name="app_description_text">My Movie Collection allows you to keep track of movies that you own or have watched, as well as creating and sharing movie lists with others. This app is optimized for Lollipop.</string>
-    <string name="terms_of_service_text">Terms of Service</string>
-    <string name="privacy_policy_text">Privacy Policy</string>
+    <string name="share_button_text">Share</string>
+    <string name="share_description_text">Tell your friends where they can get this app</string>
+    <string name="app_description_text">My Movies allows you to keep track of movies you own and watch. Movie information is provided by The Movie Database (TMDb). This app is optimized for Lollipop.</string>
+    <string name="feedback_subject">My Movies: Feedback</string>
+    <string name="report_subject">My Movies: Bug Report</string>
+    <string name="share_subject">Check out My Movies App!</string>
+    <string name="share_body">Hey, you should check out this app I found. It\'s called My Movies. It\'s great for tracking movies you own and looking up new movies to watch.</string>
 
     <string name="hello_world">Hello world!</string>
 </resources>
