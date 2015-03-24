@@ -37,5 +37,6 @@ dependencies {
         mavenCentral()
     }
     compile 'com.sothree.slidinguppanel:library:3.0.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 }
 

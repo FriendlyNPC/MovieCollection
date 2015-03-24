@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.school.comp3717.moviecollection.tools.DownloadPoster;
 import com.school.comp3717.moviecollection.tools.DownloadPosterTask;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class RandomPicksResult extends Fragment {
     private Movie            movie;
     private ArrayList<Movie> randomPicks;
     private TextView         title;
-    private int              choice;
 
     public RandomPicksResult() {
         // Required empty public constructor
@@ -42,9 +42,9 @@ public class RandomPicksResult extends Fragment {
         randomPicks = this.getArguments().getParcelableArrayList("randomPicks");
         movie       = this.getArguments().getParcelable("pick");
 
-        posterButton = (ImageButton) rootView.findViewById(R.id.randomPicksPoster);
-        title = (TextView) rootView.findViewById(R.id.randomPicksTitle);
-        nextPickButton = (Button) rootView.findViewById(R.id.nextPickButton);
+        posterButton   = (ImageButton) rootView.findViewById(R.id.randomPicksPoster);
+        title          = (TextView)    rootView.findViewById(R.id.randomPicksTitle);
+        nextPickButton = (Button)      rootView.findViewById(R.id.nextPickButton);
 
         if (randomPicks.isEmpty()) {
             posterButton.setImageResource(R.drawable.sad_face);
@@ -61,8 +61,9 @@ public class RandomPicksResult extends Fragment {
             setDetails();
 
             if (movie.getPosterUrl() != null) {
-                new DownloadPosterTask(getActivity(), (ImageButton) rootView.findViewById(R.id.randomPicksPoster))
-                        .execute("http://image.tmdb.org/t/p/w185" + movie.getPosterUrl());
+                DownloadPoster.getPoster(getActivity(),
+                                         movie.getPosterUrl(),
+                                         posterButton);
             }
 
             setPosterButton(posterButton);
