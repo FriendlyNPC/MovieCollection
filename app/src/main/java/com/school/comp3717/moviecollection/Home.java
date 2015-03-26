@@ -70,6 +70,16 @@ public class Home extends Fragment {
         headerNP                        = (TextView) rootView.findViewById(R.id.newReleasesHeader);
         headerMP                        = (TextView) rootView.findViewById(R.id.mostPopularHeader);
 
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
+        recyclerViewNP.setLayoutManager(layoutManager1);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
+        recyclerViewMP.setLayoutManager(layoutManager2);
+        LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity());
+        recyclerViewRA.setLayoutManager(layoutManager3);
+        LinearLayoutManager layoutManager4 = new LinearLayoutManager(getActivity());
+        recyclerViewJW.setLayoutManager(layoutManager4);
+
+
         setRecyclerView(recentlyAdded, recyclerViewRA, adapterRA, headerRA, false);
         setRecyclerView(justWatched,   recyclerViewJW, adapterJW, headerJW, false);
         setRecyclerView(nowPlaying,    recyclerViewNP, adapterNP, headerNP, true);

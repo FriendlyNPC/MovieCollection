@@ -144,6 +144,9 @@ public class RandomPicks extends Fragment {
         String dateStr = db.getMinReleaseDate();
         Date date = null;
         try {
+            if (dateStr == null || dateStr.isEmpty()){
+                dateStr = "1900-01-01";
+            }
             date = DATE_FORMAT.parse(dateStr);
         } catch (ParseException e) {
             Log.e(TAG, "DB min date parse exception", e);

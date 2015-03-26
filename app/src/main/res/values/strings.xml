@@ -148,17 +148,18 @@
     <string name="share_body">Hey, you should check out this app I found. It\'s called My Movies. It\'s great for tracking movies you own and looking up new movies to watch.</string>
 
     //movie metric strings
-    <string name="collection_stats_header">My Collection Stats:</string>
+    <string name="collection_stats_header">My Collection Stats</string>
     <string name="text_num_movies"># movies in collection:</string>
     <string name="collection_genres">Genres</string>
     <string name="collection_film_rating">Film Ratings</string>
     <string name="collection_star_rating">My Ratings</string>
-    <string name="viewing_stats_header">My Viewing Stats:</string>
+    <string name="viewing_stats_header">My Viewing Stats</string>
     <string name="text_num_movies_watched"># movies watched:</string>
     <string name="text_num_movies_watched_hours">watched minutes:</string>
-
-    <string name="rating_stats_header">My Rating Stats:</string>
+    <string name="rating_stats_header">My Rating Stats</string>
     <string name="text_movies_rated"># movies rated:</string>
+    <string name="text_movies_reviewed"># movies reviewed:</string>
+
 
     <string name="hello_world">Hello world!</string>
 </resources>

@@ -166,7 +166,7 @@ public class OnlineResultsList extends Fragment {
         protected TmdbResultsList<MovieDb> doInBackground(String... query) {
             try {
                 TheMovieDbApi movieDB = new TheMovieDbApi(getActivity().getResources().getString(R.string.apiKey));
-                return movieDB.searchMovie(query[0],0,null,false,0);
+                return movieDB.searchMovie(query[0],0,"en",false,0);
             } catch (MovieDbException e) {
                 Log.e("Search", "MovieDB  (MovieDbException) error");
                 String msg = (e.getMessage() == null) ? "MovieDB search failed!" : e.getMessage();

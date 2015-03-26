@@ -51,7 +51,7 @@
             android:layout_height="300dp"
             android:layout_below="@id/genre_collection_chart"
             android:background="@color/grey_300"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="20dp"
             android:id="@+id/rating_collection_chart"/>
         <TextView
             android:layout_width="fill_parent"
@@ -62,6 +62,7 @@
             android:textStyle="italic"
             android:layout_below="@id/rating_collection_chart"
             android:layout_marginBottom="5dp"
+            android:layout_marginTop="35dp"
             android:id="@+id/viewing_stats_header"/>
         <TextView
             android:layout_width="wrap_content"
@@ -128,6 +129,7 @@
             android:textStyle="italic"
             android:layout_below="@id/rating_viewing_chart"
             android:layout_marginBottom="5dp"
+            android:layout_marginTop="35dp"
             android:id="@+id/rating_stats_header"/>
         <TextView
             android:layout_width="wrap_content"
@@ -140,7 +142,7 @@
             android:id="@+id/text_movies_rated"/>
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text=""
             android:layout_gravity="end"
@@ -150,12 +152,40 @@
             android:layout_below="@id/rating_stats_header"
             android:layout_marginBottom="5dp"
             android:layout_alignParentEnd="true" />
-        <com.github.mikephil.charting.charts.PieChart
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/text_movies_reviewed"
+            android:textColor="@color/grey_800"
+            android:layout_below="@id/movies_rated"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/text_movies_reviewed"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:textColor="@color/grey_800"
+            android:id="@+id/movies_reviewed"
+            android:layout_below="@id/movies_rated"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentEnd="true" />
+        <com.github.mikephil.charting.charts.HorizontalBarChart
             android:layout_width="fill_parent"
             android:layout_height="300dp"
-            android:layout_below="@id/movies_rated"
-            android:background="@color/grey_300"
-            android:layout_marginBottom="20dp"
+            android:layout_below="@id/movies_reviewed"
+            android:layout_marginBottom="5dp"
             android:id="@+id/movie_rating_chart"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_below="@id/movie_rating_chart"
+            android:id="@+id/metric_filler"
+            android:layout_marginBottom="20dp"/>
+
     </RelativeLayout>
 </ScrollView>

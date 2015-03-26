@@ -500,22 +500,57 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return strMovies;
     }
 
-    public ArrayList<?>[] MovieCollectionGenreCount(){
+    //Get the number of reviews the user has made. (excludes null or empty reviews)
+    public String getReviewsCount(){
+        Cursor cr = null;
+        SQLiteDatabase sq = this.getReadableDatabase();
+        String strReviews = "";
+        try {
+            cr = sq.rawQuery("SELECT COUNT( * ) FROM "
+                    + MovieTable.TABLE_NAME + " WHERE " + MovieTable.MY_REVIEW + " <> '' ", null);
+            if (cr.moveToFirst()) {
+                if (!cr.isAfterLast()) {
+                    strReviews = cr.getString(0);
+                }else{
+                    strReviews = "0";
+                }
+            }
+        } catch (SQLiteException e) {
+            Log.e(TAG, "getMovieCollectionCount() error", e);
+        } finally {
+            if (cr != null) { cr.close(); }
+            if (sq != null) { sq.close(); }
+        }
+        return strReviews;
+    }
+
+
+    public ArrayList<?>[] getMovieCollectionGenreCount(){
         ArrayList[] genreStats = new ArrayList[2];
         genreStats[0] = new ArrayList<String>();
         genreStats[1] = new ArrayList<Long>();
 
         Cursor cr = null;
         SQLiteDatabase sq = this.getReadableDatabase();
-
+        Log.i("Movie Metric" , "Collection Genre Count" );
         try {
             cr = sq.rawQuery("SELECT "+ MovieTable.GENRE + ", COUNT( " + MovieTable.GENRE +" ) FROM "
-                    + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.IS_COLLECTED + " = 1"
+                    + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.IS_COLLECTED + " = 1 "
                     + "GROUP BY " + MovieTable.GENRE , null);
             if (cr.moveToFirst()) {
                 while (!cr.isAfterLast()) {
-                    genreStats[0].add(cr.getString(0));
-                    genreStats[1].add(cr.getLong(1));
+                    Log.i("Movie Metric", cr.getString(0) + " : " + cr.getLong(1));
+                    String[] genreList = cr.getString(0).split("\t");
+                    for(String genre : genreList){
+                        int genreIndex = genreStats[0].indexOf(genre);
+                        if (genreIndex < 0){
+                            genreStats[0].add(genre);
+                            genreStats[1].add(cr.getLong(1));
+                        }else{
+                            genreStats[1].set(genreIndex, (((ArrayList<Long>)genreStats[1]).get(genreIndex)+ cr.getLong(1)));
+                        }
+                    }
+
                     cr.moveToNext();
                 }
             }
@@ -528,20 +563,21 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return genreStats;
     }
 
-    public ArrayList[] MovieCollectionFilmRatingCount(){
+    public ArrayList[] getMovieCollectionFilmRatingCount(){
         ArrayList[] ratingStats = new ArrayList[2];
         ratingStats[0] = new ArrayList<String>();
         ratingStats[1] = new ArrayList<Long>();
 
         Cursor cr = null;
         SQLiteDatabase sq = this.getReadableDatabase();
-
+        Log.i("Movie Metric" , "Collection rating Count" );
         try {
             cr = sq.rawQuery("SELECT "+ MovieTable.FILM_RATING + ", COUNT( " + MovieTable.FILM_RATING +" ) FROM "
                     + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.IS_COLLECTED + " = 1 "
                     + "GROUP BY " + MovieTable.FILM_RATING , null);
             if (cr.moveToFirst()) {
                 while (!cr.isAfterLast()) {
+                    Log.i("Movie Metric" , cr.getString(0) + " : " + cr.getLong(1) );
                     ratingStats[0].add(cr.getString(0));
                     ratingStats[1].add(cr.getLong(1));
                     cr.moveToNext();
@@ -557,25 +593,77 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         return ratingStats;
     }
 
-
-    public ArrayList[] MovieViewingGenreCount(){
+    //TODO:FINISH THIS
+    public ArrayList[] getMovieViewingGenreCount(){
         ArrayList[] genreStats = new ArrayList[2];
         genreStats[0] = new ArrayList<String>();
         genreStats[1] = new ArrayList<Long>();
 
+        Cursor cr = null;
+        SQLiteDatabase sq = this.getReadableDatabase();
+
+        Log.i("Movie Metric", "Viewing Film Rating");
+        try {
+            cr = sq.rawQuery("SELECT "+ MovieTable.GENRE + ", COUNT( " + MovieTable.GENRE +" ) FROM "
+                    + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.WATCH_COUNT + " > 0 "
+                    + "GROUP BY " + MovieTable.GENRE , null);
+            if (cr.moveToFirst()) {
+                while (!cr.isAfterLast()) {
+                    Log.i("Movie Metric" , cr.getString(0) + " : " + cr.getLong(1) );
+                    String[] genreList = cr.getString(0).split("\t");
+                    for(String genre : genreList){
+                        int genreIndex = genreStats[0].indexOf(genre);
+                        if (genreIndex < 0){
+                            genreStats[0].add(genre);
+                            genreStats[1].add(cr.getLong(1));
+                        } else {
+                            genreStats[1].set(genreIndex, (((ArrayList<Long>)genreStats[1]).get(genreIndex)+ cr.getLong(1)));
+                        }
+                    }
+                    cr.moveToNext();
+                }
+            }
+        } catch (SQLiteException e) {
+            Log.e(TAG, "getMovieCollectionCount() error", e);
+        } finally {
+            if (cr != null) { cr.close(); }
+            if (sq != null) { sq.close(); }
+        }
+
         return genreStats;
     }
 
-    public ArrayList[] MovieViewingFilmRatingCount(){
+    public ArrayList[] getMovieViewingFilmRatingCount(){
         ArrayList[] ratingStats = new ArrayList[2];
         ratingStats[0] = new ArrayList<String>();
         ratingStats[1] = new ArrayList<Long>();
+        Log.i("Movie Metric" , "Viewing Film Rating" );
+        Cursor cr = null;
+        SQLiteDatabase sq = this.getReadableDatabase();
+        try {
+            cr = sq.rawQuery("SELECT "+ MovieTable.FILM_RATING + ", SUM( " + MovieTable.WATCH_COUNT
+                    + " ) FROM " + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.WATCH_COUNT
+                    + " > 0 " + "GROUP BY " + MovieTable.FILM_RATING, null);
+            if (cr.moveToFirst()) {
+                while (!cr.isAfterLast()) {
+                    Log.i("Movie Metric" , cr.getString(0) + " : " + cr.getLong(1) );
+                    ratingStats[0].add(cr.getString(0));
+                    ratingStats[1].add(cr.getLong(1));
+                    cr.moveToNext();
+                }
+            }
+        } catch (SQLiteException e) {
+            Log.e(TAG, "getMovieCollectionCount() error", e);
+        } finally {
+            if (cr != null) { cr.close(); }
+            if (sq != null) { sq.close(); }
+        }
 
 
         return ratingStats;
     }
 
-    public ArrayList[] MovieCollectionMyRatingsCount(){
+    public ArrayList[] getMovieCollectionMyRatingsCount(){
         ArrayList[] myRatingStats = new ArrayList[2];
         myRatingStats[0] = new ArrayList<String>();
         myRatingStats[1] = new ArrayList<Long>();
@@ -586,9 +674,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
             cr = sq.rawQuery("SELECT "+ MovieTable.MY_RATING + ", COUNT( " + MovieTable.MY_RATING
                     + " ) FROM " + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.MY_RATING
                     + " > 0 OR " + MovieTable.MY_REVIEW + " NOT NULL "
-                    + "GROUP BY " + MovieTable.MY_RATING, null);
+                    + "GROUP BY " + MovieTable.MY_RATING , null);
             if (cr.moveToFirst()) {
                 while (!cr.isAfterLast()) {
+                    Log.i("Movie Metric" , cr.getString(0) + " : " + cr.getLong(1) );
                     myRatingStats[0].add(cr.getString(0));
                     myRatingStats[1].add(cr.getLong(1));
                     cr.moveToNext();
