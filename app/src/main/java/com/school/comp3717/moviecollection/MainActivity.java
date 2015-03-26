@@ -65,14 +65,14 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         // secondary screens
-        appFragments = new Fragment[7];
+        appFragments = new Fragment[6];
         appFragments[0] = new Home();
         appFragments[1] = new MyCollection();
-        appFragments[2] = new MyLists();
-        appFragments[3] = new MyRatings();
-        appFragments[4] = new RandomPicks();
-        appFragments[5] = new MovieMetrics();
-        appFragments[6] = new About();
+        //appFragments[2] = new MyLists();
+        appFragments[2] = new MyRatings();
+        appFragments[3] = new RandomPicks();
+        appFragments[4] = new MovieMetrics();
+        appFragments[5] = new About();
 
         // set home screen
         selectItem(0);
@@ -261,9 +261,13 @@ public class MainActivity extends ActionBarActivity {
     public void setRandomPicks(ArrayList<Movie> randomPicks) {
         Log.d("SetRandomPicks" , "Random picks set");
 
-        int choice = randomizer.nextInt(randomPicks.size());
-        Movie movie = randomPicks.get(choice);
-        randomPicks.remove(choice);
+        Movie movie = null;
+
+        if (!randomPicks.isEmpty()) {
+            int choice = randomizer.nextInt(randomPicks.size());
+            movie = randomPicks.get(choice);
+            randomPicks.remove(choice);
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -289,6 +293,7 @@ public class MainActivity extends ActionBarActivity {
         drawerLayout.closeDrawer(listView);
     }
 
+    /*
     public void listDetailsClick(View v) {
         ListDetails listDetailsFragment = new ListDetails();
         FragmentManager fragManager = getSupportFragmentManager();
@@ -296,5 +301,5 @@ public class MainActivity extends ActionBarActivity {
                 .replace(R.id.myLists, listDetailsFragment)
                 .addToBackStack(null)
                 .commit();
-    }
+    }*/
 }

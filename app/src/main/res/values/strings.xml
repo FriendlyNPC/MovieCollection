@@ -10,7 +10,6 @@
     <string-array name="navigation_drawer_items">
         <item>Home</item>
         <item>My Collection</item>
-        <item>My Lists</item>
         <item>My Ratings</item>
         <item>Random Picks</item>
         <item>Movie Metrics</item>
@@ -28,6 +27,8 @@
     <string name="most_popular">Most Popular</string>
     <string name="searchActivity">MovieSearch</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="intro_header">Welcome to My Movies</string>
+    <string name="intro_text">Look up your favourite movies\nand add them to your collection</string>
 
     // My Collection Fragment
     <string name="filter_pane_text">Filter Collection</string>
@@ -49,7 +50,6 @@
     <string name="genre_filter_dialog_title">Display Which Genre(s)?</string>
     <string name="genre_filter_positive">OK</string>
     <string name="genre_filter_negative">Cancel</string>
-
 
     // My Lists Fragment
     <string name="my_lists_header">My Lists</string>

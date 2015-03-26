@@ -12,6 +12,52 @@
         android:orientation="vertical"
         android:background="@color/grey_300" >
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/grey_300"
+            android:id="@+id/introductionWrapper"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/get_starter_arrow"
+                android:id="@+id/introArrow"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/intro_header"
+                android:id="@+id/introHeader"
+                android:layout_alignTop="@id/introArrow"
+                android:layout_toEndOf="@id/introArrow"
+                android:textColor="@color/grey_800"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:paddingTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/intro_text"
+                android:id="@+id/introText"
+                android:layout_below="@id/introHeader"
+                android:layout_toEndOf="@id/introArrow"
+                android:layout_alignBottom="@id/introArrow"
+                android:textColor="@color/grey_800"
+                android:gravity="center"
+                android:layout_gravity="center_vertical" />
+
+        </RelativeLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

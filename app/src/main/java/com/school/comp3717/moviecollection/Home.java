@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.omertron.themoviedbapi.MovieDbException;
@@ -46,9 +47,10 @@ public class Home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        movieDbHelper = new MovieDbHelper(getActivity());
+        View           rootView    = inflater.inflate(R.layout.fragment_home, container, false);
+        RelativeLayout introLayout = (RelativeLayout) rootView.findViewById(R.id.introductionWrapper);
+        movieDbHelper              = new MovieDbHelper(getActivity());
 
         // Local Lists
         ArrayList<Movie> recentlyAdded  = getRecentlyAdded();
@@ -79,11 +81,15 @@ public class Home extends Fragment {
         LinearLayoutManager layoutManager4 = new LinearLayoutManager(getActivity());
         recyclerViewJW.setLayoutManager(layoutManager4);
 
-
         setRecyclerView(recentlyAdded, recyclerViewRA, adapterRA, headerRA, false);
         setRecyclerView(justWatched,   recyclerViewJW, adapterJW, headerJW, false);
         setRecyclerView(nowPlaying,    recyclerViewNP, adapterNP, headerNP, true);
         setRecyclerView(mostPopular,   recyclerViewMP, adapterMP, headerMP, true);
+
+        if (recyclerViewJW.getVisibility() == View.GONE &&
+            recyclerViewRA.getVisibility() == View.GONE) {
+            introLayout.setVisibility(View.VISIBLE);
+        }
 
         // Inflate the layout for this fragment
         return rootView;
