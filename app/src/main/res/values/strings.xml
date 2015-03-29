@@ -3,7 +3,7 @@
     <string name="apiKey">48a5ee87fadc129033207cea80b86b81</string>
 
     //TODO: Change to My Movies for final project
-    <string name="app_name">3R_MovieCollection</string>
+    <string name="app_name">My Movies</string>
     <string name="movie_collection">Movie Collection!</string>
     <string name="action_settings">Settings</string>
 

@@ -111,11 +111,25 @@ public class MainActivity extends ActionBarActivity {
         //set main view to selected fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        //if we switch to any nav drawer item, we crush the backstack
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if (position == 0){
+            String tag = navigationDrawerItems[position];
+            //if we switch to home, crush the entire backstack
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, appFragments[position])
+                    .commit();
+        }
+        else{
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                int id = fragmentManager.getBackStackEntryAt(0).getId();
+                fragmentManager.popBackStack(id, 0);
+            }
 
-        fragmentManager.beginTransaction().replace(R.id.content_frame, appFragments[position]).commit();
-
+            //if we switch to any other nav item, crush the entire backstack but the first (home)
+            String tag = navigationDrawerItems[position];
+            fragmentManager.beginTransaction().replace(R.id.content_frame, appFragments[position])
+                    .addToBackStack(tag)
+                    .commit();
+        }
         // update selected item and title, then close the drawer
         listView.setItemChecked(position, true);
         setTitle(navigationDrawerItems[position]);
@@ -231,6 +245,7 @@ public class MainActivity extends ActionBarActivity {
         FragmentManager sfm = getSupportFragmentManager();
         if (sfm.getBackStackEntryCount() > 0) {
             sfm.popBackStack();
+
         }else {
             super.onBackPressed();
         }

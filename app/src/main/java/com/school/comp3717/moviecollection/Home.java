@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +85,7 @@ public class Home extends Fragment {
         setRecyclerView(recentlyAdded, recyclerViewRA, adapterRA, headerRA, false);
         setRecyclerView(justWatched,   recyclerViewJW, adapterJW, headerJW, false);
         setRecyclerView(nowPlaying,    recyclerViewNP, adapterNP, headerNP, true);
-        setRecyclerView(mostPopular,   recyclerViewMP, adapterMP, headerMP, true);
+        setRecyclerView(mostPopular, recyclerViewMP, adapterMP, headerMP, true);
 
         if (recyclerViewJW.getVisibility() == View.GONE &&
             recyclerViewRA.getVisibility() == View.GONE) {
@@ -102,6 +103,12 @@ public class Home extends Fragment {
         nowPlayingTask.execute("en");
         QueryPopularMoviesTask popularMoviesTask = new QueryPopularMoviesTask();
         popularMoviesTask.execute("en");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((MainActivity)getActivity()).setTitle("Home");
     }
 
     private void setRecyclerView(ArrayList<Movie> movies,
