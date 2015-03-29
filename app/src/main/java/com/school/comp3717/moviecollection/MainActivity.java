@@ -220,7 +220,7 @@ public class MainActivity extends ActionBarActivity {
 
             // update selected item and title, then close the drawer
             //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
-            setTitle(R.string.search_results);
+            setTitle(R.string.search_results_header);
             drawerLayout.closeDrawer(listView);
         }
     }
@@ -231,7 +231,7 @@ public class MainActivity extends ActionBarActivity {
         FragmentManager sfm = getSupportFragmentManager();
         if (sfm.getBackStackEntryCount() > 0) {
             sfm.popBackStack();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -254,7 +254,7 @@ public class MainActivity extends ActionBarActivity {
 
         // update selected item and title, then close the drawer
         //listView.setItemChecked(position, true); //TODO: remove disable highlighted nav item
-        setTitle(R.string.movie_details_toolbar);
+        setTitle(R.string.movie_details_header);
         drawerLayout.closeDrawer(listView);
     }
 
@@ -289,7 +289,7 @@ public class MainActivity extends ActionBarActivity {
                 .commit();
 
         // Update selected item and title, then close the drawer
-        setTitle(R.string.random_picks_result_toolbar);
+        setTitle(R.string.random_picks_result_header);
         drawerLayout.closeDrawer(listView);
     }
 

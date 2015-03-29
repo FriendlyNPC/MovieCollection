@@ -97,6 +97,12 @@ public class MovieDetails extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.movie_details_header);
+    }
+
     private void setDetails() {
         setTitleText(movie, title);
         setDirectorText(movie, director);

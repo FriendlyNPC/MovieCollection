@@ -80,7 +80,6 @@ public class MyCollection extends Fragment{
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -180,6 +179,12 @@ public class MyCollection extends Fragment{
         new GetAllMoviesTask().execute();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.my_collection_header);
     }
 
     private void setFilterButton(Button button){

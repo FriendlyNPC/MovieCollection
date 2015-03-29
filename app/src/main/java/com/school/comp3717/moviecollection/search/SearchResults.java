@@ -51,6 +51,12 @@ public class SearchResults extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.search_results_header);
+    }
+
     private String sanitize(String toQuery){
         //TODO: sanitize the search value
         return toQuery;

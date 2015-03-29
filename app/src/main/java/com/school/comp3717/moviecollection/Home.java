@@ -96,6 +96,12 @@ public class Home extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.home_header);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         QueryNowPlayingTask nowPlayingTask = new QueryNowPlayingTask();

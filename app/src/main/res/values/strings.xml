@@ -2,10 +2,7 @@
 <resources>
     <string name="apiKey">48a5ee87fadc129033207cea80b86b81</string>
 
-    //TODO: Change to My Movies for final project
-    <string name="app_name">3R_MovieCollection</string>
-    <string name="movie_collection">Movie Collection!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">My Movies</string>
 
     <string-array name="navigation_drawer_items">
         <item>Home</item>
@@ -17,20 +14,19 @@
     </string-array>
 
     <string name="search_toolbar">Search</string>
-    <string name="movie_details_toolbar">Movie Details</string>
-    <string name="random_picks_result_toolbar">Random Picks</string>
 
     // Home fragment
+    <string name="home_header">Home</string>
     <string name="new_releases">Now Playing</string>
     <string name="recently_added">Recently Added</string>
     <string name="just_watched">Just Watched</string>
     <string name="most_popular">Most Popular</string>
     <string name="searchActivity">MovieSearch</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="intro_header">Welcome to My Movies</string>
     <string name="intro_text">Look up your favourite movies\nand add them to your collection</string>
 
     // My Collection Fragment
+    <string name="my_collection_header">My Collection</string>
     <string name="filter_pane_text">Filter Collection</string>
     <string name="filter_pane_genre">Show Genre(s)</string>
     <string name="filter_pane_OK">OK</string>
@@ -46,7 +42,7 @@
     <string name="asc">ASC</string>
     <string name="desc">DESC</string>
 
-    //genre_filter dialog
+    // genre_filter dialog
     <string name="genre_filter_dialog_title">Display Which Genre(s)?</string>
     <string name="genre_filter_positive">OK</string>
     <string name="genre_filter_negative">Cancel</string>
@@ -58,8 +54,8 @@
     <string name="my_list_3">My List 3</string>
 
     // Search Results Fragment
+    <string name="search_results_header">Search Results</string>
     <string name="search_results_tag">search_results_tag</string>
-    <string name="search_results">Search Results</string>
     <string name="search_hint">Search Movies</string>
     <string name="collection_tab_title">My Collection</string>
     <string name="online_tab_title">Online Search</string>
@@ -72,6 +68,7 @@
     <string name="quick_add_descriptor">Quick Add Button</string>
 
     // Movie Details fragment
+    <string name="movie_details_header">Movie Details</string>
     <string name="movie_details_tag">movie_details_tag</string>
     <string name="movie_title">Movie Title (Year)</string>
     <string name="director">Directed by John Doe</string>
@@ -79,7 +76,6 @@
     <string name="remove_movie_text">Remove Movie</string>
     <string name="synopsis_header_text">Synopsis</string>
     <string name="synopsis_text">Synopsis of movie</string>
-    <string name="movie_details_header">Movie Details</string>
     <string name="film_rating_label">Film Rating:</string>
     <string name="film_rating_field">N/A</string>
     <string name="runtime_label">Runtime:</string>
@@ -107,6 +103,7 @@
     <string name="save_review_text">Save Review</string>
 
     // My Ratings fragment
+    <string name="my_ratings_header">My Ratings</string>
     <string name="rating_item_title">Movie Title (Year)</string>
     <string name="rating_item_review">Show Review</string>
     <string name="rating_item_review_body">Review Body</string>
@@ -114,8 +111,8 @@
     <string name="collapse_button">Collapse</string>
 
     // Random Picks fragment
-    <string name="random_picks_tag">random_picks_tag</string>
     <string name="random_picks_header">Random Picks</string>
+    <string name="random_picks_tag">random_picks_tag</string>
     <string name="preferences_header">Set Your Preferences</string>
     <string name="genre_pref_label">Genre</string>
     <string name="runtime_pref_label">Max Runtime</string>
@@ -126,14 +123,15 @@
     <string name="pref_submit">Get Random Pick</string>
 
     // Random Picks Result fragment
-    <string name="random_picks_result_tag">random_picks_result_tag</string>
     <string name="random_picks_result_header">Random Picks Result</string>
+    <string name="random_picks_result_tag">random_picks_result_tag</string>
     <string name="random_picks_title">Movie Title\n(Year)</string>
     <string name="random_picks_poster">Random Picks Poster Button</string>
     <string name="next_pick">Next Random Pick</string>
     <string name="results_criteria">We did not find any movies matching that criteria in your collection.</string>
 
     // About fragment
+    <string name="about_header">About</string>
     <string name="version_text">Version 1.0\n© 2015 Team KGY</string>
     <string name="feedback_button_text">Send Feedback</string>
     <string name="feedback_description_text">Tell us what you think</string>
@@ -145,9 +143,10 @@
     <string name="feedback_subject">My Movies: Feedback</string>
     <string name="report_subject">My Movies: Bug Report</string>
     <string name="share_subject">Check out My Movies App!</string>
-    <string name="share_body">Hey, you should check out this app I found. It\'s called My Movies. It\'s great for tracking movies you own and looking up new movies to watch.</string>
+    <string name="share_body">Hey, you should check out this app I found. It\'s called My Movies. It\'s great for tracking movies you own and looking up new movies to watch.\n\n[Insert link to app on Google Play]</string>
 
-    //movie metric strings
+    // Movie Metrics fragment
+    <string name="movie_metrics_header">Movie Metrics</string>
     <string name="collection_stats_header">My Collection Stats</string>
     <string name="text_num_movies"># movies in collection:</string>
     <string name="collection_genres">Genres</string>
@@ -159,7 +158,4 @@
     <string name="rating_stats_header">My Rating Stats</string>
     <string name="text_movies_rated"># movies rated:</string>
     <string name="text_movies_reviewed"># movies reviewed:</string>
-
-
-    <string name="hello_world">Hello world!</string>
 </resources>

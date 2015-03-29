@@ -52,6 +52,12 @@ public class MyRatings extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.my_ratings_header);
+    }
+
     private class GetAllRatingsTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
         protected ArrayList<Movie> doInBackground(Void... params) {
             try {

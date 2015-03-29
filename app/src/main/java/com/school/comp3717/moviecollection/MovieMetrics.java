@@ -80,6 +80,12 @@ public class MovieMetrics extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.movie_metrics_header);
+    }
+
     private void setupCharts(){
         collection_genres_chart.setVisibility(View.GONE);
         collection_genres_chart.setTouchEnabled(false);

@@ -46,15 +46,13 @@ public class RandomPicksResult extends Fragment {
         title          = (TextView)    rootView.findViewById(R.id.randomPicksTitle);
         nextPickButton = (Button)      rootView.findViewById(R.id.nextPickButton);
 
-        if (randomPicks.isEmpty()) {
+        if (movie == null) {
             posterButton.setImageResource(R.drawable.sad_face);
             title.setText(getResources().getString(R.string.results_criteria));
             nextPickButton.setVisibility(View.INVISIBLE);
         } else {
-
-
             // If no more picks to show, remove next pick button
-            if (randomPicks.size() <= 1) {
+            if (randomPicks.size() < 1) {
                 nextPickButton.setVisibility(View.INVISIBLE);
             }
 
@@ -72,6 +70,12 @@ public class RandomPicksResult extends Fragment {
 
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.random_picks_result_header);
     }
 
     private void setDetails() {

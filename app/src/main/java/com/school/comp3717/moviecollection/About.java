@@ -48,6 +48,12 @@ public class About extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.about_header);
+    }
+
     public void setEmailButton(Button button,
                                final String mailTo,
                                final String subject,

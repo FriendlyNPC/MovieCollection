@@ -85,6 +85,12 @@ public class RandomPicks extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.random_picks_header);
+    }
+
     private ArrayAdapter loadSpinnerData(String column) {
         MovieDbHelper db = new MovieDbHelper(getActivity());
         // Spinner Drop down elements
