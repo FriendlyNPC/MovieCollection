@@ -673,10 +673,11 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         try {
             cr = sq.rawQuery("SELECT "+ MovieTable.MY_RATING + ", COUNT( " + MovieTable.MY_RATING
                     + " ) FROM " + MovieTable.TABLE_NAME + " WHERE " +  MovieTable.MY_RATING
-                    + " > 0 OR " + MovieTable.MY_REVIEW + " NOT NULL "
-                    + "GROUP BY " + MovieTable.MY_RATING , null);
+                    + " >= 0 " + "GROUP BY " + MovieTable.MY_RATING , null);
+
             if (cr.moveToFirst()) {
                 while (!cr.isAfterLast()) {
+
                     Log.i("Movie Metric" , cr.getString(0) + " : " + cr.getLong(1) );
                     myRatingStats[0].add(cr.getString(0));
                     myRatingStats[1].add(cr.getLong(1));

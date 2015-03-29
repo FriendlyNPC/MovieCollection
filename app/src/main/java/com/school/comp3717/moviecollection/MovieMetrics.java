@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -87,7 +88,10 @@ public class MovieMetrics extends Fragment {
         collection_genres_chart.setHoleColorTransparent(true);
         collection_genres_chart.setCenterText(getActivity().getResources()
                 .getString(R.string.collection_genres));
+        collection_genres_chart.setUsePercentValues(false);
+        collection_genres_chart.setDrawSliceText(false);
         collection_genres_chart.animateXY(1500, 1500);
+        collection_genres_chart.setDescription("");
 
         collection_film_rating_chart.setVisibility(View.GONE);
         collection_film_rating_chart.setTouchEnabled(false);
@@ -95,28 +99,33 @@ public class MovieMetrics extends Fragment {
         collection_film_rating_chart.setCenterText(getActivity().getResources()
                 .getString(R.string.collection_film_rating));
         collection_film_rating_chart.animateXY(1500, 1500);
+        collection_film_rating_chart.setUsePercentValues(false);
+        collection_film_rating_chart.setDrawSliceText(false);
+        collection_film_rating_chart.setDescription("");
 
         viewing_genres_chart.setVisibility(View.GONE);
-        viewing_genres_chart.setTouchEnabled(false);
         viewing_genres_chart.setTouchEnabled(false);
         viewing_genres_chart.setHoleColorTransparent(true);
         viewing_genres_chart.setCenterText(getActivity().getResources()
                 .getString(R.string.collection_genres));
         viewing_genres_chart.animateXY(1500, 1500);
+        viewing_genres_chart.setUsePercentValues(false);
+        viewing_genres_chart.setDrawSliceText(false);
+        viewing_genres_chart.setDescription("");
 
         viewing_film_chart.setVisibility(View.GONE);
-        viewing_film_chart.setTouchEnabled(false);
-        viewing_film_chart.setTouchEnabled(false);
         viewing_film_chart.setTouchEnabled(false);
         viewing_film_chart.setHoleColorTransparent(true);
         viewing_film_chart.setCenterText(getActivity().getResources()
                 .getString(R.string.collection_film_rating));
         viewing_film_chart.animateXY(1500, 1500);
+        viewing_film_chart.setUsePercentValues(false);
+        viewing_film_chart.setDrawSliceText(false);
+        viewing_film_chart.setDescription("");
 
         star_rating_chart.setVisibility(View.GONE);
         star_rating_chart.setTouchEnabled(false);
-        star_rating_chart.setDescription(getActivity().getResources()
-                .getString(R.string.collection_star_rating));
+        star_rating_chart.setDescription("");
         star_rating_chart.animateXY(1500, 1500);
     }
 
@@ -146,7 +155,16 @@ public class MovieMetrics extends Fragment {
 
         ArrayList<Integer> colours = new ArrayList<Integer>();
 
+
         for(int c : ColorTemplate.COLORFUL_COLORS){
+            colours.add(c);
+        }
+
+        for(int c : ColorTemplate.PASTEL_COLORS){
+            colours.add(c);
+        }
+
+        for(int c : ColorTemplate.VORDIPLOM_COLORS){
             colours.add(c);
         }
 
@@ -174,6 +192,10 @@ public class MovieMetrics extends Fragment {
             dataset.setColors(colours);
             PieData data = new PieData((ArrayList<String>)collection_film_ratings[0], dataset);
             collection_film_rating_chart.setData(data);
+
+            Legend l = collection_film_rating_chart.getLegend();
+            l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
+
             collection_film_rating_chart.setVisibility(View.VISIBLE);
         }
 
@@ -187,7 +209,7 @@ public class MovieMetrics extends Fragment {
                 yVals1.add(new Entry(((ArrayList<Long>) collection_genre[1]).get(i) / total * 100, i));
             }
 
-            PieDataSet dataset = new PieDataSet( yVals1, "Film Rating");
+            PieDataSet dataset = new PieDataSet( yVals1, "Genres");
             dataset.setValueFormatter(new PercentFormatter());
             dataset.setSliceSpace(3f);
             dataset.setValueTextSize(11f);
@@ -195,6 +217,10 @@ public class MovieMetrics extends Fragment {
             dataset.setColors(colours);
             PieData data = new PieData((ArrayList<String>)collection_genre[0], dataset);
             collection_genres_chart.setData(data);
+
+            Legend l = collection_genres_chart.getLegend();
+            l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
+
             collection_genres_chart.setVisibility(View.VISIBLE);
         }
 
@@ -208,14 +234,19 @@ public class MovieMetrics extends Fragment {
                 yVals1.add(new Entry(((ArrayList<Long>) viewing_genre[1]).get(i) / total * 100, i));
             }
 
-            PieDataSet dataset = new PieDataSet( yVals1, "Film Rating");
+            PieDataSet dataset = new PieDataSet( yVals1, "Genres");
             dataset.setValueFormatter(new PercentFormatter());
             dataset.setSliceSpace(3f);
             dataset.setValueTextSize(11f);
             dataset.setValueTextSize(Color.WHITE);
             dataset.setColors(colours);
             PieData data = new PieData((ArrayList<String>)viewing_genre[0], dataset);
+
             viewing_genres_chart.setData(data);
+
+            Legend l = viewing_genres_chart.getLegend();
+            l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
+
             viewing_genres_chart.setVisibility(View.VISIBLE);
         }
 
@@ -237,6 +268,11 @@ public class MovieMetrics extends Fragment {
             dataset.setColors(colours);
             PieData data = new PieData((ArrayList<String>)viewing_film_rating[0], dataset);
             viewing_film_chart.setData(data);
+
+            Legend l = viewing_film_chart.getLegend();
+            l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
+
+
             viewing_film_chart.setVisibility(View.VISIBLE);
         }
 
@@ -246,7 +282,7 @@ public class MovieMetrics extends Fragment {
                 yVals1.add(new BarEntry( ((ArrayList<Long>)star_ratings[1]).get(i) ,i ));
             }
 
-            BarDataSet dataset = new BarDataSet( yVals1, "Film Rating");
+            BarDataSet dataset = new BarDataSet( yVals1, "Movies Rated");
             ArrayList<BarDataSet> datasets = new ArrayList<BarDataSet>();
             datasets.add(dataset);
             BarData data = new BarData((ArrayList<String>)star_ratings[0], datasets);
