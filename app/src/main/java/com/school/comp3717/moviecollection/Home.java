@@ -111,12 +111,6 @@ public class Home extends Fragment {
         popularMoviesTask.execute("en");
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        ((MainActivity)getActivity()).setTitle("Home");
-    }
-
     private void setRecyclerView(ArrayList<Movie> movies,
                                  RecyclerView recyclerView,
                                  RecyclerAdapter adapter,
