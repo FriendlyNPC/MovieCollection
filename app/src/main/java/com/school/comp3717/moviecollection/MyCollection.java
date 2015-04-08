@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -156,7 +155,6 @@ public class MyCollection extends Fragment{
                 filter.setSort(sortBySpinner.getSelectedItemPosition());
                 filter.setMaxRating((String) filmRatingSpinner.getSelectedItem());
                 doFilterQuery();
-
             }
 
             @Override
@@ -303,7 +301,7 @@ public class MyCollection extends Fragment{
             collectionResults.setVisibility(View.VISIBLE);
         }else{
             CollectionSearchItemArrayAdapter adapter = new CollectionSearchItemArrayAdapter(getActivity(),
-                    results, filter.getSortEnum() );
+                    results);
             collectionItems.setAdapter(adapter);
 
             collectionItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -373,130 +371,17 @@ public class MyCollection extends Fragment{
 
     }
 
-    private class CollectionSearchItemArrayAdapter extends ArrayAdapter<Movie> implements SectionIndexer{
+    private class CollectionSearchItemArrayAdapter extends ArrayAdapter<Movie>{
         private final Context context;
         private final List<Movie> movies;
-        private String[] sections;
-        private SparseIntArray positionToSection;
-        private SparseIntArray sectionToPosition;
-        private MovieFilter.SortOrder sortingMethod;
 
-        public CollectionSearchItemArrayAdapter(Context context, List<Movie> objects, MovieFilter.SortOrder sort) {
+        public CollectionSearchItemArrayAdapter(Context context, List<Movie> objects) {
             super(context, R.layout.search_result_collection_item, objects);
             this.context = context;
             this.movies = objects;
-            this.sortingMethod = sort;
-            positionToSection = new SparseIntArray();
-            sectionToPosition = new SparseIntArray();
 
-            switch (sortingMethod){
-                case TITLE:
-                    sections = getTitleSections();
-                    break;
-                case FILM_RATING:
-                    sections = getRatingSections();
-                    break;
-                case RUNTIME:
-                    sections = getRuntimeSections();
-                    break;
-                case RELEASE_DATE:
-                    sections = getYearSections();
-                    break;
-                default:
-                    //shouldn't get here, all enums accounted for
-                    break;
-            }
         }
 
-        String[] getTitleSections(){
-            ArrayList<String> section = new ArrayList<String>();
-            String prevChar = "";
-            String firstChar;
-            int sectionIndex = 0;
-            for(int i = 0; i < movies.size(); i++){
-                firstChar = movies.get(i).getTitle().substring(0,1).toUpperCase();
-
-                if (!firstChar.equals(prevChar)){
-                    section.add(firstChar);
-                    prevChar = firstChar;
-                    sectionToPosition.append(sectionIndex, i);
-                    positionToSection.append(i, sectionIndex);
-                    sectionIndex++;
-                }else{
-                    positionToSection.append(i, sectionIndex);
-                }
-            }
-            return section.toArray(new String[section.size()]);
-        }
-
-        String[] getRuntimeSections(){
-            ArrayList<String> section = new ArrayList<String>();
-            int prevRuntime = -1;
-            int currentRuntime;
-            int sectionIndex = 0;
-            for(int i = 0; i < movies.size(); i++){
-                currentRuntime = movies.get(i).getRuntime();
-                //drop single minutes using integer division
-                currentRuntime /=  10;
-                currentRuntime *= 10;
-                if (currentRuntime != prevRuntime){
-                    section.add(Integer.toString(currentRuntime));
-                    sectionToPosition.put(sectionIndex, i);
-                    positionToSection.put(i, sectionIndex);
-                    sectionIndex++;
-
-                }else{
-                    positionToSection.put(i, sectionIndex);
-                }
-            }
-            return section.toArray(new String[section.size()]);
-        }
-
-        String[] getYearSections(){
-            ArrayList<String> section = new ArrayList<String>();
-            String prevYear = "";
-            String currentYear;
-            int sectionIndex = 0;
-            for(int i = 0; i < movies.size(); i++){
-                if(!movies.get(i).getReleaseDate().isEmpty()) {
-                    currentYear = movies.get(i).getReleaseDate().substring(0, 4);
-                }else{
-                    currentYear = "";
-                }
-
-                if (!currentYear.equals(prevYear)){
-                    section.add(prevYear);
-                    prevYear = currentYear;
-                    positionToSection.put(sectionIndex, i);
-                    sectionToPosition.put(i, sectionIndex);
-                    sectionIndex++;
-                } else {
-                    sectionToPosition.put(i, sectionIndex);
-                }
-            }
-            return section.toArray(new String[section.size()]);
-        }
-
-        String[] getRatingSections(){
-            ArrayList<String> section = new ArrayList<String>();
-            String prevRating = "";
-            String rating;
-            int sectionIndex = 0;
-            for(int i = 0; i < movies.size(); i++) {
-                rating = movies.get(i).getFilmRating();
-                if (!rating.equals(prevRating)) {
-                    section.add(rating);
-                    prevRating =  rating;
-                    positionToSection.put(sectionIndex, i);
-                    sectionToPosition.put(i, sectionIndex);
-                    sectionIndex++;
-                }else{
-                    sectionToPosition.put(i, sectionIndex);
-                }
-
-            }
-            return section.toArray(new String[section.size()]);
-        }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent){
@@ -521,20 +406,6 @@ public class MyCollection extends Fragment{
             return movies.get(position);
         }
 
-        @Override
-        public Object[] getSections() {
-            return sections;
-        }
-
-        @Override
-        public int getPositionForSection(int sectionIndex) {
-            return sectionToPosition.get(sectionIndex);
-        }
-
-        @Override
-        public int getSectionForPosition(int position) {
-            return positionToSection.get(position);
-        }
     }
 
     public void setRangeSeekBar(SeekBar oldSeekBar,

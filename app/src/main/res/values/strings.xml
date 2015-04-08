@@ -35,7 +35,6 @@
     <string name="filter_pane_sort_option_title">Sort By</string>
     <string-array name="filter_sort_options">
         <item>Title</item>
-        <item>Film Rating</item>
         <item>Runtime</item>
         <item>Release Date</item>
     </string-array>

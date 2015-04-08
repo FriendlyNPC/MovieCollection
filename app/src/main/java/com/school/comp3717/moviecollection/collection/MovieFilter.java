@@ -43,12 +43,9 @@ public class MovieFilter implements Parcelable{
                 this.sort = SortOrder.TITLE;
                 break;
             case 1:
-                this.sort = SortOrder.FILM_RATING;
-                break;
-            case 2:
                 this.sort = SortOrder.RUNTIME;
                 break;
-            case 3:
+            case 2:
                 this.sort = SortOrder.RELEASE_DATE;
                 break;
             default:
@@ -174,7 +171,6 @@ public class MovieFilter implements Parcelable{
 
     public enum SortOrder{
         TITLE(MovieDbContract.MovieTable.TITLE),
-        FILM_RATING(MovieDbContract.MovieTable.FILM_RATING),
         RUNTIME(MovieDbContract.MovieTable.RUNTIME),
         RELEASE_DATE(MovieDbContract.MovieTable.RELEASE_DATE);
 
